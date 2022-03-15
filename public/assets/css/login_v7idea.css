@@ -1,0 +1,47 @@
+/*背景*/
+body {background-image: url('../img/login.jpg');}
+
+/*表單*/
+form {margin: 0px 0px 5px 0px;}
+.login_page{display: flex; align-items: center;}
+.md-card {border-radius: 25px 0px 25px 0px;box-shadow: 0 10px 30px rgb(0 155 187 / 16%), 0 3px 6px rgb(0 155 187 / 16%);}
+
+/*頭像*/
+.login_page .user_avatar {background-image: url(../img/avatars/user.png);background-color:fff;}
+
+/*輸入框*/
+.md-input-wrapper>label{color: #989898;font-weight: bold;}
+.md-input-filled>label, .md-input-focus>label {font-size: 14px;top: 0px;}
+
+input:not([type]).md-input, input[type=color].md-input, input[type=date].md-input, input[type=datetime-local].md-input, input[type=datetime].md-input, input[type=email].md-input, input[type=month].md-input, input[type=number].md-input, input[type=password].md-input, input[type=search].md-input, input[type=tel].md-input, input[type=text].md-input, input[type=time].md-input, input[type=url].md-input, input[type=week].md-input, select.md-input, textarea.md-input{
+    border-width: 0 0 1px;
+    border-color: rgba(152,152,152,0.6);
+    padding: 24px 4px 4px 4px;
+    transition: border-color 0.5s ease;
+}
+input:not([type]).md-input:focus,input[type=text].md-input:focus,input[type=password].md-input:focus,input[type=number].md-input:focus, select.md-input:focus, textarea.md-input:focus{
+    border-width: 0 0 2px;
+    border-color: rgba(0,155,187,1);
+}
+input:not([type]).md-input:focus+.label ,input[type=text].md-input:focus+.label ,input[type=password].md-input:focus+.label ,input[type=number].md-input:focus+.label, select.md-input:focus+.label, textarea.md-input:focus+.label{
+    color: rgba(0,155,187,1);
+}
+input:-webkit-autofill{
+  -webkit-box-shadow:0 0 0 1000px white inset !important;
+}
+
+/*驗證碼按鈕*/
+.md-btn{box-shadow: 0 1px 3px rgb(0 155 187 / 16%), 0 1px 2px rgb(0 155 187 / 16%);}
+.md-btn:hover{box-shadow: 0 3px 9px rgb(0 155 187 / 32%), 0 3px 18px rgb(0 155 187 / 32%);}
+.md-btn.md-btn-flat.md-btn-flat-primary {float: right;}
+.md-btn-flat-primary:active, .md-btn-flat-primary:focus, .md-btn-flat-primary:hover {background: rgba(0,155,187,0.1);border-radius: 25px;}
+
+/*登入頁按鈕*/
+.md-btn-flat-primary, .md-btn-flat-primary.uk-active, .md-btn-flat-primary:active, .md-btn-flat-primary:focus, .md-btn-flat-primary:hover {color: rgba(0,155,187,1);}
+.md-btn-primary, .md-btn-primary.uk-active, .md-btn-primary:active, .md-btn-primary:focus, .md-btn-primary:hover {background: #59BBBC;border-radius: 30px;}
+
+
+/*記住帳號*/
+.icheckbox_md {border: 1px solid rgba(152,152,152,0.6);}
+.icheckbox_md.checked, .icheckbox_md.hover.checked {background: rgba(0,155,187,1);border: 2px solid rgba(0,155,187,1)!important;}
+.inline-label{color:#59BBBC;font-weight: bold;}

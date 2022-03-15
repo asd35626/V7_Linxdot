@@ -1,0 +1,49 @@
+/*背景*/
+body {background-color: #E8EBEB;padding-top: 0px;}
+a {color:#59BBBC;}
+a:hover,a:focus {color:#C52256;}
+#breadcrumbArea #breadcrumbs a {color:#59BBBC;}
+#breadcrumbArea #breadcrumbs a:hover, #breadcrumbArea #breadcrumbs a:focus {color:#C52256;}
+
+/*navbar*/
+#header_main{background-color: #59BBBC;height: 100px;border-radius: 0px 0px 50px 50px;z-index: 10;}
+#header_main .uk-navbar .uk-navbar-nav>li{position: relative;top: 12px;right: -24px;}
+#header_main .uk-navbar .uk-navbar-nav>li .uk-dropdown {border-radius: 20px;box-shadow: 0 10px 30px rgb(0 155 187 / 16%), 0 3px 6px rgb(0 155 187 / 16%);}
+.uk-dropdown>ul>li>a {text-align: center;}
+.uk-navbar-flip >ul>li:first-child{padding-top:6px;color: #59BBBC;font-weight: 500;}
+
+/*表單目錄*/
+#page_heading {position: relative;top: -40px;width: 100%;height: 70px;min-height: 70px;margin:0px 2.5%;border-radius: 35px;box-shadow: 0 10px 30px rgb(0 155 187 / 16%), 0 3px 6px rgb(0 155 187 / 16%);}
+#page_heading h1{display: inline-block;position: relative;top: -12px;font-weight:bold;color:#59BBBC;padding-right: 12px;border-right:#59BBBC 2px solid;}
+#page_heading.uk-active {box-shadow: 0 10px 30px rgb(0 155 187 / 16%), 0 3px 6px rgb(0 155 187 / 16%);}
+.page_heading_active #header_main {position: inherit;}
+#breadcrumbArea {display: inline-block;padding-left: 24px;}
+
+.heading_a {padding-left: 24px;font-weight:bold;color:#59BBBC;}
+.heading_reset {padding-left: 0px;}
+#page_content_inner {width: 95%;margin: auto;padding: 0px 24px 100px;}
+form {margin: 0px 0px 5px 0px;}
+.login_page{display: flex; align-items: center;}
+.md-card {border-radius: 25px 0px 25px 0px;box-shadow: 0 10px 30px rgb(0 155 187 / 16%), 0 3px 6px rgb(0 155 187 / 16%);}
+.md-card .md-card-content {margin-bottom: 24px;padding: 16px 24px;}
+
+/*搜尋*/
+.md-input-wrapper{color: #727272;}
+.md-input-filled>label, .md-input-focus>label ,.parsley-row>label {font-size: 14px;top: 0px;}
+.md-btn-primary, .md-btn-primary.uk-active, .md-btn-primary:active, .md-btn-primary:focus, .md-btn-primary:hover {background: #59BBBC;border-radius: 30px;float: right;margin: 8px 8px 0px 8px;}
+.md-btn-warning, .md-btn-warning.uk-active, .md-btn-warning:active, .md-btn-warning:focus, .md-btn-warning:hover {background: #939393;border-radius: 30px;float: right;margin: 8px 8px 0px 8px;}
+
+input:not([type]).md-input, input[type=color].md-input, input[type=date].md-input, input[type=datetime-local].md-input, input[type=datetime].md-input, input[type=email].md-input, input[type=month].md-input, input[type=number].md-input, input[type=password].md-input, input[type=search].md-input, input[type=tel].md-input, input[type=text].md-input, input[type=time].md-input, input[type=url].md-input, input[type=week].md-input, select.md-input, textarea.md-input
+{padding:20px 4px 4px 4px;}
+.uk-grid+.uk-grid, .uk-grid-margin, .uk-grid>*>.uk-panel+.uk-panel{margin-top:0px;}
+
+/*列表*/
+.uk-table{margin: 15px 0px;}
+.uk-table td {vertical-align: middle;}
+.uk-pagination>li.uk-active>a, .uk-pagination>li.uk-active>span {background: #59BBBC;}
+
+/*sidebar*/
+#sidebar_main{box-shadow: 0 10px 30px rgb(0 155 187 / 16%), 0 3px 6px rgb(0 155 187 / 16%);border: none;}
+#sidebar_main .sidebar_main_header{height: 120px;border-bottom:#59BBBC 2px solid;background-image: url(../img/sidebar_head_bg_w.png);}
+#sidebar_main .sidebar_main_header .sidebar_logo{height: 120px;line-height: 120px;}
+.sSidebar_hide.sidebar_logo_large>img{margin-top: 10px;}

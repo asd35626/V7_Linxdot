@@ -1,0 +1,191 @@
+{{-- 載入主要的版型 --}}
+@extends('layouts.master')
+
+{{-- 額外增加所需要的css檔案 --}}
+@section('extraCssArea')
+
+@endsection
+
+{{-- 增加所需要的Script; 將會放置在主板型的後面 --}}
+@section('scriptArea')
+
+@endsection
+
+
+{{-- 設定視窗的標題 --}}
+@section('title', $functionname)
+
+{{-- 設定內容的主標題區 --}}
+@section('pageTitle', $functionname)
+
+{{-- 設定內容的主標題區 --}}
+@section('breadcrumbArea')
+    <ul id="breadcrumbs">
+        <li><a href="/Default">Home</a></li>
+        <li><span>{!! $functionname !!}</span></li>
+    </ul>
+@endsection
+
+{{-- 設定內容 --}}
+@section('content')
+    <!-- search area start-->
+    <h4 class="heading_a uk-margin-bottom">Search</h4>
+    {!! Form::open(array('route' => $routePath.'.index','method'=>'GET', 'id'=> 'searchForm')) !!}
+        {{ Form::hidden('IfNewSearch', '', array('id' => 'IfNewSearch')) }}
+        {{ Form::hidden('IfSearch', '', array('id' => 'IfSearch')) }}
+        {{ Form::hidden('Page', '', array('id' => 'Page')) }}
+        {{ Form::hidden('excel', '', array('id' => 'excel')) }}
+        <div class="uk-grid uk-margin-medium-bottom" >
+            <div class="uk-width-medium-5-5 uk-row-first">
+                <div class="md-card">
+                    <div class="md-card-content">
+                        <div data-dynamic-fields="field_template_a" dynamic-fields-counter="0">
+                            <div class="uk-grid uk-grid-medium form_section" data-uk-grid-match="">
+                                <div class="uk-width-10-10">
+                                    <!-- uk-grid start -->
+                                    <div class="uk-grid">
+                                        <div class="uk-width-1-3">
+                                            {!! $searchFields['S/N']['completeField'] !!}
+                                        </div>
+                                        <div class="uk-width-1-3">
+                                            {!! $searchFields['Mac']['completeField'] !!}
+                                        </div>
+                                        <div class="uk-width-1-3">
+                                            {!! $searchFields['AnimalName']['completeField'] !!}
+                                        </div>
+                                    </div>
+                                    <div class="uk-grid">
+                                        <div class="uk-width-1-3">
+                                            {!! $searchFields['IsVerify']['completeField'] !!}
+                                        </div>
+                                        <div class="uk-width-1-3">
+                                            {!! $searchFields['IfRegister']['completeField'] !!}
+                                        </div>
+                                    </div>
+                                    <!-- uk-grid end -->
+                                </div>
+                                <div class="uk-width-10-10" style="margin-top:20px;" >
+                                    <div class="uk-width-1-1">
+                                        <div onclick="search();" class="md-btn md-btn-primary">Inquire</div>
+                                        @if($IfSearch == '1') 
+                                            <div onclick="resetForm();" class="md-btn md-btn-warning">Clear inquiry</div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script id="field_template_a" type="text/x-handlebars-template">
+                            {{--<hr class="form_hr">--}}
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {!! Form::close() !!}
+    <!-- search area end-->
+
+    <!-- table start -->
+    <h4 class="heading_a uk-margin-bottom">List</h4>
+    <div class="md-card uk-margin-medium-bottom">
+        <div class="md-card-content">
+            <div class="uk-overflow-container">
+                <div class="uk-width-1-10" style="float:right">
+                    <button type="submit" onclick="exportExcel()" class="md-btn md-btn-primary">Export</button>
+                </div>
+                {{-- <div class="uk-width-1-10" style="float:right">
+                    <button type="submit" onclick="window.location.href='{{ route( $routePath.'.create') }}';" class="md-btn md-btn-primary">Add</button>
+                </div> --}}
+            </div>
+            <div class="uk-overflow-container">
+                <table id="grid-basic" class="uk-table uk-table-nowrap table_check">
+                    <thead>
+                        <tr>
+                            <th class="uk-width-1-10 uk-text-small">s/n</th>
+                            <th class="uk-width-1-10 uk-text-small">lan mac</th>
+                            <th class="uk-width-1-10 uk-text-small">animal name</th>
+                            <th class="uk-width-2-10 uk-text-small">issue date</th>
+                            <th class="uk-width-1-10 uk-text-small">verify status</th>
+                            <th class="uk-width-2-10 uk-text-small">register status</th>
+                            <th class="uk-width-1-10 uk-text-small">edit</th>
+                            {{-- <th class="uk-width-1-10 uk-text-center uk-text-small">功能</th> --}}
+                        </tr>
+                    </thead>
+                    @if($data->count() > 0)
+                        @foreach ($data as $object)
+                            <tr>
+                                <td class="uk-text-small">{{ $object->DeviceSN }}</td>
+                                <td class="uk-text-small">{{ $object->MacAddress }}</td>
+                                <td class="uk-text-small">{{ $object->AnimalName }}</td>
+                                <td class="uk-text-small">{{ $object->IssueDate }}</td>
+                                <td class="uk-text-small">
+                                    @if($object->IsVerify == 1) 
+                                        {{ $object->IfVerifyDate }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
+                                <td class="uk-text-small">
+                                    @if($object->IfRegister == 1) 
+                                        Y
+                                    @else
+                                        @if($object->IfKey == 0) 
+                                            @if($object->IfAnimal == 1) 
+                                                No Key
+                                            @else
+                                                N/A
+                                            @endif
+                                        @else
+                                            No Animal
+                                        @endif
+                                    @endif
+                                </td>
+                                <td class="uk-text-center uk-text-small">
+                                    {{-- <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}"><i class="md-icon material-icons">&#xE254;</i></a>
+                                    {!! Form::open(['id' => 'formDeleteAction'.$i , 'method' => 'DELETE','route' => [ $routePath.'.destroy', $object->$primaryKey],'style'=>'display:inline']  ) !!}
+                                        <a href="javascript:if(confirm('Are you sure to delete this datum?'))$('{{ '#formDeleteAction'.$i }}').submit();"><i class="md-icon material-icons">&#xE872;</i></a>
+                                    {!! Form::close() !!} --}}
+                                </td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <td colspan="500" style="text-align: center;">查無資料</td>
+                    @endif
+                </table>
+            </div>
+            @include('Pagination')
+        </div>
+    </div>
+    <!-- table end -->
+
+    <script>
+        function search() {
+            $('#IfSearch').val('1');
+            $('#IfNewSearch').val('1');
+            $('#Page').val('1');
+            $('#searchForm').submit();
+        }
+
+        function resetForm() {
+            $('#searchForm input').val('');
+            $('#searchForm select').val('');
+            $('#IfSearch').val('0');
+            $('#IfNewSearch').val('0');
+            $('#Page').val('1');
+            $('#searchForm').submit();
+        }
+
+        function exportExcel() {
+            $('#excel').val('1');
+            $('#IfSearch').val('0');
+            $('#IfNewSearch').val('0');
+            $('#Page').val('1');
+            $('#searchForm').submit();
+        }
+
+        function gotoPage(pageNo) {
+            $('#Page').val(pageNo);
+            $('#IfNewSearch').val('0');
+            $('#searchForm').submit();
+        } 
+    </script>    
+@endsection

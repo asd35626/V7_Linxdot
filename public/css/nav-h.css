@@ -1,0 +1,99 @@
+/*
+Author: Craig Erskine
+Description: Dynamic Menu System - Horizontal/Vertical
+*/
+
+ul#navmenu-h { margin: 0; padding: 0; list-style: none; position: relative; z-index:9999; }
+
+ul#navmenu-h ul {
+ width: 160px; /* Sub Menu Width */
+ list-style: none;
+ display: none;
+ position: absolute;
+ top: 100%;
+ left: 0px;
+ -webkit-box-shadow: 0px 3px 10px #999999;
+ -moz-box-shadow: 0px 3px 10px #999999;
+  box-shadow: 0px 3px 10px #999999;
+  padding:0px;
+}
+
+ul#navmenu-h ul ul,ul#navmenu-h ul ul ul { top: 0; left: 100%; }
+
+ul#navmenu-h li { float: left; display: inline; position: relative; z-index:9999;  }
+ul#navmenu-h ul li { width: 100%; display: block; text-align:left; }
+
+/* Root Menu */
+ul#navmenu-h a {
+ border-right: 0px solid #bad26a;
+ border-bottom: 0px solid #bad26a;
+ border-left: 0px solid #bad26a;
+ text-align:center;
+ padding: 0px 10px 0px 10px;
+ min-width:80px;
+ float: left;
+ display: block;
+ background: #2f2f2f;
+ color: #FFFFFF;
+ font-size:10pt;
+ text-decoration: none;
+ line-height:35px;  
+ font-family: 'Microsoft JhengHei', 'Microsoft YaHei', 'Arial Unicode MS', '·L³n¥¿¶ÂÅé', '·L³n¶®¶ÂÅé';
+ /* 
+ background-image: -webkit-gradient(linear, left top, left bottom, color-stop( 0%, #6e6e6e),color-stop(49%, #4e4e4e), color-stop(50%, #4e4e4e),  to( #252525));
+ background-image: -webkit-linear-gradient(top, #6e6e6e 0%, #4e4e4e 49%,#4e4e4e 50%, #252525 100%);
+ */
+ 
+}
+
+    ul#navmenu-h ul li a {
+
+        text-align:left; 
+        font-size:10pt;
+    }
+
+/* Root Menu Hover Persistence */
+ul#navmenu-h a:hover,ul#navmenu-h li:hover a,ul#navmenu-h li.iehover a {
+ background: RGBA(51, 51, 204, 0.8);
+ color: #FFF;
+}
+
+/* 2nd Menu */
+ul#navmenu-h li:hover li a,ul#navmenu-h li.iehover li a {
+ float: none;
+ background: RGBA(51, 51, 204, 0.8);
+ border-left: 0px solid #31a9eb;
+ border-right: 0px solid #31a9eb;
+ border-bottom: 1px solid #FFFFFF;
+ color: #FFFFFF;
+}
+
+/* 2nd Menu Hover Persistence */
+ul#navmenu-h li:hover li a:hover,ul#navmenu-h li:hover li:hover a,ul#navmenu-h li.iehover li a:hover,ul#navmenu-h li.iehover li.iehover a {
+ background: #333;
+}
+
+/* 3rd Menu */
+ul#navmenu-h li:hover li:hover li a,ul#navmenu-h li.iehover li.iehover li a {
+ background: #333;
+}
+
+/* 3rd Menu Hover Persistence */
+ul#navmenu-h li:hover li:hover li a:hover,ul#navmenu-h li:hover li:hover li:hover a,ul#navmenu-h li.iehover li.iehover li a:hover,ul#navmenu-h li.iehover li.iehover li.iehover a {
+ background: #333;
+}
+
+/* 4th Menu */
+ul#navmenu-h li:hover li:hover li:hover li a,ul#navmenu-h li.iehover li.iehover li.iehover li a {
+ background: #333;
+}
+
+/* 4th Menu Hover */
+ul#navmenu-h li:hover li:hover li:hover li a:hover,ul#navmenu-h li.iehover li.iehover li.iehover li a:hover {
+ background: #333;
+}
+
+/* Hover Function - Do Not Move */
+ul#navmenu-h li:hover ul ul,ul#navmenu-h li:hover ul ul ul,ul#navmenu-h li.iehover ul ul,ul#navmenu-h li.iehover ul ul ul { display: none; }
+ul#navmenu-h li:hover ul,ul#navmenu-h ul li:hover ul,ul#navmenu-h ul ul li:hover ul,ul#navmenu-h li.iehover ul,ul#navmenu-h ul li.iehover ul,ul#navmenu-h ul ul li.iehover ul { display: block; }
+

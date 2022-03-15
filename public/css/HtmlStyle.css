@@ -1,0 +1,281 @@
+
+/* Font Properties */
+
+body, div, table, tr, td, li, textarea, input, select, option {
+  font-family: 'Microsoft JhengHei', 'Microsoft YaHei', 'Arial Unicode MS', '·L³n¥¿¶ÂÅé', '·L³n¶®¶ÂÅé';
+}
+
+
+body 
+{
+ text-align:left;  
+ font-family: 'Microsoft JhengHei', 'Microsoft YaHei', 'Arial Unicode MS', '·L³n¥¿¶ÂÅé', '·L³n¶®¶ÂÅé';
+    
+}
+
+
+.foldertextb       
+{ 
+font-family: Verdana; 
+font-size : 12px;
+line-height: 11pt;
+}
+
+.foldertexts       
+{ 
+font-family: Verdana; 
+font-size : 9px;
+line-height: 7pt;
+}
+
+.smalltext       
+{ 
+font-family: Verdana; 
+font-size : 12px;
+}
+
+.mediumtext      
+{ 
+font-family: Verdana; 
+font-size : 12px;
+}
+
+.largetext       
+{ 
+font-family: Verdana; 
+font-size : 13px;
+}
+
+.nametext-c       
+{ 
+font-family: Verdana;
+font-size : 21px;
+font-weight: bold;
+}
+
+.nametext-e       
+{ 
+font-family: Georgia;
+font-size : 19px;
+}
+
+
+/* Link Properties */
+
+
+a.yellowlink                         { text-decoration: underline; color: #d03f60; font-family: Arial Unicode MS  }  
+a.yellowlink:link                    { text-decoration: underline; color: #d03f60; font-family: Arial Unicode MS }  
+a.yellowlink:visited                 { text-decoration: underline; color: #d03f60; font-family: Arial Unicode MS }  
+a.yellowlink:active                  { text-decoration: underline; color: #d03f60; font-family: Arial Unicode MS }  
+a.yellowlink:hover		       { text-decoration: underline; color: #982a43; font-family: Arial Unicode MS }
+
+
+a                         { text-decoration: underline; color: #003399; font-family: Verdana }  
+a:link                    { text-decoration: underline; color: #003399; font-family: Verdana }  
+a:visited                 { text-decoration: underline; color: #003366; font-family: Verdana }  
+a:active                  { text-decoration: underline; color: #3366CC; font-family: Verdana }  
+a:hover					  { text-decoration: underline; color: #3366CC; font-family: Verdana }
+
+a.white                         { text-decoration: none; color: #FFFFFF; font-family: Verdana }  
+a.white:link                    { text-decoration: none; color: #FFFFFF; font-family: Verdana }  
+a.white:visited                 { text-decoration: none; color: #FFFFFF; font-family: Verdana }  
+a.white:active                  { text-decoration: none; color: #FFFFFF; font-family: Verdana }  
+a.white:hover					  { text-decoration: underline; color: #FFFFFF; font-family: Verdana }
+
+a.second                  { text-decoration: none; color: #003399; font-family: Verdana }  
+a:link                    { text-decoration: none; color: #003399; font-family: Verdana }  
+a:visited                 { text-decoration: none; color: #003366; font-family: Verdana }  
+a:active                  { text-decoration: none; color: #3366CC; font-family: Verdana }  
+a:hover					  { text-decoration: none; color: #3366CC; font-family: Verdana }
+
+a.whitelink                { text-decoration: underline; color: #CCCCCC; font-family: Verdana }  
+a.whitelink:link           { text-decoration: underline; color: #CCCCCC; font-family: Verdana }  
+a.whitelink:visited        { text-decoration: underline; color: #CCCCCC; font-family: Verdana }  
+a.whitelink:active         { text-decoration: underline; color: #3366CC; font-family: Verdana }  
+a.whitelink:hover	      { text-decoration: underline; color: #3366CC; font-family: Verdana }
+
+a.bforumlink               { text-decoration: underline; font-weight: bold; font-size: 12px; color: #999999; font-family: Verdana }
+a.bforumlink:link          { text-decoration: underline; font-weight: bold; font-size: 12px; color: #999999; font-family: Verdana }
+a.bforumlink:visited       { text-decoration: underline; font-weight: bold; font-size: 12px; color: #999999; font-family: Verdana }
+a.bforumlink:active        { text-decoration: underline; font-weight: bold; font-size: 12px; color: #FFFFFF; font-family: Verdana }
+a.bforumlink:hover         { text-decoration: underline; font-size: 12px; font-weight: bold; color: #FFFFFF; font-family: Verdana }  
+  
+a.headerlink               { text-decoration: underline; font-size: 12px; color: #CCCCCC; font-family: Verdana }   
+a.headerlink:link          { text-decoration: underline; font-size: 12px; color: #CCCCCC; font-family: Verdana }
+a.headerlink:visited       { text-decoration: underline; font-size: 12px; color: #CCCCCC; font-family: Verdana }
+a.headerlink:active        { text-decoration: underline; font-size: 12px; color: #CCCCCC; font-family: Verdana }
+a.headerlink:hover         { text-decoration: underline; font-size: 12px; color: #CCCCCC; font-family: Verdana }     
+  
+a.funclink               { text-decoration: underline; font-size: 12px; color: #003366; font-family: Verdana }   
+a.funclink:link          { text-decoration: underline; font-size: 12px; color: #003366; font-family: Verdana }
+a.funclink:visited       { text-decoration: underline; font-size: 12px; color: #333366; font-family: Verdana }
+a.funclink:active        { text-decoration: underline; font-size: 12px; color: #3366CC; font-family: Verdana }
+a.funclink:hover         { text-decoration: underline; font-size: 12px; color: #3366CC; font-family: Verdana }  
+
+.searchbox {border-top: 1px solid #999999; border-left: 1px solid #999999; border-bottom: 1px solid #999999; border-right: 1px solid #999999; font-family: "Verdana", "Arial"; line-height: 13pt; font-size: 12px; background: #EEEEEE; color: #000000; height:22px;}
+.loginhbox {border-top: 1px solid #D9D9D9; border-left: 1px solid #D9D9D9; border-bottom: 1px solid #D9D9D9; border-right: 1px solid #D9D9D9; font-family: "Verdana", "Arial"; line-height: 13pt; font-size: 12px; background: #EEEEEE; color: #000000; height:22px;}
+
+#page { margin: 0 auto; width: 300px; text-align: left; position: relative; }
+
+#contentArea {
+ 
+  padding-left:20px; 
+
+}
+
+.functionTitle {
+
+    font-size: 16pt;
+	line-height: 18pt;
+	color: #000000;
+	text-decoration: none;
+	margin:10px 5px 5px 5px;
+
+
+
+}
+
+
+ .contentArea 
+ {
+  text-align:left;      
+     
+ } 
+ 
+.contentArea td
+{
+    text-align:left;
+    
+}
+
+.tabletitle { font-size: 13px;  COLOR: #000000;TEXT-DECORATION: none; font-family:Arial, Verdana; padding:2px 2px 2px 2px; }
+.tablecoltitle { font-size: 12px;  COLOR: #000000;TEXT-DECORATION: none; font-family:Arial, Verdana; padding:2px 2px 2px 2px; text-align:left;   }
+.tabletext { font-size: 12px;  COLOR: #000000;TEXT-DECORATION: none; font-family:Arial, Verdana;}
+
+.tabletext td 
+{
+    text-align:left;  
+    padding:5px 5px 5px 5px; 
+       
+    
+}
+
+.tableTopButtonArea 
+{
+  text-align:left;  
+  padding-left:10px;  
+    
+}
+
+.tableContent 
+{
+ 
+      text-align:left;  
+  padding-left:10px;  
+  padding-right:10px; 
+  padding-top:10px;
+  padding-bottom:10px;   
+    
+}
+
+.tableContent table 
+{
+  background-color:#97A5AF;  
+   
+}     
+ 
+ .tableContent .tablecoltitle
+ {
+    background-color:#A7D5FF;
+ }   
+ 
+  .tableContent .tablecolcontent
+ {
+    background-color:#ffffff;
+ }  
+ 
+ .tableContent .tablecolcontent td
+ {
+     padding:5px 5px 5px 5px; 
+ }  
+ 
+ .SubListTable 
+{
+    font-size:10pt;
+    font-family: Calibri, Arial Unicode MS;      
+    background-color:#333333;    
+    
+}
+
+.SubListTable .SubListTable_Field 
+{
+ 
+    background-color:#731a3e;
+    color:#FFFFFF; 
+    padding:2px 2px 2px 2px;  
+    
+}
+
+.SubListTable .SubListTable_Data 
+{
+ 
+    background-color:#FFFFFF;
+    color:#000000; 
+    padding:2px 2px 2px 2px;  
+    
+}
+
+.SubListTable .SubListTable_Data:hover
+{
+ 
+    background-color:#ABABAB;
+    color:#000000; 
+    padding:2px 2px 2px 2px;  
+    
+}
+
+.SubListTable .SubListTable_Data_DELETE
+{
+ 
+    background-color:#FFCCCC;
+    color:#000000; 
+    padding:2px 2px 2px 2px;  
+    
+}
+
+    .menuArea {
+        -webkit-box-shadow: 0px 0px 3px #333333;
+        -moz-box-shadow: 0px 0px 3px #333333;
+        box-shadow: 0px 0px 3px #333333;
+        background: #2f2f2f;
+        height:35px;
+        /*
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop( 0%, #6e6e6e),color-stop(49%, #4e4e4e), color-stop(50%, #4e4e4e),  to( #252525));
+        background-image: -webkit-linear-gradient(top, #6e6e6e 0%, #4e4e4e 49%,#4e4e4e 50%, #252525 100%); 
+        */
+    }
+
+#userProfile {
+
+    visibility:visible; font-size:10pt; float:right; margin-right:20px;color:#fff;  
+    line-height:35px;
+}
+
+#userProfile a:link, #userProfile a:visited {
+
+    color:#fff;  
+    text-decoration:none;
+
+}
+
+#userProfile a:hover {
+
+    color:#FFFF00;
+}
+
+.clear {
+
+    clear:both;   
+
+}
+

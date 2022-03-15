@@ -1,0 +1,48 @@
+#tinmce {
+	padding: 40px 40px 40px 40px;
+    	font-size: 12pt;
+    	line-height: 28px;
+    	color: #333;
+    	width: 100%;
+}
+
+.grayArea{
+	width: 90%;
+    	margin: 10px auto 10px auto;
+    	padding: 5%;
+    	background-color: #dedede;
+    	border-radius: 10px;
+}
+
+h3.colorOrange.center{
+    	color: #ff7f04;
+    	width: 50%;
+    	margin: 0px auto 0px auto;
+}
+
+.breakLine40{
+height: 40px;
+    width: 100%;
+}
+
+.cafeSource{
+	width: 50%;
+    margin: 0px auto 0px auto;
+}
+
+.subCategory{
+	    float: left;
+    margin: 5px 10px 5px 0px;
+    padding: 10px 15px 5px 15px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #666;
+    border-radius: 5px;
+    line-height: 16px;
+}
+
+.dividDashedLine{
+height: 30px;
+    width: 100%;
+    border-bottom: 1px #dedede dashed;
+}
