@@ -59,8 +59,8 @@ class HotspotsController extends Controller
                 'type' => 'select',
                 'selectLists' => [
                     '' => 'Choose',
-                    '0' => '0',
-                    '1' => '1'
+                    '0' => 'No',
+                    '1' => 'Yes'
                 ],
                 'value' => '1',
                 'class' => 'md-input label-fixed',
@@ -72,8 +72,8 @@ class HotspotsController extends Controller
                 'type' => 'select',
                 'selectLists' => [
                     '' => 'Choose',
-                    '0' => '0',
-                    '1' => '1'
+                    '0' => 'No',
+                    '1' => 'Yes'
                 ],
                 'value' => '1',
                 'class' => 'md-input label-fixed',
@@ -181,7 +181,7 @@ class HotspotsController extends Controller
 
     public function index(Request $request)
     {
-        $pageNumEachPage = 50;                              // 每頁的基本資料量
+        $pageNumEachPage = 100;                             // 每頁的基本資料量
         $pageNo = (int) $request->input('Page', '1');       // 目前的頁碼
         $IsNewSearch = $request->input('IfNewSearch', '');  // 是否為新開始搜尋
         $IfSearch = $request->input('IfSearch', '');        // 是否為搜尋
@@ -271,10 +271,12 @@ class HotspotsController extends Controller
                         $report->DeviceSN,
                         $report->MacAddress,
                         $report->AnimalName,
-                        $report->IssueDate,
+                        Carbon::parse($report->IssueDate)->format('Y-m-d H:i:s'),
+                        // $report->IssueDate,
                     );
                     if($report->IsVerify == 1){
-                        $thisRecord[] = $report->IfVerifyDate;
+                        Carbon::parse($report->IfVerifyDate)->format('Y-m-d H:i:s');
+                        // $thisRecord[] = $report->IfVerifyDate;
                     }else{
                         $thisRecord[] = '';
                     }

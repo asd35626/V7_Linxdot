@@ -218,22 +218,27 @@ class GenerateData {
         $Creater = '';
         // dd($MID);
 
-        // 先找DimMember
-        $Creaters = DimMember::select('RealName')
-                            ->where('IfValid', 1)
-                            ->where('IfDelete',0)
-                            ->where('MID',$MID);
+        // // 先找DimMember
+        // $Creaters = DimMember::select('RealName')
+        //                     ->where('IfValid', 1)
+        //                     ->where('IfDelete',0)
+        //                     ->where('MID',$MID);
         
-        // 如果有就取出名字，沒有就檢查DimUser
-        if($Creaters->count() != 0){
-            $Creater = $Creaters->first()->RealName;
-            // dd($Creater->first()->RealName);  
-        }else{
-            $Creaters = DimUser::select('RealName')
+        // // 如果有就取出名字，沒有就檢查DimUser
+        // if($Creaters->count() != 0){
+        //     $Creater = $Creaters->first()->RealName;
+        //     // dd($Creater->first()->RealName);  
+        // }else{
+        //     $Creaters = DimUser::select('RealName')
+        //                     ->where('IfValid', 1)
+        //                     ->where('IfDelete',0)
+        //                     ->where('Id',$MID);
+        // }
+
+        $Creaters = DimUser::select('RealName')
                             ->where('IfValid', 1)
                             ->where('IfDelete',0)
                             ->where('Id',$MID);
-        }
 
         // 如果DimUser有就取出RealName，沒有就預設文字
         if($Creaters->count() != 0){

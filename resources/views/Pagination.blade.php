@@ -1,4 +1,4 @@
-<div>Current page：{{ $data->currentPage() }} Total numbers：{{ $data->total() }}</div>
+<div>Current page：{{ $data->currentPage() }} Total Pages：{{ $data->lastPage() }} Total numbers：{{ $data->total() }}</div>
 <ul class="uk-pagination uk-margin-medium-top">
     @if($data->currentPage() > 1)
         <li><a href="javascript:gotoPage('1');"><i class="uk-icon-angle-double-left"></i></a></li> 
