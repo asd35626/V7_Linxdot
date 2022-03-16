@@ -101,91 +101,78 @@ class UserProcessTicketsController extends Controller
         //dd($users->count());
         if ($count == 1) {
             $user = $users->first();
-            // 檢察權限
-            $str = $user->UserType;
-            $p = explode(",",env('Allowlogin'));
-            $OK = 0;
-            foreach ($p as $key => $value) {
-                if($str == $value){
-                    $OK = 1;
-                }
+            if($user->LoginFailTimes > 5){
+                $responseBody['message'] = '密碼錯誤次數過多，已被鎖定，無法登入';
+                return Response::json($responseBody, 200);
             }
-            // 如果權限OK，才進行登入
-            if($OK == 1){
-                if($user->LoginFailTimes > 2){
-                    $responseBody['status'] = 1;
-                    $responseBody['message'] = '密碼錯誤次數過多，已被鎖定，無法登入';
-                    return Response::json($responseBody, 200);
-                }
-                //get Key
-                $keys = Key::where('MemberNo', $memberNo)
-                            ->where('IfValid', 1)
-                            ->where('IfDelete', 0)
-                            ->orderBy('CreateDate', 'DESC');
-                //$responseBody['debug']=$keys->toSql();
-                
-                if($keys->count() > 0){
-                    $key = $keys->get()->first()->Key;
-                    $hash = $user->UserPassword.$key;
-                    //dd($key);
-                    if (Hash::check($hash, $password)) {
-                        $processTicket = $this->generateProcessTicket($user, $request);
-                        //登入成功將失敗次數歸零
-                        if($user->LoginFailTimes > 0){
-                            $update = [
-                                'LoginFailTimes' => 0,
-                            ];
-                            // dd($user->LoginFailTimes);
-                            DimUser::on('mysql2')->where('MemberNo', $memberNo)
-                                    ->where('IfValid', 1)
-                                    ->where('IfDelete', 0)->first()->update($update);
-                        }
-                        //toekn
-                        if ($processTicket) {
-                            $responseBody['status'] = 0;
-                            $responseBody['message'] = 'Login Successfully';
-                            $responseBody['userProcessTicket'] = $processTicket;
-                        }else{
-                            $responseBody['status'] = 1;
-                            $responseBody['message'] = '系統異常，無法通過驗證，請記錄您的操作步驟並聯絡管理人員處理';
-                        }
-                    } else {
-                        $errorMsg = 'Login Fail(Password not match)';
-                        //記錄登入失敗原因
-                        $this->loginFailLog($user, $request, $errorMsg);
-                        //更新密碼錯誤次數
-                        $times = $user->LoginFailTimes;
-                        $uid = $user->Id;
-                        DimUser::on('mysql2')->find($uid)->update(['LoginFailTimes' => ($times+1)]);
-                        //錯誤訊息
-                        $responseBody['status'] = 1;
-                        $responseBody['message'] = '密碼錯誤。';
-                        // $responseBody['hash'] = $hash;
-                        // $responseBody['key'] = $key;
+            //get Key
+            $keys = Key::where('MemberNo', $memberNo)
+                        ->where('IfValid', 1)
+                        ->where('IfDelete', 0)
+                        ->orderBy('CreateDate', 'DESC');
+            //$responseBody['debug']=$keys->toSql();
+            
+            if($keys->count() > 0){
+                $key = $keys->get()->first()->Key;
+                $hash = $user->UserPassword.$key;
+                //dd($key);
+                if (Hash::check($hash, $password)) {
+                    
+                    // The passwords match...
+
+                    $processTicket = $this->generateProcessTicket($user, $request);
+                    //登入成功將失敗次數歸零
+                    if($user->LoginFailTimes > 0){
+                        $update = [
+                            'LoginFailTimes' => 0,
+                        ];
+                        // dd($user->LoginFailTimes);
+                        DimUser::on('mysql2')->where('MemberNo', $memberNo)
+                                ->where('IfValid', 1)
+                                ->where('IfDelete', 0)->first()->update($update);
                     }
-                }else{
-                    $errorMsg = 'Login Fail(Key not found)';
-                    //找不到登入Key
+                    //toekn
+                    if ($processTicket) {
+                        $responseBody['status'] = 1;
+                        $responseBody['message'] = 'Login Successfully';
+                        $responseBody['userProcessTicket'] = $processTicket;
+                        $_SESSION['authToken'] = $processTicket;
+                    }else{
+                        $responseBody['status'] = 0;
+                        $responseBody['message'] = '系統異常，無法通過驗證，請記錄您的操作步驟並聯絡管理人員處理';
+                    }
+                } else {
+                    $errorMsg = 'Login Fail(Password not match)';
+                    //記錄登入失敗原因
                     $this->loginFailLog($user, $request, $errorMsg);
-                    $responseBody['status'] = 1;
-                    $responseBody['message'] = '未取得驗證金鑰';
+                    //更新密碼錯誤次數
+                    $times = $user->LoginFailTimes;
+                    $uid = $user->Id;
+                    DimUser::on('mysql2')->find($uid)->update(['LoginFailTimes' => ($times+1)]);
+                    //錯誤訊息
+                    $responseBody['status'] = 0;
+                    $responseBody['message'] = '密碼錯誤。';
+                    // $responseBody['hash'] = $hash;
+                    // $responseBody['key'] = $key;
                 }
             }else{
-                $responseBody['status'] = 1;
-                $responseBody['message'] = '權限不足';
-                return Response::json($responseBody, 200);
+                $errorMsg = 'Login Fail(Key not found)';
+                //找不到登入Key
+                $this->loginFailLog($user, $request, $errorMsg);
+                $responseBody['status'] = 0;
+                $responseBody['message'] = '未取得驗證金鑰';
             }
         } else if($count == 0){
             $errorMsg = 'Login Fail(MemberNo not found)';
             //記錄登入失敗原因
             $this->loginFailLog(null, $request, $errorMsg);
-            $responseBody['status'] = 1;
+            $responseBody['status'] = 0;
             $responseBody['message'] = '帳號不存在。';
         } else {
             $errorMsg = 'Login Fail(MemberNo confilict)';
             //多個重複的帳號
             $this->loginFailLog(null, $request, $errorMsg);
-            $responseBody['status'] = 1;
+            $responseBody['status'] = 0;
             $responseBody['message'] = '帳號狀態異常，請連路管理人員。';
         }
 
@@ -196,9 +183,9 @@ class UserProcessTicketsController extends Controller
     public function destroy(Request $request,$id)
     {
         $responseBody = array(
-                'status' => 0,
-                'message' => 'Unknown Error',
-            );
+            'status' => 0,
+            'message' => 'Unknown Error',
+        );
 
         //Token
         $userProcessTickets = UserProcessTicket::where('ProcessTicketId', $id);
@@ -209,10 +196,9 @@ class UserProcessTicketsController extends Controller
 
             return Response::json($responseBody, 404);
         }
-
         $count = $userProcessTickets->count();
 
-        if ($count == 1) {
+        if ($count > 0) {
             $update = [
                 'IfLogout' => 1,
                 'LogoutIssue' => 'Logout Successfully',
@@ -220,6 +206,7 @@ class UserProcessTicketsController extends Controller
                 'LogoutDate' => Carbon::now('Asia/Taipei')->toDateTimeString(),
             ];
             UserProcessTicket::on('mysql2')->where('ProcessTicketId', $id)->update($update);
+            $_SESSION['authToken'] = null;
         }
 
         $responseBody['status'] = 1;
