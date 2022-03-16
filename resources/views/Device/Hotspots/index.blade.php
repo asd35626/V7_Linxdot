@@ -100,14 +100,13 @@
                 <table id="grid-basic" class="uk-table uk-table-nowrap table_check">
                     <thead>
                         <tr>
-                            <th class="uk-width-1-10 uk-text-small">s/n</th>
-                            <th class="uk-width-1-10 uk-text-small">lan mac</th>
-                            <th class="uk-width-1-10 uk-text-small">animal name</th>
-                            <th class="uk-width-2-10 uk-text-small">issue date</th>
+                            <th class="uk-width-2-10 uk-text-small">s/n</th>
+                            <th class="uk-width-2-10 uk-text-small">lan mac</th>
+                            <th class="uk-width-2-10 uk-text-small">animal name</th>
+                            <th class="uk-width-1-10 uk-text-small">issue date</th>
                             <th class="uk-width-1-10 uk-text-small">verify status</th>
-                            <th class="uk-width-2-10 uk-text-small">register status</th>
+                            <th class="uk-width-1-10 uk-text-small">register status</th>
                             <th class="uk-width-1-10 uk-text-small">edit</th>
-                            {{-- <th class="uk-width-1-10 uk-text-center uk-text-small">功能</th> --}}
                         </tr>
                     </thead>
                     @if($data->count() > 0)
