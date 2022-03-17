@@ -54,7 +54,7 @@ class UserProcessKeyController extends Controller
             }else if($users->count() == 0){
                 // 帳號不存在
                 $responseBody['status'] = 1;
-                $responseBody['message'] = 'Non-existant account';
+                $responseBody['message'] = 'Non-existent account';
             }else {
                 // 帳號狀態異常，拒絕存取。
                 $responseBody['status'] = 1;
