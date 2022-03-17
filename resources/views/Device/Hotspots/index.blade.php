@@ -34,7 +34,7 @@
         {{ Form::hidden('IfNewSearch', '', array('id' => 'IfNewSearch')) }}
         {{ Form::hidden('IfSearch', '', array('id' => 'IfSearch')) }}
         {{ Form::hidden('Page', '', array('id' => 'Page')) }}
-        {{ Form::hidden('excel', '', array('id' => 'excel')) }}
+        {{ Form::hidden('excel', '', array('id' => 'excel', 'value' => 0)) }}
         <div class="uk-grid uk-margin-medium-bottom" >
             <div class="uk-width-medium-5-5 uk-row-first">
                 <div class="md-card">
@@ -60,6 +60,22 @@
                                         </div>
                                         <div class="uk-width-1-3">
                                             {!! $searchFields['IfRegister']['completeField'] !!}
+                                        </div>
+                                    </div>
+                                    <div class="uk-grid">
+                                        <div class="uk-width-1-3">
+                                            {!! $searchFields['IssueDateFrom']['completeField'] !!}
+                                        </div>
+                                        <div class="uk-width-1-3">
+                                            {!! $searchFields['IssueDateTo']['completeField'] !!}
+                                        </div>
+                                    </div>
+                                    <div class="uk-grid">
+                                        <div class="uk-width-1-3">
+                                            {!! $searchFields['VerifyDateFrom']['completeField'] !!}
+                                        </div>
+                                        <div class="uk-width-1-3">
+                                            {!! $searchFields['VerifyDateTo']['completeField'] !!}
                                         </div>
                                     </div>
                                     <!-- uk-grid end -->
@@ -160,6 +176,7 @@
 
     <script>
         function search() {
+            $('#excel').val(0);
             $('#IfSearch').val('1');
             $('#IfNewSearch').val('1');
             $('#Page').val('1');
@@ -167,6 +184,7 @@
         }
 
         function resetForm() {
+            $('#excel').val(0);
             $('#searchForm input').val('');
             $('#searchForm select').val('');
             $('#IfSearch').val('0');
@@ -176,9 +194,9 @@
         }
 
         function exportExcel() {
-            $('#excel').val('1');
-            $('#IfSearch').val('0');
-            $('#IfNewSearch').val('0');
+            $('#excel').val(1);
+            $('#IfSearch').val('1');
+            $('#IfNewSearch').val('1');
             $('#Page').val('1');
             $('#searchForm').submit();
         }

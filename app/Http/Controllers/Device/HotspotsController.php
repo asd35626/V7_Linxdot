@@ -78,6 +78,58 @@ class HotspotsController extends Controller
                 'value' => '1',
                 'class' => 'md-input label-fixed',
             ],
+            'IssueDateFrom' => [
+                'name' => 'IssueDateFrom',
+                'id' => 'IssueDateFrom',
+                'label' => 'Issue Date From',
+                'type' => 'date',
+                'value' => '',
+                'extras' => [
+                    'placeholder' => '',
+                    'data-parsley-trigger' => 'change',
+                    'autocomplete' => 'off',
+                ],
+                'class' => 'md-input label-fixed',
+            ],
+            'IssueDateTo' => [
+                'name' => 'IssueDateTo',
+                'id' => 'IssueDateTo',
+                'label' => 'Issue Date To',
+                'type' => 'date',
+                'extras' => [
+                    'placeholder' => '',
+                    'data-parsley-trigger' => 'change',
+                    'autocomplete' => 'off',
+                ],
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'VerifyDateFrom' => [
+                'name' => 'VerifyDateFrom',
+                'id' => 'VerifyDateFrom',
+                'label' => 'Verify Date From',
+                'type' => 'date',
+                'value' => '',
+                'extras' => [
+                    'placeholder' => '',
+                    'data-parsley-trigger' => 'change',
+                    'autocomplete' => 'off',
+                ],
+                'class' => 'md-input label-fixed',
+            ],
+            'VerifyDateTo' => [
+                'name' => 'VerifyDateTo',
+                'id' => 'VerifyDateTo',
+                'label' => 'Verify Date To',
+                'type' => 'date',
+                'extras' => [
+                    'placeholder' => '',
+                    'data-parsley-trigger' => 'change',
+                    'autocomplete' => 'off',
+                ],
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
         ];
         return $fields;
     }
@@ -209,11 +261,16 @@ class HotspotsController extends Controller
             // 表示會需要參考搜尋的變數
             $searchArray = array(
                 'S/N' => $searchFields['S/N']['value'],
-                'Mac' => $searchFields['Mac']['value'],
+                'Mac' => str_replace("-",":",$searchFields['Mac']['value']),
                 'AnimalName' => $searchFields['AnimalName']['value'],
                 'IsVerify' => $searchFields['IsVerify']['value'],
                 'IfRegister' => $searchFields['IfRegister']['value'],
+                'IssueDateFrom' => $searchFields['IssueDateFrom']['value'],
+                'IssueDateTo' => $searchFields['IssueDateTo']['value'],
+                'VerifyDateFrom' => $searchFields['VerifyDateFrom']['value'],
+                'VerifyDateTo' => $searchFields['VerifyDateTo']['value'],
             );
+            
             $data= $data->where(function($query) use ($searchArray) {
                 if($searchArray['S/N'] != '') {
                     $query->where('DeviceSN', 'like', '%'.$searchArray['S/N'].'%' );
@@ -229,6 +286,18 @@ class HotspotsController extends Controller
                 }
                 if($searchArray['IfRegister'] != '') {
                     $query->where('IfRegister', $searchArray['IfRegister']);
+                }
+                if ($searchArray['IssueDateFrom'] != '') {
+                    $query->where('IssueDate', '>=', ($searchArray['IssueDateFrom'] . ' 00:00:00'));
+                }
+                if ($searchArray['IssueDateTo'] != '') {
+                    $query->where('IssueDate', '<=', ( $searchArray['IssueDateTo'] . ' 23:59:59'));
+                }
+                if ($searchArray['VerifyDateFrom'] != '') {
+                    $query->where('IfVerifyDate', '>=', ($searchArray['VerifyDateFrom'] . ' 00:00:00'));
+                }
+                if ($searchArray['VerifyDateTo'] != '') {
+                    $query->where('IfVerifyDate', '<=', ( $searchArray['VerifyDateTo'] . ' 23:59:59'));
                 }
             });
         }
@@ -275,7 +344,7 @@ class HotspotsController extends Controller
                         // $report->IssueDate,
                     );
                     if($report->IsVerify == 1){
-                        Carbon::parse($report->IfVerifyDate)->format('Y-m-d H:i:s');
+                        $thisRecord[] = Carbon::parse($report->IfVerifyDate)->format('Y-m-d H:i:s');
                         // $thisRecord[] = $report->IfVerifyDate;
                     }else{
                         $thisRecord[] = '';
