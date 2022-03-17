@@ -90,24 +90,36 @@ $(document).ready(function(e){
   function getKey(){
     var loginName = $('#loginName').val();
     var loginPassword = $('#loginPassword').val();
+    var authcode = $("#authcode").val();
+    // 檢查欄位不為空
+    if(loginName == ''){
+      alert('Please enter account');
+      return false;
+    }
+    if(loginPassword == ''){
+      alert('Please enter password');
+      return false;
+    }
+    if(authcode == ''){
+      alert('Please enter CAPTCHA number');
+      return false;
+    }
 
-    // console.log('loginName:'+$('#loginName').val());
-    // console.log('loginPassword:'+$('#loginPassword').val());
-    // console.log('try get key.....Start');
     $.ajax({
       type: "POST",
       url:"../api/v1/UserProcessKey",
       async: false,
       data:{
         'loginName' : loginName,
+        'authcode': authcode,
       },
       headers:{
        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
       success: function(response){
         if(response.status == 1){
-          // console.log('try get key.....Fail');
           alert(response.message);
+          ChangeCaptcha();
         }else{
           login(loginName, loginPassword, response.data);
         }
@@ -131,18 +143,7 @@ $(document).ready(function(e){
   }
 
   function login(loginName,loginPassword, keyName){
-    // console.log('try login.....Start');
-    // console.log('loginName:'+loginName);
-    // console.log('loginPassword:'+loginPassword);
-    // console.log('keyName:'+keyName);
-    var authcode = $("#authcode").val();
-    if(loginPassword == ''){
-      alert('請輸入密碼');
-      return false;
-    }
-
     var pwd = md5(loginPassword)+keyName;
-    // console.log('hash:'+bcrypt.hashSync(pwd));
     
     $.ajax({
       type: "POST",
@@ -151,11 +152,11 @@ $(document).ready(function(e){
       data:{
         loginName : loginName,
         loginPassword : bcrypt.hashSync(pwd),
-        authcode: authcode,
       },
       success: function(response){
-        if(response.status == 0){
+        if(response.status == 1){
           alert(response.message);
+          ChangeCaptcha();
         }else{
           Cookies.remove('authToken');
           Cookies.set('authToken', response.userProcessTicket, { expires: 3 });

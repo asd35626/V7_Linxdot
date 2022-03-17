@@ -19,8 +19,24 @@ class UserProcessKeyController extends Controller
             'status' => 0,
             'message' => '',
         );
+        // 步驟一：檢查驗證碼
 
-        // 步驟一：確認帳號
+        /** PHP 數字驗證 **/
+        if(isset($_REQUEST['authcode'])){
+            session_start();
+            //strtolower()小寫函數
+            if(strtolower($_REQUEST['authcode'])== $_SESSION['authcode']){
+                //pass
+            }else{
+                // 未通過圖形驗證
+                $responseBody['status'] = 1;
+                $responseBody['message'] = 'Invalid CAPTCHA number';
+                return Response::json($responseBody, 200);
+            }
+        }
+        /** PHP 數字驗證 **/
+
+        // 步驟二：確認帳號
         $memberNo = $request->has('loginName') ? $request->input('loginName') : '';
         
         if($memberNo == ''){
@@ -28,7 +44,7 @@ class UserProcessKeyController extends Controller
             $responseBody['message'] = 'Please provide data';
         } 
 
-        if ($responseBody['status'] == 0) {
+        if($responseBody['status'] == 0){
             $users = DimUser::where('MemberNo', $memberNo)
                             ->where('IfValid', 1)
                             ->where('IfDelete', 0);
@@ -36,15 +52,17 @@ class UserProcessKeyController extends Controller
             if($users->count() == 1){
                 //pass
             }else if($users->count() == 0){
+                // 帳號不存在
                 $responseBody['status'] = 1;
-                $responseBody['message'] = '帳號不存在';
+                $responseBody['message'] = 'Non-existant account';
             }else {
+                // 帳號狀態異常，拒絕存取。
                 $responseBody['status'] = 1;
-                $responseBody['message'] = '帳號狀態異常，拒絕存取。';
+                $responseBody['message'] = 'Exception account';
             }
         }
 
-        // 步驟二：刪除舊的key     
+        // 步驟三：刪除舊的key     
         if ($responseBody['status'] == 0) {
             $keys = Key::where('MemberNo', $memberNo)
                         ->where('IfValid', 1)
@@ -63,7 +81,7 @@ class UserProcessKeyController extends Controller
             }
         }
 
-        // 步驟三：產生新的key        
+        // 步驟四：產生新的key        
         if ($responseBody['status'] == 0) {
             $id = Uuid::generate(4);
             $check = Key::find($id);

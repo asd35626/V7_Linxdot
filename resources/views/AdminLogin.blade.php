@@ -26,7 +26,8 @@
         <div class="md-card" id="login_card">
             <div class="md-card-content large-padding" id="login_form">
                 <div class="login_heading">
-                    <div class="user_avatar"></div>
+                    <img class="logo_regular" src="/assets/img/logo-white.svg" alt="" height="" width="230"/>
+                    {{-- <div class="user_avatar"></div> --}}
                 </div>
                 <form>
                     <div class="md-input-wrapper md-input-filled">
