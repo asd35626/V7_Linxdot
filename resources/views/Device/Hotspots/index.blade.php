@@ -22,7 +22,7 @@
 @section('breadcrumbArea')
     <ul id="breadcrumbs">
         <li><a href="/Default">Home</a></li>
-        <li><span>{!! $functionname !!}</span></li>
+        <li><span>Device</span></li>
     </ul>
 @endsection
 
@@ -35,6 +35,8 @@
         {{ Form::hidden('IfSearch', '', array('id' => 'IfSearch')) }}
         {{ Form::hidden('Page', '', array('id' => 'Page')) }}
         {{ Form::hidden('excel', '', array('id' => 'excel', 'value' => 0)) }}
+        {{ Form::hidden('orderBy', '', array('id' => 'orderBy')) }}
+        {{ Form::hidden('isAsc', '', array('id' => 'isAsc')) }}
         <div class="uk-grid uk-margin-medium-bottom" >
             <div class="uk-width-medium-5-5 uk-row-first">
                 <div class="md-card">
@@ -116,11 +118,11 @@
                 <table id="grid-basic" class="uk-table uk-table-nowrap table_check">
                     <thead>
                         <tr>
-                            <th class="uk-width-2-10 uk-text-small">s/n</th>
-                            <th class="uk-width-2-10 uk-text-small">lan mac</th>
-                            <th class="uk-width-2-10 uk-text-small">animal name</th>
-                            <th class="uk-width-1-10 uk-text-small">issue date</th>
-                            <th class="uk-width-1-10 uk-text-small">verify status</th>
+                            {!! generateHTML('DeviceSN','s/n',$isAsc, $orderBy) !!}
+                            {!! generateHTML('MacAddress','lan mac',$isAsc, $orderBy) !!}
+                            {!! generateHTML('AnimalName','animal name',$isAsc, $orderBy) !!}
+                            {!! generateHTML('IssueDate','issue date',$isAsc, $orderBy) !!}
+                            {!! generateHTML('IfVerifyDate','verify status',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small">register status</th>
                             <th class="uk-width-1-10 uk-text-small">edit</th>
                         </tr>
@@ -205,6 +207,48 @@
             $('#Page').val(pageNo);
             $('#IfNewSearch').val('0');
             $('#searchForm').submit();
-        } 
-    </script>    
+        }
+
+        function orderBy(type){
+            $('#Page').val('1');
+            $('#excel').val(0);
+            $('#orderBy').val(type);
+            var a = $('#'+type);
+            if(a.length > 0){
+                // a[0].textContent == "keyboard_arrow_up"
+                if($('#isAsc').val() == '1'){
+                    $('#isAsc').val('0');
+                }else if($('#isAsc').val() == '0'){
+                    $('#isAsc').val('1');
+                }
+            }else{
+                $('#isAsc').val('1');
+            }
+              
+            $('#searchForm').submit();
+        }
+    </script>
+
+    <?php 
+        //產生列表的 title(id, 名稱, 排列方式, 當前排序欄位)
+        function generateHTML($rawId,$rawName,$isAsc,$orderBy){
+            $html = '<th class="uk-width-1-10 uk-text-small">
+                        <span onclick="orderBy(\''.$rawId.'\');" style="cursor: pointer;">';
+            $html .= $rawName;
+            $html .= '</span>';
+            //是否為當前排序
+            if($orderBy == $rawId){
+                $html .= '<i class="material-icons" id="'.$rawId.'">';
+                //顯示箭頭
+                if($isAsc){
+                    $html .= 'keyboard_arrow_down';
+                }else{
+                    $html .= 'keyboard_arrow_up';
+                }
+                $html .= '</i>';
+            }
+            $html .= '</th>';
+            return $html;
+        }
+    ?>
 @endsection

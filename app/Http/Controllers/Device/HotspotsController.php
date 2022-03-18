@@ -270,7 +270,7 @@ class HotspotsController extends Controller
                 'VerifyDateFrom' => $searchFields['VerifyDateFrom']['value'],
                 'VerifyDateTo' => $searchFields['VerifyDateTo']['value'],
             );
-            
+
             $data= $data->where(function($query) use ($searchArray) {
                 if($searchArray['S/N'] != '') {
                     $query->where('DeviceSN', 'like', '%'.$searchArray['S/N'].'%' );
