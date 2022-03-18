@@ -261,7 +261,7 @@ class HotspotsController extends Controller
             // 表示會需要參考搜尋的變數
             $searchArray = array(
                 'S/N' => $searchFields['S/N']['value'],
-                'Mac' => str_replace("-",":",$searchFields['Mac']['value']),
+                'Mac' => strtolower(str_replace("-",":",$searchFields['Mac']['value'])),
                 'AnimalName' => $searchFields['AnimalName']['value'],
                 'IsVerify' => $searchFields['IsVerify']['value'],
                 'IfRegister' => $searchFields['IfRegister']['value'],
@@ -301,7 +301,7 @@ class HotspotsController extends Controller
                 }
             });
         }
-        
+
         //排序
         if(isset($orderBy) && $orderBy != ''){
             if($isAsc == '1'){
