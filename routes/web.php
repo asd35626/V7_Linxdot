@@ -70,8 +70,10 @@ Route::group(['prefix' => 'System/UserSetting'],function () {
 
 //設備管理
 Route::group(['prefix' => 'Device'],function () {
-    //用戶型別管理
+    //
     Route::resource('Hotspots', 'Device\HotspotsController');
+    //excel上傳
+    Route::resource('Excel', 'Device\ExcelController');
 });
 //修改後台帳密碼(右上角的個人選單)
 Route::resource('/Profile/PasswordSetting', 'ProfilePasswordSettingController');
