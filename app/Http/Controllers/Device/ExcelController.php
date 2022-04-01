@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use Uuid;
 use Carbon\Carbon;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Maatwebsite\Excel\Facades\Excel;
 use App\V7Idea\WebLib;
 use App\V7Idea\GenerateData;
