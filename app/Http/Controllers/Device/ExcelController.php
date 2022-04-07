@@ -46,7 +46,7 @@ class ExcelController extends Controller
             $totle = 0;    // 總筆數
             $extension = $file->getClientOriginalExtension();                   // 副檔名
             $filename = $file->getClientOriginalName();                         // 原始檔名
-            $FilePath = 'Import_'.Carbon::now()->format('Y-m-d-H-i-s').'.xlsx'; // 儲存檔名
+            $FilePath = Carbon::now()->format('m-d-H-i').'.xlsx'; // 儲存檔名
             $tempPath = $file->getRealPath();                                   // 路徑
             $fileSize = $file->getSize();                                       // 檔案大小
 
