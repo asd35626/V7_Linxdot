@@ -46,14 +46,14 @@ class ExcelController extends Controller
             $totle = 0;    // 總筆數
             $extension = $file->getClientOriginalExtension();                   // 副檔名
             $filename = $file->getClientOriginalName();                         // 原始檔名
-            $FilePath = Carbon::now()->format('m-d-H-i').'.xlsx'; // 儲存檔名
+            $FilePath = 'Import_'.Carbon::now()->format('Y-m-d-H-i-s').'.xlsx'; // 儲存檔名
             $tempPath = $file->getRealPath();                                   // 路徑
             $fileSize = $file->getSize();                                       // 檔案大小
 
             $this->checkUploadedFileProperties($extension, $fileSize);          // 檢查副檔名及檔案大小
-            $location = storage_path('excel\upload\\');                         // 組存檔路徑
+            $location = storage_path('excel/upload');                           // 組存檔路徑
             $file->move($location, $FilePath);                                  // 把檔案存起來
-            $filepath = $location.$FilePath;                                    // 組檔案路徑
+            $filepath = $location.'/'.$FilePath;                                // 組檔案路徑
             $importData = Excel::toArray(new UsersImport, $filepath);           // 把資料轉成陣列
             // dd($location,count($importData),$importData);
             
