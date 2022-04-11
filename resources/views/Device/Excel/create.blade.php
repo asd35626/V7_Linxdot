@@ -41,7 +41,7 @@
 
     <script>
         function resetForm() {
-            location.href = '{{ route($routePath.'.index') }}';
+            location.href = '{{ route('Hotspots'.'.index') }}';
         }
     </script>    
 @endsection

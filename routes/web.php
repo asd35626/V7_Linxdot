@@ -75,5 +75,14 @@ Route::group(['prefix' => 'Device'],function () {
     //excel上傳
     Route::resource('Excel', 'Device\ExcelController');
 });
+
+//人員管理
+Route::group(['prefix' => 'Fulfillment'],function () {
+    // 物流商管理
+    Route::resource('Warehouse', 'Fulfillment\WarehouseController');
+    // 製造商管理
+    Route::resource('Manufacturer', 'Fulfillment\ManufacturerController');
+});
+
 //修改後台帳密碼(右上角的個人選單)
 Route::resource('/Profile/PasswordSetting', 'ProfilePasswordSettingController');
