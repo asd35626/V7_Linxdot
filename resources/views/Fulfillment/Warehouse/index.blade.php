@@ -75,7 +75,7 @@
 {{-- 設定內容 --}}
 @section('content')
     <!-- search area start-->
-    <h4 class="heading_a uk-margin-bottom">搜尋</h4>
+    <h4 class="heading_a uk-margin-bottom">Search</h4>
     {!! Form::open(array('route' => $routePath.'.index','method'=>'GET', 'id'=> 'searchForm')) !!}
         {{ Form::hidden('IfNewSearch', '', array('id' => 'IfNewSearch')) }}
         {{ Form::hidden('IfSearch', '', array('id' => 'IfSearch')) }}
@@ -99,9 +99,9 @@
                                 </div>
                                 <div class="uk-width-1-1" style="margin-top:20px;" >
                                     <div class="uk-width-1-1">
-                                        <div onclick="search();" class="md-btn md-btn-primary">查詢</div>
+                                        <div onclick="search();" class="md-btn md-btn-primary">Inquire</div>
                                         @if($IfSearch == '1') 
-                                            <div onclick="resetForm();" class="md-btn md-btn-warning">清除搜尋</div>
+                                            <div onclick="resetForm();" class="md-btn md-btn-warning">Clear inquiry</div>
                                         @endif
                                     </div>
                                 </div>
@@ -116,12 +116,12 @@
     <!-- search area end-->
     
     <!-- table start -->
-    <h4 class="heading_a uk-margin-bottom">列表</h4>
+    <h4 class="heading_a uk-margin-bottom">List</h4>
     <div class="md-card uk-margin-medium-bottom">
         <div class="md-card-content">
             <div class="uk-overflow-container">
                 <div class="uk-width-1-10" style="float:right">
-                    <button type="submit" onclick="window.location.href='{{ route( $routePath.'.create') }}';" class="md-btn md-btn-primary">新增</button>
+                    <button type="submit" onclick="window.location.href='{{ route( $routePath.'.create') }}';" class="md-btn md-btn-primary">Add</button>
                 </div>
             </div>
             
@@ -139,7 +139,7 @@
                             {!! generateHTML('CompanyName','Contact',$isAsc, $orderBy) !!}
                             {!! generateHTML('CompanyPhone','Contact Phone',$isAsc, $orderBy) !!}
                             {!! generateHTML('CompanyEmail','Contact Email',$isAsc, $orderBy) !!}
-                            {!! generateHTML('IfValid','啟用/停用',$isAsc, $orderBy) !!}
+                            {!! generateHTML('IfValid','Active/ Inactive',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-center uk-text-small">功能</th>
                         </tr>
                     </thead>
@@ -158,11 +158,11 @@
                                 <td class="uk-text-small">{{ isset($object->CompanyEmail) ? $object->CompanyEmail : '' }}</td>
                                 <td class="uk-text-small Status">
                                     @if($object->IfValid == 0) 
-                                        <span class="uk-badge uk-badge-danger">停用</span>
+                                        <span class="uk-badge uk-badge-danger">Inactive</span>
                                     @elseif($object->LoginFailTimes > 2)
                                         <span class="uk-badge uk-badge-danger" onclick="unlock('{{$object->Id}}')">鎖定</span>
                                     @else
-                                        <span class="uk-badge uk-badge-primary">啟用</span>
+                                        <span class="uk-badge uk-badge-primary">Active</span>
                                     @endif
                                 </td>
                                 <td class="uk-text-center uk-text-small">
