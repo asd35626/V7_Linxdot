@@ -22,7 +22,7 @@
 @section('breadcrumbArea')
     <ul id="breadcrumbs">
         <li><a href="/Default">Home</a></li>
-        <li><a href="/Device/Car">{!! $functionname !!}</a></li>
+        <li><a href="/Device/Hotspots">{!! $functionname !!}</a></li>
         <li><span>新增</span></li>
     </ul>
 @endsection
