@@ -125,7 +125,17 @@ class ExcelController extends Controller
                     
                     if($Hotspot->count() > 0){
                         // 重複的資料把IsVerify改成0，Memo資料重複，IsVerify修改為0
-                        DimHotspot::on('mysql2')->where('MacAddress',$data->MacAddress)->update(['IsVerify' => 0]);
+                        $update = [
+                            'IssueDate' => $data->IssueDate,
+                            'PalletId' => $data->PalletId,
+                            'CartonId' => $data->CartonId,
+                            'Firmware' => $data->Firmware,
+                            'IsVerify' => 0
+                        ]
+                        DimHotspot::on('mysql2')
+                                    ->where('MacAddress',$data->MacAddress)
+                                    ->where('DeviceSN',$data->DeviceSN)
+                                    ->update($update);
                         LinxdotExcelHotspotDetail::on('mysql2')
                                 ->where('id',$data->id)
                                 ->update(['IfCompletedImport' => 1,
