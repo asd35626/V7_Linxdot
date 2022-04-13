@@ -72,6 +72,8 @@ Route::group(['prefix' => 'System/UserSetting'],function () {
 Route::group(['prefix' => 'Device'],function () {
     //
     Route::resource('Hotspots', 'Device\HotspotsController');
+    //型號管理
+    Route::resource('ProductModel', 'Device\ProductModelController');
     //excel上傳
     Route::resource('Excel', 'Device\ExcelController');
 });

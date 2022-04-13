@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Device;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Controller;
-use App\Model\DimHotspot;
+use App\Model\DimProductModel;
 use Uuid;
 use Carbon\Carbon;
 use App\V7Idea\WebLib;
@@ -11,154 +11,99 @@ use App\V7Idea\GenerateData;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-class HotspotsController extends Controller
+class ProductModelController extends Controller
 {
     /// <summary>
     /// 檢查權限
     /// </summary>
     function __construct(){
-        WebLib::checkUserPermission('Hotspots');
+        WebLib::checkUserPermission('ProductModel');
     }
     // 設定blade目錄的位置
-    public static $viewPath = "Device.Hotspots";
+    public static $viewPath = "Device.ProductModel";
     
     // 設定route目錄的位置
-    public static $routePath = "Hotspots";
+    public static $routePath = "ProductModel";
 
     // 這個資料表的主要鍵值
-    public static $primaryKey = "CarId";
+    public static $primaryKey = "ModelID";
 
     // 設定功能名稱
-    public static $functionname = "Hotspots";
+    public static $functionname = "ProductModel";
 
     // 定義搜尋的欄位設定;
     public function defineSearchFields() {
         $fields = [ 
-            'S/N' =>  [
-                'name' => 'S/N',
-                'id' => 'S/N',
-                'label' => 'S/N',
+            'ModelNo' =>  [
+                'name' => 'ModelNo',
+                'id' => 'ModelNo',
+                'label' => 'ModelNo',
                 'type' => 'text',
                 'value' => '',
                 'class' => 'md-input label-fixed',
             ],
-            'Mac' =>  [
-                'name' => 'Mac',
-                'id' => 'Mac',
-                'label' => 'Mac',
+            'ModelName' =>  [
+                'name' => 'ModelName',
+                'id' => 'ModelName',
+                'label' => 'ModelName',
                 'type' => 'text',
                 'value' => '',
                 'class' => 'md-input label-fixed',
-            ],
-            'AnimalName' =>  [
-                'name' => 'AnimalName',
-                'id' => 'AnimalName',
-                'label' => 'Animal Name',
-                'type' => 'text',
-                'value' => '',
-                'class' => 'md-input label-fixed',
-            ],
-            'IsVerify' => [
-                'name' => 'IsVerify',
-                'id' => 'IsVerify',
-                'label' => 'IsVerify',
-                'type' => 'select',
-                'selectLists' => [
-                    '' => 'Choose',
-                    '0' => 'No',
-                    '1' => 'Yes'
-                ],
-                'value' => '1',
-                'class' => 'md-input label-fixed',
-            ],
-            'IfRegister' => [
-                'name' => 'IfRegister',
-                'id' => 'IfRegister',
-                'label' => 'IfRegister',
-                'type' => 'select',
-                'selectLists' => [
-                    '' => 'Choose',
-                    '0' => 'No',
-                    '1' => 'Yes'
-                ],
-                'value' => '1',
-                'class' => 'md-input label-fixed',
-            ],
-            'IssueDateFrom' => [
-                'name' => 'IssueDateFrom',
-                'id' => 'IssueDateFrom',
-                'label' => 'Issue Date From',
-                'type' => 'date',
-                'value' => '',
-                'extras' => [
-                    'placeholder' => '',
-                    'data-parsley-trigger' => 'change',
-                    'autocomplete' => 'off',
-                ],
-                'class' => 'md-input label-fixed',
-            ],
-            'IssueDateTo' => [
-                'name' => 'IssueDateTo',
-                'id' => 'IssueDateTo',
-                'label' => 'Issue Date To',
-                'type' => 'date',
-                'extras' => [
-                    'placeholder' => '',
-                    'data-parsley-trigger' => 'change',
-                    'autocomplete' => 'off',
-                ],
-                'value' => '',
-                'class' => 'md-input label-fixed',
-            ],
-            'VerifyDateFrom' => [
-                'name' => 'VerifyDateFrom',
-                'id' => 'VerifyDateFrom',
-                'label' => 'Verify Date From',
-                'type' => 'date',
-                'value' => '',
-                'extras' => [
-                    'placeholder' => '',
-                    'data-parsley-trigger' => 'change',
-                    'autocomplete' => 'off',
-                ],
-                'class' => 'md-input label-fixed',
-            ],
-            'VerifyDateTo' => [
-                'name' => 'VerifyDateTo',
-                'id' => 'VerifyDateTo',
-                'label' => 'Verify Date To',
-                'type' => 'date',
-                'extras' => [
-                    'placeholder' => '',
-                    'data-parsley-trigger' => 'change',
-                    'autocomplete' => 'off',
-                ],
-                'value' => '',
-                'class' => 'md-input label-fixed',
-            ],
+            ]
         ];
         return $fields;
     }
 
     public function defineFormFields() {
         $fields = [
-            'CarNumber' => [
-                'name' => 'CarNumber',
-                'id' => 'CarNumber',
-                'label' => '車牌',
+            'ModelNo' => [
+                'name' => 'ModelNo',
+                'id' => 'ModelNo',
+                'label' => 'ModelNo',
                 'type' => 'text',
                 'validation' => 'required',
                 'value' => '',
                 'class' => 'md-input label-fixed',
+                'extras' => ['required' => 'required']
+            ],
+            'ModelName' => [
+                'name' => 'ModelName',
+                'id' => 'ModelName',
+                'label' => 'ModelName',
+                'type' => 'text',
+                'validation' => 'required',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['required' => 'required']
+            ],
+            'ModelSpec' =>  [
+                'name' => 'ModelSpec',
+                'id' => 'ModelSpec',
+                'label' => 'ModelSpec',
+                'type' => 'simple_textarea',
+                'validation' => '',
+                'value' => '',
+                'extras' => [],
+                'class' => 'tinymce abel-fixed',
+            ],
+            'ModelInfo' =>  [
+                'name' => 'ModelInfo',
+                'id' => 'ModelInfo',
+                'label' => 'ModelInfo',
+                'type' => 'simple_textarea',
+                'validation' => '',
+                'value' => '',
+                'extras' => [],
+                'class' => 'tinymce abel-fixed',
             ],
             'IfValid' => [
                 'name' => 'IfValid',
                 'id' => 'IfValid',
-                'label' => '啟用/停用',
+                'label' => 'Active/ Inactive',
                 'type' => 'radio',
                 'selectLists' => [
-                    '0' => '停用',
-                    '1' => '啟用'
+                    '0' => 'Inactive',
+                    '1' => 'Active'
                 ],
                 'value' => '1',
                 'validation' => 'required',
@@ -167,9 +112,9 @@ class HotspotsController extends Controller
             'CreateBy'  => [
                 'name' => 'CreateBy',
                 'id' => 'CreateBy',
-                'label' => '資料建立者',
+                'label' => 'Created By',
                 'type' => 'text',
-                'value' => '系統自動產生',
+                'value' => 'Generated by System',
                 'validation' => '',
                 'class' => 'md-input label-fixed',
                 'extras' => ['disabled' => 'disabled']
@@ -177,10 +122,10 @@ class HotspotsController extends Controller
             'CreateDate' =>  [
                 'name' => 'CreateDate',
                 'id' => 'CreateDate',
-                'label' => '資料建立日期',
+                'label' => 'Created Date',
                 'type' => 'text',
                 'validation' => '',
-                'value' => '系統自動產生',
+                'value' => 'Generated by System',
                 'class' => 'md-input label-fixed',
                 'extras' => ['disabled' => 'disabled']
             ]
@@ -190,24 +135,54 @@ class HotspotsController extends Controller
 
     public function defineEditFormFields($data) {
         $fields = [
-            'CarNumber' => [
-                'name' => 'CarNumber',
-                'id' => 'CarNumber',
-                'label' => '車牌',
+            'ModelNo' => [
+                'name' => 'ModelNo',
+                'id' => 'ModelNo',
+                'label' => 'ModelNo',
                 'type' => 'text',
                 'validation' => 'required',
                 'value' => '',
                 'class' => 'md-input label-fixed',
-                'extras' => ['disabled' => 'disabled']
+                'extras' => ['required' => 'required']
+            ],
+            'ModelName' => [
+                'name' => 'ModelName',
+                'id' => 'ModelName',
+                'label' => 'ModelName',
+                'type' => 'text',
+                'validation' => 'required',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['required' => 'required']
+            ],
+            'ModelSpec' =>  [
+                'name' => 'ModelSpec',
+                'id' => 'ModelSpec',
+                'label' => 'ModelSpec',
+                'type' => 'simple_textarea',
+                'validation' => '',
+                'value' => '',
+                'extras' => [],
+                'class' => 'tinymce abel-fixed',
+            ],
+            'ModelInfo' =>  [
+                'name' => 'ModelInfo',
+                'id' => 'ModelInfo',
+                'label' => 'ModelInfo',
+                'type' => 'simple_textarea',
+                'validation' => '',
+                'value' => '',
+                'extras' => [],
+                'class' => 'tinymce abel-fixed',
             ],
             'IfValid' => [
                 'name' => 'IfValid',
                 'id' => 'IfValid',
-                'label' => '啟用/停用',
+                'label' => 'Active/ Inactive',
                 'type' => 'radio',
                 'selectLists' => [
-                    '0' => '停用',
-                    '1' => '啟用'
+                    '0' => 'Inactive',
+                    '1' => 'Active'
                 ],
                 'value' => '1',
                 'validation' => 'required',
@@ -216,9 +191,9 @@ class HotspotsController extends Controller
             'CreateBy'  => [
                 'name' => 'CreateBy',
                 'id' => 'CreateBy',
-                'label' => '資料建立者',
+                'label' => 'Created By',
                 'type' => 'text',
-                'value' => '系統自動產生',
+                'value' => 'Generated by System',
                 'validation' => '',
                 'class' => 'md-input label-fixed',
                 'extras' => ['disabled' => 'disabled']
@@ -226,10 +201,10 @@ class HotspotsController extends Controller
             'CreateDate' =>  [
                 'name' => 'CreateDate',
                 'id' => 'CreateDate',
-                'label' => '資料建立日期',
+                'label' => 'Created Date',
                 'type' => 'text',
                 'validation' => '',
-                'value' => '系統自動產生',
+                'value' => 'Generated by System',
                 'class' => 'md-input label-fixed',
                 'extras' => ['disabled' => 'disabled']
             ]
@@ -261,49 +236,21 @@ class HotspotsController extends Controller
             $pageNo = 1;
         }
 
-        $data = DimHotspot::where('IfDelete','0');
+        $data = DimProductModel::where('IfDelete','0');
 
         if ($IfSearch == '1') {
             // 表示會需要參考搜尋的變數
             $searchArray = array(
-                'S/N' => $searchFields['S/N']['value'],
-                'Mac' => strtolower(str_replace("-",":",$searchFields['Mac']['value'])),
-                'AnimalName' => $searchFields['AnimalName']['value'],
-                'IsVerify' => $searchFields['IsVerify']['value'],
-                'IfRegister' => $searchFields['IfRegister']['value'],
-                'IssueDateFrom' => $searchFields['IssueDateFrom']['value'],
-                'IssueDateTo' => $searchFields['IssueDateTo']['value'],
-                'VerifyDateFrom' => $searchFields['VerifyDateFrom']['value'],
-                'VerifyDateTo' => $searchFields['VerifyDateTo']['value'],
+                'ModelNo' => $searchFields['ModelNo']['value'],
+                'ModelName' => $searchFields['ModelName']['value']
             );
 
             $data= $data->where(function($query) use ($searchArray) {
-                if($searchArray['S/N'] != '') {
-                    $query->where('DeviceSN', 'like', '%'.$searchArray['S/N'].'%' );
+                if($searchArray['ModelNo'] != '') {
+                    $query->where('ModelNo', 'like', '%'.$searchArray['ModelNo'].'%' );
                 }
-                if($searchArray['Mac'] != '') {
-                    $query->where('MacAddress', 'like', '%'.$searchArray['Mac'].'%' );
-                }
-                if($searchArray['AnimalName'] != '') {
-                    $query->where('AnimalName', 'like', '%'.$searchArray['AnimalName'].'%' );
-                }
-                if($searchArray['IsVerify'] != '') {
-                    $query->where('IsVerify', $searchArray['IsVerify']);
-                }
-                if($searchArray['IfRegister'] != '') {
-                    $query->where('IfRegister', $searchArray['IfRegister']);
-                }
-                if ($searchArray['IssueDateFrom'] != '') {
-                    $query->where('IssueDate', '>=', ($searchArray['IssueDateFrom'] . ' 00:00:00'));
-                }
-                if ($searchArray['IssueDateTo'] != '') {
-                    $query->where('IssueDate', '<=', ( $searchArray['IssueDateTo'] . ' 23:59:59'));
-                }
-                if ($searchArray['VerifyDateFrom'] != '') {
-                    $query->where('IfVerifyDate', '>=', ($searchArray['VerifyDateFrom'] . ' 00:00:00'));
-                }
-                if ($searchArray['VerifyDateTo'] != '') {
-                    $query->where('IfVerifyDate', '<=', ( $searchArray['VerifyDateTo'] . ' 23:59:59'));
+                if($searchArray['ModelName'] != '') {
+                    $query->where('ModelName', 'like', '%'.$searchArray['ModelName'].'%' );
                 }
             });
         }
@@ -319,75 +266,7 @@ class HotspotsController extends Controller
             $data = $data->orderBy('CreateDate');
         }
 
-        // dd($data);
-        if ($excel == 1) {
-            $path = storage_path('excel/exports/hotspots');
-            //dd($path);
-            $now = Carbon::now()->format('Y-m-d-H-i-s');
-
-            $excelName = 'Hotspots_' . $now;
-            $reports = $data;
-
-            //--- New Excel -------------------------------
-            $spreadsheet = new Spreadsheet();
-            $sheet = $spreadsheet->getActiveSheet();
-            $sheet->setTitle('sheet1');
-            // $sheet->setCellValue('A1', 'Hello World !');
-            $TitleArray = ['s/n','lan mac','animal name','issue date','verify status','register status'];
-            $spreadsheet->getActiveSheet()
-                            ->fromArray($TitleArray);
-            $data = [];
-            if ($reports->count() > 0) {
-                $key = 0;
-                //foreach start//
-                // dd($reports->get());
-                foreach ($reports->get() as $report) {
-                    $thisRecord = array(
-                        $report->DeviceSN,
-                        $report->MacAddress,
-                        $report->AnimalName,
-                        Carbon::parse($report->IssueDate)->format('Y-m-d H:i:s'),
-                        // $report->IssueDate,
-                    );
-                    if($report->IsVerify == 1){
-                        $thisRecord[] = Carbon::parse($report->IfVerifyDate)->format('Y-m-d H:i:s');
-                        // $thisRecord[] = $report->IfVerifyDate;
-                    }else{
-                        $thisRecord[] = '';
-                    }
-                    if($report->IfRegister == 1){
-                        $thisRecord[] = 'Y';
-                    }else{
-                        if($report->IfKey == 1){
-                            $thisRecord[] = 'No Animal';
-                        }else{
-                            if($report->IfAnimal == 1){
-                                $thisRecord[] = 'No Key';
-                            }else{
-                                $thisRecord[] = 'N/A';
-                            }
-                        }
-                    }
-                    $data[] = $thisRecord;
-                    $key++;
-                }
-                //foreach end//
-            }else{
-                $data = ['', '', '', '', '', ''];
-            }
-            $spreadsheet->getActiveSheet()
-                        ->fromArray($data, null, 'A2');
-
-            $writer = new Xlsx($spreadsheet);
-            $file = $path . '/' . $excelName . '.xlsx';
-            // dd($file);
-            $writer->save($file);
-
-            return response()->download($file);
-        } else {
-            // 分頁
-            $data = $data->paginate($pageNumEachPage);
-        }
+        $data = $data->paginate($pageNumEachPage);
 
         return view(self::$viewPath.'.index', compact('data'))
                     ->with('i', ($pageNo - 1) * $pageNumEachPage)
@@ -442,16 +321,16 @@ class HotspotsController extends Controller
 
         // 步驟二：檢查是否有存在相同的值
         if($requestResult['isError'] == false) {
-            // for CarNumber
-            $existUserType = DimCar::where('CarNumber', '=',  $formFields['CarNumber']['value'])
+            // for ModelNo
+            $existUserType = DimProductModel::where('ModelNo', '=',  $formFields['ModelNo']['value'])
                                         ->where('IfDelete',0)
                                         ->get();
             
             if($existUserType->count() > 0 ){
                 $requestResult['isError'] = true;
-                $formFields['CarNumber']['isCorrect'] = false;
-                $formFields['CarNumber']['error'] = "這個車牌已經被用過了，不可以重複";
-                $formFields['CarNumber']['completeField'] = GenerateData::generateCustomErrorMessage('車牌','CarNumber', $formFields['CarNumber']['value'], $formFields['CarNumber']['error'], 'text');
+                $formFields['ModelNo']['isCorrect'] = false;
+                $formFields['ModelNo']['error'] = "這個ModelNo已被使用";
+                $formFields['ModelNo']['completeField'] = GenerateData::generateCustomErrorMessage('ModelNo','ModelNo', $formFields['ModelNo']['value'], $formFields['ModelNo']['error'], 'text');
             }
         }
 
@@ -461,8 +340,11 @@ class HotspotsController extends Controller
 
             // 組成目前需要新增的資料物件;
             $newData = [
-                'CarId' => $id,
-                'CarNumber' => $formFields['CarNumber']['value'],
+                'ModelID' => $id,
+                'ModelNo' => $formFields['ModelNo']['value'],
+                'ModelName' => $formFields['ModelName']['value'],
+                'ModelSpec' => $formFields['ModelSpec']['value'],
+                'ModelInfo' => $formFields['ModelInfo']['value'],
 
                 'IfValid' => $formFields['IfValid']['value'],
                 'IfDelete' => 0,
@@ -471,7 +353,7 @@ class HotspotsController extends Controller
             ];
 
             // 執行產生資料的動作
-            DimCar::on('mysql2')->create($newData);
+            DimProductModel::on('mysql2')->create($newData);
 
             return redirect()->route(self::$routePath.'.index')
                         ->with('success','成功新增一筆資料！');
@@ -480,9 +362,9 @@ class HotspotsController extends Controller
             $IfValid= ($formFields['IfValid']['value'] == '') ? 1 : $formFields['IfValid']['value'];
             $formFields['IfValid']['completeField'] = GenerateData::getIfValidHtml($IfValid);
 
-            $formFields['CreateBy']['completeField'] = GenerateData::generateData('資料建立者','CreateBy', '系統自動產生', '', 'text');
+            $formFields['CreateBy']['completeField'] = GenerateData::generateData('Created By','CreateBy', 'Generated by System', '', 'text');
 
-            $formFields['CreateDate']['completeField'] = GenerateData::generateData('資料建立日期','CreateDate', '系統自動產生', '', 'text');
+            $formFields['CreateDate']['completeField'] = GenerateData::generateData('Created Date','CreateDate', 'Generated by System', '', 'text');
 
             return view(self::$viewPath.'.create')
                 ->with('formFields', $formFields)
@@ -511,7 +393,7 @@ class HotspotsController extends Controller
     public function edit($id)
     {
         $id = (string) $id;
-        $data= DimCar::where('CarId', $id)
+        $data= DimProductModel::where('ModelID', $id)
                             ->where('IfDelete', 0)
                             ->get();
 
@@ -521,7 +403,7 @@ class HotspotsController extends Controller
 
         // 把資料放進對應欄位
         $requestResult =  WebLib::generateInputsWhthData($formFieldDef, $data);
-        // 修正資料建立者
+        // 修正Created By
         $requestResult['CreateBy']['value'] = GenerateData::getCreater($data->first()->CreateBy);
         // 產生需要設定的欄位  
         $requestResult = WebLib::generateInputs($requestResult, false);
@@ -547,7 +429,7 @@ class HotspotsController extends Controller
     public function update(Request $request, $id)
     {
         $id = (string) $id;
-        $data= DimCar::where('CarId', $id)->first();
+        $data= DimProductModel::where('ModelID', $id)->first();
         $formFieldDef = $this->defineEditFormFields($data);
         $requestResult = WebLib::generateInputs($formFieldDef, true);
         $formFields = $requestResult["data"];
@@ -555,13 +437,30 @@ class HotspotsController extends Controller
 
         // 檢查是否有存在相同的值
         if($requestResult['isError'] == false) {
+            // for ModelNo
+            $existUserType = DimProductModel::where('ModelNo', '=',  $formFields['ModelNo']['value'])
+                                        ->where('IfDelete',0)
+                                        ->where('ModelID','!=',$id)
+                                        ->get();
+            
+            if($existUserType->count() > 0 ){
+                $requestResult['isError'] = true;
+                $formFields['ModelNo']['isCorrect'] = false;
+                $formFields['ModelNo']['error'] = "這個ModelNo已被使用";
+                $formFields['ModelNo']['completeField'] = GenerateData::generateCustomErrorMessage('ModelNo','ModelNo', $formFields['ModelNo']['value'], $formFields['ModelNo']['error'], 'text');
+            }
         }
 
         if($requestResult['isError'] == false) {
             $updateValue = [
+                'ModelNo' => $formFields['ModelNo']['value'],
+                'ModelName' => $formFields['ModelName']['value'],
+                'ModelSpec' => $formFields['ModelSpec']['value'],
+                'ModelInfo' => $formFields['ModelInfo']['value'],
+
                 'IfValid' => $formFields['IfValid']['value'],
-                'LastModifiedBy' => WebLib::getCurrentUserID(),
-                'LastModifiedDate' => Carbon::now('Asia/Taipei')->toDateTimeString() // 表示為目前時間;
+                'UpdateBy' => WebLib::getCurrentUserID(),
+                'UpdateDate' => Carbon::now('Asia/Taipei')->toDateTimeString() // 表示為目前時間;
             ];
 
             if($data->IfValid == '1'&& $formFields['IfValid']['value'] == 0 ) {
@@ -570,7 +469,7 @@ class HotspotsController extends Controller
                 $updateValue['IfNotValidDate'] = Carbon::now('Asia/Taipei')->toDateTimeString();
             }
 
-            DimCar::on('mysql2')->where('CarId', $id)->update($updateValue);
+            DimProductModel::on('mysql2')->where('ModelID', $id)->update($updateValue);
             return redirect()->route(self::$routePath.'.index')
                             ->with('success','更新完成');
         }else{
@@ -580,10 +479,10 @@ class HotspotsController extends Controller
 
             $CreateBy = GenerateData::getCreater($data->first()->CreateBy);
             $formFields['CreateBy']['value'] = $CreateBy;
-            $formFields['CreateBy']['completeField'] = GenerateData::generateData('資料建立者','CreateBy', $CreateBy, '', 'text');
+            $formFields['CreateBy']['completeField'] = GenerateData::generateData('Created By','CreateBy', $CreateBy, '', 'text');
 
             $formFields['CreateDate']['value'] = ($formFields['CreateDate']['value'] == '') ? $data->CreateDate : $formFields['CreateDate']['value'];
-            $formFields['CreateDate']['completeField'] = GenerateData::generateData('資料建立日期','CreateDate', $formFields['CreateDate']['value'], '', 'text');
+            $formFields['CreateDate']['completeField'] = GenerateData::generateData('Created Date','CreateDate', $formFields['CreateDate']['value'], '', 'text');
 
             return view(self::$viewPath.'.edit', compact('data'))
                     ->with('formFields', $formFields)
@@ -605,21 +504,13 @@ class HotspotsController extends Controller
     public function destroy($id)
     {
         $authToken = \Cookie::get('authToken');
-        $CarDeviceEntity = CarDeviceEntity::where('CarId',$id);
-        if($CarDeviceEntity->count()>0){
-            return redirect()->route(self::$routePath.'.index')
-                            ->with('success','資料不可刪除');
-        }else{
-            $DeleteValue = [
-                'IfDelete' => 1, 
-                'IfDeleteBy' => WebLib::getCurrentUserID(),
-                'DeleteDate' => Carbon::now('Asia/Taipei')->toDateTimeString() //date("Y-m-d H:i:s")
-            ];
-
-            DimCar::on('mysql2')->where('CarId', $id)->update($DeleteValue);
-
-            return redirect()->route(self::$routePath.'.index')
-                            ->with('success','資料已經刪除');
-        }
+        $DeleteValue = [
+            'IfDelete' => 1,
+            'IfDeleteBy' => WebLib::getCurrentUserID(),
+            'IfDeleteDate' => Carbon::now('Asia/Taipei')->toDateTimeString() // 表示為目前時間;
+        ];
+        DimProductModel::on('mysql2')->where('ModelID', $id)->update($DeleteValue);
+        return redirect()->route(self::$routePath.'.index')
+                        ->with('success','資料已經刪除');
     }
 }
