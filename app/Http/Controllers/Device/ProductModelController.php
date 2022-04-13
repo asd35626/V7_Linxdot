@@ -329,7 +329,7 @@ class ProductModelController extends Controller
             if($existUserType->count() > 0 ){
                 $requestResult['isError'] = true;
                 $formFields['ModelNo']['isCorrect'] = false;
-                $formFields['ModelNo']['error'] = "這個ModelNo已被使用";
+                $formFields['ModelNo']['error'] = "This Model No. has been taken";
                 $formFields['ModelNo']['completeField'] = GenerateData::generateCustomErrorMessage('ModelNo','ModelNo', $formFields['ModelNo']['value'], $formFields['ModelNo']['error'], 'text');
             }
         }
@@ -446,7 +446,7 @@ class ProductModelController extends Controller
             if($existUserType->count() > 0 ){
                 $requestResult['isError'] = true;
                 $formFields['ModelNo']['isCorrect'] = false;
-                $formFields['ModelNo']['error'] = "這個ModelNo已被使用";
+                $formFields['ModelNo']['error'] = "This Model No. has been taken";
                 $formFields['ModelNo']['completeField'] = GenerateData::generateCustomErrorMessage('ModelNo','ModelNo', $formFields['ModelNo']['value'], $formFields['ModelNo']['error'], 'text');
             }
         }

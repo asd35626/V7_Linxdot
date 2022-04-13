@@ -140,7 +140,7 @@
                             {!! generateHTML('CompanyPhone','Contact Phone',$isAsc, $orderBy) !!}
                             {!! generateHTML('CompanyEmail','Contact Email',$isAsc, $orderBy) !!}
                             {!! generateHTML('IfValid','Active/ Inactive',$isAsc, $orderBy) !!}
-                            <th class="uk-width-1-10 uk-text-center uk-text-small">功能</th>
+                            <th class="uk-width-1-10 uk-text-center uk-text-small">Function</th>
                         </tr>
                     </thead>
                     @if($data->count() > 0)
@@ -160,7 +160,7 @@
                                     @if($object->IfValid == 0) 
                                         <span class="uk-badge uk-badge-danger">Inactive</span>
                                     @elseif($object->LoginFailTimes > 2)
-                                        <span class="uk-badge uk-badge-danger" onclick="unlock('{{$object->Id}}')">鎖定</span>
+                                        <span class="uk-badge uk-badge-danger" onclick="unlock('{{$object->Id}}')">Locked</span>
                                     @else
                                         <span class="uk-badge uk-badge-primary">Active</span>
                                     @endif
@@ -176,7 +176,7 @@
                             </tr>
                         @endforeach
                     @else
-                        <td colspan="500" style="text-align: center;">查無資料</td>
+                        <td colspan="500" style="text-align: center;">No data matched</td>
                     @endif
                 </table>
             </div>

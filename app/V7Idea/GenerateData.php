@@ -65,14 +65,14 @@ class GenerateData {
         if($IfValid == 1){
             $Html = '<div class="parsley-row">
                         <div class="md-input-wrapper  md-input-filled">
-                            <label for="IfValid">啟用/停用<span class="req">*</span></label><br>
+                            <label for="IfValid">Active/ Inactive<span class="req">*</span></label><br>
                             <span class="icheck-inline">
                                 <input data-md-icheck="" id="IfValid_0" name="IfValid" type="radio" value="0">
-                                <label for="IfValid_0" class="inline-label">停用</label>
+                                <label for="IfValid_0" class="inline-label">Inactive</label>
                             </span>
                             <span class="icheck-inline">
                                 <input data-md-icheck="" id="IfValid_1" checked="checked" name="IfValid" type="radio" value="1">
-                                <label for="IfValid_1" class="inline-label">啟用</label>
+                                <label for="IfValid_1" class="inline-label">Active</label>
                             </span>
                             <div class="parsley-errors-list filled">
                                 <span class="parsley-required"></span>
@@ -82,14 +82,14 @@ class GenerateData {
         }else{
             $Html = '<div class="parsley-row">
                         <div class="md-input-wrapper  md-input-filled">
-                            <label for="IfValid">啟用/停用<span class="req">*</span></label><br>
+                            <label for="IfValid">Active/ Inactive<span class="req">*</span></label><br>
                             <span class="icheck-inline">
                                 <input data-md-icheck="" id="IfValid_0" checked="checked" name="IfValid" type="radio" value="0">
-                                <label for="IfValid_0" class="inline-label">停用</label>
+                                <label for="IfValid_0" class="inline-label">Inactive</label>
                             </span>
                             <span class="icheck-inline">
                                 <input data-md-icheck="" id="IfValid_1" name="IfValid" type="radio" value="1">
-                                <label for="IfValid_1" class="inline-label">啟用</label>
+                                <label for="IfValid_1" class="inline-label">Active</label>
                             </span>
                             <div class="parsley-errors-list filled">
                                 <span class="parsley-required"></span>
@@ -244,7 +244,7 @@ class GenerateData {
         if($Creaters->count() != 0){
             $Creater = $Creaters->first()->RealName;
         }else{
-            $Creater = '系統管理員';
+            $Creater = 'System Administrator';
         }
 
         $result = $Creater;
@@ -278,7 +278,7 @@ class GenerateData {
             if($LastModifiedBys->count() != 0){
                 $LastModifiedBy = $LastModifiedBys->first()->RealName;
             }else{
-                $LastModifiedBy = '系統管理員';
+                $LastModifiedBy = 'System Administrator';
             }
         }else{
             $LastModifiedBy = '無最後修改紀錄';

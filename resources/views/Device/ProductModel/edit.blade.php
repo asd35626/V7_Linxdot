@@ -24,9 +24,9 @@
         <li><a href="/Default">Home</a></li>
         <li><a href="/Device/ProductModel">{!! $functionname !!}</a></li>
         @if($Action == 'EDIT')
-          <li><span>編輯</span></li>
+          <li><span>Edit</span></li>
         @else
-          <li><span>檢視</span></li>
+          <li><span>Query</span></li>
         @endif
     </ul>
 @endsection
@@ -35,9 +35,9 @@
 @section('content')
     <h4 class="heading_a uk-margin-bottom">
         @if($Action == 'EDIT')
-          編輯
+          Edit
         @else
-          檢視
+          Query
         @endif
     </h4>
     @if (count($errors) > 0)

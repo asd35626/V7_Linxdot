@@ -93,7 +93,7 @@
                             {!! generateHTML('MacAddress','ModelName mac',$isAsc, $orderBy) !!}
                             {!! generateHTML('AnimalName','ModelSpec',$isAsc, $orderBy) !!}
                             {!! generateHTML('IssueDate','ModelInfo',$isAsc, $orderBy) !!}
-                            <th class="uk-width-1-10 uk-text-small">edit</th>
+                            <th class="uk-width-1-10 uk-text-small">Function</th>
                         </tr>
                     </thead>
                     @if($data->count() > 0)
@@ -113,7 +113,7 @@
                             </tr>
                         @endforeach
                     @else
-                        <td colspan="500" style="text-align: center;">查無資料</td>
+                        <td colspan="500" style="text-align: center;">No data matched</td>
                     @endif
                 </table>
             </div>

@@ -304,7 +304,7 @@ class WarehouseController extends Controller
                 'id' => 'CreateBy',
                 'label' => 'Created By',
                 'type' => 'text',
-                'value' =>  isset($data->Creater) ? $data->Creater->RealName : '系統管理員',
+                'value' =>  isset($data->Creater) ? $data->Creater->RealName : 'System Administrator',
                 'validation' => '',
                 'class' => 'md-input label-fixed',
                 'extras' => ['disabled' => 'disabled']
@@ -325,7 +325,8 @@ class WarehouseController extends Controller
                 'label' => 'Last Log-in Time',
                 'type' => 'text',
                 'validation' => '',
-                'value' => isset($data->LastLoginTime) ? $data->LastLoginTime : '無登入紀錄',
+                'value' => isset($data->LastLoginTime) ? $data->LastLoginTime : 'No log-in record
+',
                 'class' => 'md-input label-fixed',
                 'extras' => ['readonly' => 'readonly'],
             ],
@@ -474,7 +475,7 @@ class WarehouseController extends Controller
             if($exist->count() > 0) {
                 $requestResult['isError'] = true;
                 $formFields['MemberNo']['isCorrect'] = false;
-                $formFields['MemberNo']['error'] = "此帳號已被使用";
+                $formFields['MemberNo']['error'] = "This account name has been taken";
                 $formFields['MemberNo']['completeField'] = GenerateData::generateCustomErrorMessage('Login Name','MemberNo', $formFields['MemberNo']['value'], $formFields['MemberNo']['error'], 'text');
             }
 
@@ -482,7 +483,7 @@ class WarehouseController extends Controller
             if(strlen($formFields['UserPassword']['value'])< 6) {
                 $requestResult['isError'] = true;
                 $formFields['UserPassword']['isCorrect'] = false;
-                $formFields['UserPassword']['error'] = "密碼過短，請輸入六個字元以上";
+                $formFields['UserPassword']['error'] = "Too short password, please type 6 characters or more";
                 $formFields['UserPassword']['completeField'] = GenerateData::generateCustomErrorMessage('Login Password','UserPassword', $formFields['UserPassword']['value'], $formFields['UserPassword']['error'], 'Password');
             }
         }
@@ -655,7 +656,7 @@ class WarehouseController extends Controller
             if(strlen($formFields['UserPassword']['value']) != 0 && strlen($formFields['UserPassword']['value'])< 6) {
                 $requestResult['isError'] = true;
                 $formFields['UserPassword']['isCorrect'] = false;
-                $formFields['UserPassword']['error'] = "密碼過短，請輸入六個字元以上";
+                $formFields['UserPassword']['error'] = "Too short password, please type 6 characters or more";
                 $formFields['UserPassword']['completeField'] = GenerateData::generateCustomErrorMessage('Login Password','UserPassword', $formFields['UserPassword']['value'], $formFields['UserPassword']['error'], 'Password');
             }
         }
