@@ -131,7 +131,7 @@ class ExcelController extends Controller
                             'CartonId' => $data->CartonId,
                             'Firmware' => $data->Firmware,
                             'IsVerify' => 0
-                        ]
+                        ];
                         DimHotspot::on('mysql2')
                                     ->where('MacAddress',$data->MacAddress)
                                     ->where('DeviceSN',$data->DeviceSN)
