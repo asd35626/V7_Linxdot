@@ -111,11 +111,11 @@
                     <button type="submit" onclick="exportExcel()" class="md-btn md-btn-primary">Export</button>
                 </div>
                 <div class="uk-width-1-10" style="float:right">
-                    <button type="submit" onclick="window.location.href='{{ route('Excel.create') }}';" class="md-btn md-btn-primary">Add</button>
+                    <button type="submit" onclick="window.location.href='{{ route('Excel.create') }}';" class="md-btn md-btn-primary">Import</button>
                 </div>
-                {{-- <div class="uk-width-1-10" style="float:right">
+                <div class="uk-width-1-10" style="float:right">
                     <button type="submit" onclick="window.location.href='{{ route( $routePath.'.create') }}';" class="md-btn md-btn-primary">Add</button>
-                </div> --}}
+                </div>
             </div>
             <div class="uk-overflow-container">
                 <table id="grid-basic" class="uk-table uk-table-nowrap table_check">
@@ -162,8 +162,8 @@
                                     @endif
                                 </td>
                                 <td class="uk-text-center uk-text-small">
-                                    {{-- <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}"><i class="md-icon material-icons">&#xE254;</i></a>
-                                    {!! Form::open(['id' => 'formDeleteAction'.$i , 'method' => 'DELETE','route' => [ $routePath.'.destroy', $object->$primaryKey],'style'=>'display:inline']  ) !!}
+                                    <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}"><i class="md-icon material-icons">&#xE254;</i></a>
+                                    {{-- {!! Form::open(['id' => 'formDeleteAction'.$i , 'method' => 'DELETE','route' => [ $routePath.'.destroy', $object->$primaryKey],'style'=>'display:inline']  ) !!}
                                         <a href="javascript:if(confirm('Are you sure to delete this datum?'))$('{{ '#formDeleteAction'.$i }}').submit();"><i class="md-icon material-icons">&#xE872;</i></a>
                                     {!! Form::close() !!} --}}
                                 </td>

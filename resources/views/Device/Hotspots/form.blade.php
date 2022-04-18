@@ -1,19 +1,35 @@
 <div class="md-card">
     <div class="md-card-content large-padding">
         <div class="uk-grid" data-uk-grid-margin>
-            <div class="uk-width-medium-1-2">
-                {!! $formFields['CarNumber']['completeField']  !!}
+            <div class="uk-width-medium-1-3">
+                {!! $formFields['DeviceSN']['completeField']  !!}
             </div>
-            <div class="uk-width-medium-1-2">
-                {!! $formFields['IfValid']['completeField']  !!}
+            <div class="uk-width-medium-1-3">
+                {!! $formFields['MacAddress']['completeField']  !!}
+            </div>
+            <div class="uk-width-medium-1-3">
+                {!! $formFields['AnimalName']['completeField']  !!}
             </div>
         </div>
-
+        <div class="uk-grid" data-uk-grid-margin>
+            <div class="uk-width-medium-1-3">
+                {!! $formFields['PalletId']['completeField']  !!}
+            </div>
+            <div class="uk-width-medium-1-3">
+                {!! $formFields['CartonId']['completeField']  !!}
+            </div>
+            <div class="uk-width-medium-1-3">
+                {!! $formFields['IsVerify']['completeField']  !!}
+            </div>
+        </div>
         <div class="uk-grid " data-uk-grid-margin>
-            <div class="uk-width-medium-1-2">
+            <div class="uk-width-medium-1-3">
+                {!! $formFields['IfValid']['completeField']  !!}
+            </div>
+            <div class="uk-width-medium-1-3">
                 {!! $formFields['CreateBy']['completeField']  !!}
             </div>
-            <div class="uk-width-medium-1-2">
+            <div class="uk-width-medium-1-3">
                 {!! $formFields['CreateDate']['completeField']  !!}
             </div>
         </div>
