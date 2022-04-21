@@ -71,17 +71,19 @@ class ExcelController extends Controller
                             if($data[1] != '' && $data[2] != '' && $data[3] != '' && $data[4] != '' ){
                                 // 總筆數+1
                                 $totle += 1;
+                                // dd($totle);
                                 // 新增到暫存表
                                 // 0.IssueDate 1.Pallet 2.CartoneID 3.SN 4.Mac 5.Firmware 6.IfValid
                                 $MacAddress = $data[4];
                                 $MacAddress = strtolower(str_replace("-","",$MacAddress));
                                 $MacAddress = strtolower(str_replace(":","",$MacAddress));
+
                                 if(strlen($MacAddress) != 12){
                                     $ImportStatus = 0;
                                     $ImportMemo = '請確認MacAddress長度為12';
                                     $newMacAddress = $data[4];
                                 }else{
-                                    $ImportStatus = 1;
+                                    $ImportStatus = -1;
                                     $ImportMemo = '';
                                     $newMacAddress = '';
                                     for ($i=0; $i < 11; $i+=2) { 
@@ -142,25 +144,63 @@ class ExcelController extends Controller
                                         'ImportStatus' => 0,
                                         'ImportMemo' => '資料重複，IsVerify修改為0']);
                     }else{
-                        // 不重複的資料，檢查MacAddress格式是否正確
-                        $newdata = [
-                            'IssueDate' => $data->IssueDate,
-                            'PalletId' => $data->PalletId,
-                            'CartonId' => $data->CartonId,
-                            'DeviceSN' => $data->DeviceSN,
-                            'MacAddress' => $data->MacAddress,
-                            'Firmware' => $data->Firmware,
-                            'IsVerify' => 0,
-                            'IfValid' => 1,
-                            'IfDelete' => 0,
-                            'CreateBy' => WebLib::getCurrentUserID(),
-                            'CreateDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
-                        ];
-                        DimHotspot::on('mysql2')->create($newdata);
-                        LinxdotExcelHotspotDetail::on('mysql2')
-                                ->where('id',$data->id)
-                                ->update(['IfCompletedImport' => 1,
-                                        'ImportStatus' => 1]);
+                        $HotspotMac = DimHotspot::where('MacAddress',$data->MacAddress)
+                                                ->where('DeviceSN','!=',$data->DeviceSN);
+                        $HotspotSN = DimHotspot::where('DeviceSN',$data->DeviceSN)
+                                                ->where('MacAddress','!=',$data->MacAddress);
+                        if($HotspotMac->count() > 0){
+                            $update = [
+                                'IssueDate' => $data->IssueDate,
+                                'PalletId' => $data->PalletId,
+                                'CartonId' => $data->CartonId,
+                                'Firmware' => $data->Firmware,
+                                'IsVerify' => 0
+                            ];
+                            DimHotspot::on('mysql2')
+                                        ->where('MacAddress',$data->MacAddress)
+                                        ->update($update);
+                            LinxdotExcelHotspotDetail::on('mysql2')
+                                    ->where('id',$data->id)
+                                    ->update(['IfCompletedImport' => 1,
+                                            'ImportStatus' => 0,
+                                            'ImportMemo' => 'MacAddress重複，請確認資料，IsVerify修改為0']);
+                        }elseif($HotspotSN->count() > 0){
+                            $update = [
+                                'IssueDate' => $data->IssueDate,
+                                'PalletId' => $data->PalletId,
+                                'CartonId' => $data->CartonId,
+                                'Firmware' => $data->Firmware,
+                                'IsVerify' => 0
+                            ];
+                            DimHotspot::on('mysql2')
+                                        ->where('DeviceSN',$data->DeviceSN)
+                                        ->update($update);
+                            LinxdotExcelHotspotDetail::on('mysql2')
+                                    ->where('id',$data->id)
+                                    ->update(['IfCompletedImport' => 1,
+                                            'ImportStatus' => 0,
+                                            'ImportMemo' => 'DeviceSN重複，請確認資料，IsVerify修改為0']);
+                        }else{
+                            // 不重複的資料，檢查MacAddress格式是否正確
+                            $newdata = [
+                                'IssueDate' => $data->IssueDate,
+                                'PalletId' => $data->PalletId,
+                                'CartonId' => $data->CartonId,
+                                'DeviceSN' => $data->DeviceSN,
+                                'MacAddress' => $data->MacAddress,
+                                'Firmware' => $data->Firmware,
+                                'IsVerify' => 0,
+                                'IfValid' => 1,
+                                'IfDelete' => 0,
+                                'CreateBy' => WebLib::getCurrentUserID(),
+                                'CreateDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
+                            ];
+                            DimHotspot::on('mysql2')->create($newdata);
+                            LinxdotExcelHotspotDetail::on('mysql2')
+                                    ->where('id',$data->id)
+                                    ->update(['IfCompletedImport' => 1,
+                                            'ImportStatus' => 1]);
+                        }
                     }
                 }
                 // 修改 LinxdotExcelHotspotImport 筆數資料
