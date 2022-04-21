@@ -149,32 +149,12 @@ class ExcelController extends Controller
                         $HotspotSN = DimHotspot::where('DeviceSN',$data->DeviceSN)
                                                 ->where('MacAddress','!=',$data->MacAddress);
                         if($HotspotMac->count() > 0){
-                            $update = [
-                                'IssueDate' => $data->IssueDate,
-                                'PalletId' => $data->PalletId,
-                                'CartonId' => $data->CartonId,
-                                'Firmware' => $data->Firmware,
-                                'IsVerify' => 0
-                            ];
-                            DimHotspot::on('mysql2')
-                                        ->where('MacAddress',$data->MacAddress)
-                                        ->update($update);
                             LinxdotExcelHotspotDetail::on('mysql2')
                                     ->where('id',$data->id)
                                     ->update(['IfCompletedImport' => 1,
                                             'ImportStatus' => 0,
                                             'ImportMemo' => 'MacAddress重複，請確認資料，IsVerify修改為0']);
                         }elseif($HotspotSN->count() > 0){
-                            $update = [
-                                'IssueDate' => $data->IssueDate,
-                                'PalletId' => $data->PalletId,
-                                'CartonId' => $data->CartonId,
-                                'Firmware' => $data->Firmware,
-                                'IsVerify' => 0
-                            ];
-                            DimHotspot::on('mysql2')
-                                        ->where('DeviceSN',$data->DeviceSN)
-                                        ->update($update);
                             LinxdotExcelHotspotDetail::on('mysql2')
                                     ->where('id',$data->id)
                                     ->update(['IfCompletedImport' => 1,
