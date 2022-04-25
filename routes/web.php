@@ -86,5 +86,12 @@ Route::group(['prefix' => 'Fulfillment'],function () {
     Route::resource('Manufacturer', 'Fulfillment\ManufacturerController');
 });
 
+//會員管理
+Route::group(['prefix' => 'Customer'],function () {
+    // 物流商管理
+    Route::resource('B2B', 'Customer\B2BController');
+});
+
+
 //修改後台帳密碼(右上角的個人選單)
 Route::resource('/Profile/PasswordSetting', 'ProfilePasswordSettingController');
