@@ -76,6 +76,8 @@ Route::group(['prefix' => 'Device'],function () {
     Route::resource('ProductModel', 'Device\ProductModelController');
     //excel上傳
     Route::resource('Excel', 'Device\ExcelController');
+    //B2B會員設備管理
+    Route::resource('B2BHotspots', 'Device\B2BHotspotsController');
 });
 
 //人員管理
