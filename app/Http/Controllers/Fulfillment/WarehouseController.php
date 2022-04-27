@@ -38,7 +38,7 @@ class WarehouseController extends Controller
     public static $primaryKey = "Id";
 
     // 設定功能主選單名稱名稱
-    public static $TOPname = "Users";
+    public static $TOPname = "Third Party";
 
     // 設定功能名稱
     public static $functionname = "Warehouse";

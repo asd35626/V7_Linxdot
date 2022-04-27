@@ -29,7 +29,7 @@ class ProductModelController extends Controller
     public static $primaryKey = "ModelID";
 
     // 設定功能主選單名稱名稱
-    public static $TOPname = "Device";
+    public static $TOPname = "Profiles";
 
     // 設定功能名稱
     public static $functionname = "Device Model";
