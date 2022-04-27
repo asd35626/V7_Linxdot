@@ -392,7 +392,7 @@ class SystemLeftMenuController extends Controller
                 $formFields['FunctionName']['completeField'] = GenerateData::generateCustomErrorMessage('功能名稱','FunctionName', $formFields['FunctionName']['value'], $formFields['FunctionName']['error'], 'text');
             }
             // for FunctionName
-            $codes = AdminFunction::where('FunctionCode', $formFields['FunctionName']['value'])
+            $codes = AdminFunction::where('FunctionCode', $formFields['FunctionCode']['value'])
                                     ->where('IfDelete', 0);
             if($codes->count() > 0) {
                 $requestResult['isError'] = true;
