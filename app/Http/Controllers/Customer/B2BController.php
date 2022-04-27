@@ -37,8 +37,14 @@ class B2BController extends Controller
     // 這個資料表的主要鍵值
     public static $primaryKey = "Id";
 
+    // 設定功能主選單名稱名稱
+    public static $TOPname = "Customers";
+
     // 設定功能名稱
     public static $functionname = "B2B";
+
+    // 設定功能名稱
+    public static $functionURL = "/Customer/B2B";
 
     // 定義搜尋的欄位設定;
     public function defineSearchFields() {
@@ -427,7 +433,9 @@ class B2BController extends Controller
                     ->with('isAsc', $isAsc)
                     ->with('UserType', $UserType)
                     ->with('DegreeId', $DegreeId)
-                    ->with('functionname', self::$functionname);
+                    ->with('functionname', self::$functionname)
+                    ->with('functionURL', self::$functionURL)
+                    ->with('TOPname', self::$TOPname);
     }
 
     /**
@@ -448,7 +456,9 @@ class B2BController extends Controller
                     ->with('routePath', self::$routePath)
                     ->with('Action', "NEW")
                     ->with('viewPath', self::$viewPath)
-                    ->with('functionname', self::$functionname);
+                    ->with('functionname', self::$functionname)
+                    ->with('functionURL', self::$functionURL)
+                    ->with('TOPname', self::$TOPname);
     }
 
     /**
@@ -536,7 +546,9 @@ class B2BController extends Controller
                 ->with('routePath', self::$routePath)
                 ->with('Action', "NEW")
                 ->with('viewPath', self::$viewPath)
-                ->with('functionname', self::$functionname);
+                ->with('functionname', self::$functionname)
+                    ->with('functionURL', self::$functionURL)
+                    ->with('TOPname', self::$TOPname);
         }
     }
     /**
@@ -587,7 +599,9 @@ class B2BController extends Controller
                     ->with('Action', "SHOW")
                     ->with('primaryKey', self::$primaryKey)
                     ->with('viewPath', self::$viewPath)
-                    ->with('functionname', self::$functionname);
+                    ->with('functionname', self::$functionname)
+                    ->with('functionURL', self::$functionURL)
+                    ->with('TOPname', self::$TOPname);
     }
     /**
      * Show the form for editing the specified resource.
@@ -631,7 +645,9 @@ class B2BController extends Controller
                     ->with('Action', "EDIT")
                     ->with('primaryKey', self::$primaryKey)
                     ->with('viewPath', self::$viewPath)
-                    ->with('functionname', self::$functionname);
+                    ->with('functionname', self::$functionname)
+                    ->with('functionURL', self::$functionURL)
+                    ->with('TOPname', self::$TOPname);
     }
 
     /**
@@ -714,7 +730,9 @@ class B2BController extends Controller
                     ->with('primaryKey', self::$primaryKey)
                     ->with('Action', "EDIT")
                     ->with('viewPath', self::$viewPath)
-                    ->with('functionname', self::$functionname);
+                    ->with('functionname', self::$functionname)
+                    ->with('functionURL', self::$functionURL)
+                    ->with('TOPname', self::$TOPname);
         }
     }
     /**

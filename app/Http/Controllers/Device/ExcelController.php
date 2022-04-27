@@ -27,8 +27,14 @@ class ExcelController extends Controller
     // 這個資料表的主要鍵值
     public static $primaryKey = "id";
 
+    // 設定功能主選單名稱名稱
+    public static $TOPname = "Device";
+
     // 設定功能名稱
-    public static $functionname = "Hotspots";
+    public static $functionname = "Global Hotspots";
+
+    // 設定功能名稱
+    public static $functionURL = "/Device/Hotspots";
 
     public function create()
     {
@@ -36,7 +42,9 @@ class ExcelController extends Controller
             ->with('routePath', self::$routePath)
             ->with('Action', "NEW")
             ->with('viewPath', self::$viewPath)
-            ->with('functionname', self::$functionname);
+            ->with('functionname', self::$functionname)
+            ->with('functionURL', self::$functionURL)
+            ->with('TOPname', self::$TOPname);
     }
 
     public function store(Request $request)

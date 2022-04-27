@@ -68,7 +68,7 @@
 @section('breadcrumbArea')
     <ul id="breadcrumbs">
         <li><a href="/Default">Home</a></li>
-        <li><span>{{ $functionname }}</span></li>
+        <li><span>{!! $TOPname !!}</span></li>
     </ul>
 @endsection
 
@@ -99,9 +99,9 @@
                                 </div>
                                 <div class="uk-width-1-1" style="margin-top:20px;" >
                                     <div class="uk-width-1-1">
-                                        <div onclick="search();" class="md-btn md-btn-primary">Inquire</div>
+                                        <div onclick="search();" class="md-btn md-btn-primary">Search</div>
                                         @if($IfSearch == '1') 
-                                            <div onclick="resetForm();" class="md-btn md-btn-warning">Clear inquiry</div>
+                                            <div onclick="resetForm();" class="md-btn md-btn-warning">Clear</div>
                                         @endif
                                     </div>
                                 </div>

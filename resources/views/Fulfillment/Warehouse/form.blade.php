@@ -7,6 +7,7 @@
             <div class="uk-width-medium-1-2">
                 @if($Action == 'EDIT')                
                     {{-- <div class="md-btn md-btn-primary" onclick="reSendPassword('{{ $targetId }}')">重新產生登入密碼</div> --}}
+                    {!! $formFields['UserPassword']['completeField']  !!}
                 @elseif($Action == 'NEW')
                     {!! $formFields['UserPassword']['completeField']  !!}    
                 @endif
@@ -56,9 +57,9 @@
         <div class="uk-grid">
             <div class="uk-width-1-1">
                 @if($Action == 'EDIT' || $Action == 'NEW')
-                    <button type="submit" class="md-btn md-btn-primary" onclick="this.disabled='true'; this.form.submit();">送出</button>
+                    <button type="submit" class="md-btn md-btn-primary" onclick="this.disabled='true'; this.form.submit();">OK</button>
                 @endif
-                <button type="button" class="md-btn md-btn-warning" onclick="resetForm();">返回</button>
+                <button type="button" class="md-btn md-btn-warning" onclick="resetForm();">BACK</button>
             </div>
         </div>
     </div>

@@ -67,12 +67,12 @@ class GenerateData {
                         <div class="md-input-wrapper  md-input-filled">
                             <label for="IfValid">Active/ Inactive<span class="req">*</span></label><br>
                             <span class="icheck-inline">
-                                <input data-md-icheck="" id="IfValid_0" name="IfValid" type="radio" value="0">
-                                <label for="IfValid_0" class="inline-label">Inactive</label>
-                            </span>
-                            <span class="icheck-inline">
                                 <input data-md-icheck="" id="IfValid_1" checked="checked" name="IfValid" type="radio" value="1">
                                 <label for="IfValid_1" class="inline-label">Active</label>
+                            </span>
+                            <span class="icheck-inline">
+                                <input data-md-icheck="" id="IfValid_0" name="IfValid" type="radio" value="0">
+                                <label for="IfValid_0" class="inline-label">Inactive</label>
                             </span>
                             <div class="parsley-errors-list filled">
                                 <span class="parsley-required"></span>
@@ -84,12 +84,12 @@ class GenerateData {
                         <div class="md-input-wrapper  md-input-filled">
                             <label for="IfValid">Active/ Inactive<span class="req">*</span></label><br>
                             <span class="icheck-inline">
-                                <input data-md-icheck="" id="IfValid_0" checked="checked" name="IfValid" type="radio" value="0">
-                                <label for="IfValid_0" class="inline-label">Inactive</label>
-                            </span>
-                            <span class="icheck-inline">
                                 <input data-md-icheck="" id="IfValid_1" name="IfValid" type="radio" value="1">
                                 <label for="IfValid_1" class="inline-label">Active</label>
+                            </span>
+                            <span class="icheck-inline">
+                                <input data-md-icheck="" id="IfValid_0" checked="checked" name="IfValid" type="radio" value="0">
+                                <label for="IfValid_0" class="inline-label">Inactive</label>
                             </span>
                             <div class="parsley-errors-list filled">
                                 <span class="parsley-required"></span>
@@ -111,12 +111,12 @@ class GenerateData {
                         <div class="md-input-wrapper  md-input-filled">
                             <label for="'.$id.'">'.$name.'<span class="req">*</span></label><br>
                             <span class="icheck-inline">
-                                <input data-md-icheck="" id="SpeakAuth_0" name="'.$id.'" type="radio" value="0">
-                                <label for="SpeakAuth_0" class="inline-label">'.$r0.'</label>
-                            </span>
-                            <span class="icheck-inline">
                                 <input data-md-icheck="" id="SpeakAuth_1" checked="checked" name="'.$id.'" type="radio" value="1">
                                 <label for="SpeakAuth_1" class="inline-label">'.$r1.'</label>
+                            </span>
+                            <span class="icheck-inline">
+                                <input data-md-icheck="" id="SpeakAuth_0" name="'.$id.'" type="radio" value="0">
+                                <label for="SpeakAuth_0" class="inline-label">'.$r0.'</label>
                             </span>
                             <div class="parsley-errors-list filled">
                                 <span class="parsley-required"></span>
@@ -128,12 +128,12 @@ class GenerateData {
                         <div class="md-input-wrapper  md-input-filled">
                             <label for="'.$id.'">'.$name.'<span class="req">*</span></label><br>
                             <span class="icheck-inline">
-                                <input data-md-icheck="" id="SpeakAuth_0" checked="checked" name="'.$id.'" type="radio" value="0">
-                                <label for="SpeakAuth_0" class="inline-label">'.$r0.'</label>
-                            </span>
-                            <span class="icheck-inline">
                                 <input data-md-icheck="" id="SpeakAuth_1" name="'.$id.'" type="radio" value="1">
                                 <label for="SpeakAuth_1" class="inline-label">'.$r1.'</label>
+                            </span>
+                            <span class="icheck-inline">
+                                <input data-md-icheck="" id="SpeakAuth_0" checked="checked" name="'.$id.'" type="radio" value="0">
+                                <label for="SpeakAuth_0" class="inline-label">'.$r0.'</label>
                             </span>
                             <div class="parsley-errors-list filled">
                                 <span class="parsley-required">
@@ -244,7 +244,7 @@ class GenerateData {
         if($Creaters->count() != 0){
             $Creater = $Creaters->first()->RealName;
         }else{
-            $Creater = 'System Administrator';
+            $Creater = 'CreateBy';
         }
 
         $result = $Creater;
@@ -278,10 +278,10 @@ class GenerateData {
             if($LastModifiedBys->count() != 0){
                 $LastModifiedBy = $LastModifiedBys->first()->RealName;
             }else{
-                $LastModifiedBy = 'System Administrator';
+                $LastModifiedBy = 'LastModifiedBy';
             }
         }else{
-            $LastModifiedBy = '無最後修改紀錄';
+            $LastModifiedBy = 'LastModifiedBy';
         }
         $result = $LastModifiedBy;
         // dd($result);

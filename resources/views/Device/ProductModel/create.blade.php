@@ -16,16 +16,17 @@
 @section('title', $functionname)
 
 {{-- 設定內容的主標題區 --}}
-@section('pageTitle', $functionname)
+@section('pageTitle', 'ADD')
 
 {{-- 設定內容的主標題區 --}}
 @section('breadcrumbArea')
     <ul id="breadcrumbs">
         <li><a href="/Default">Home</a></li>
-        <li><a href="/Device/ProductModel">{!! $functionname !!}</a></li>
-        <li><span>ADD</span></li>
+        <li><a href="{!! $functionURL !!}">{!! $TOPname !!}</a></li>
+        <li><a href="{!! $functionURL !!}">{!! $functionname !!}</a></li>
     </ul>
 @endsection
+
 
 {{-- 設定內容 --}}
 @section('content')

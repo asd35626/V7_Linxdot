@@ -37,9 +37,9 @@
         <div class="uk-grid">
             <div class="uk-width-1-1">
                 @if($Action == 'EDIT' || $Action == 'NEW')
-                    <button type="submit" class="md-btn md-btn-primary" onclick="this.disabled='true'; this.form.submit();">Send</button>
+                    <button type="submit" class="md-btn md-btn-primary" onclick="this.disabled='true'; this.form.submit();">OK</button>
                 @endif
-                <button type="button" class="md-btn md-btn-warning" onclick="resetForm();">Return</button>
+                <button type="button" class="md-btn md-btn-warning" onclick="resetForm();">BACK</button>
             </div>
         </div>
     </div>

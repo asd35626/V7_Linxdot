@@ -16,20 +16,20 @@
 @section('title', $functionname)
 
 {{-- 設定內容的主標題區 --}}
-@section('pageTitle', $functionname)
+@section('pageTitle', 'IMPORT')
 
 {{-- 設定內容的主標題區 --}}
 @section('breadcrumbArea')
     <ul id="breadcrumbs">
         <li><a href="/Default">Home</a></li>
-        <li><a href="/Device/Hotspots">{!! $functionname !!}</a></li>
-        <li><span>新增</span></li>
+        <li><a href="{!! $functionURL !!}">{!! $TOPname !!}</a></li>
+        <li><a href="{!! $functionURL !!}">{!! $functionname !!}</a></li>
     </ul>
 @endsection
 
 {{-- 設定內容 --}}
 @section('content')
-    <h4 class="heading_a uk-margin-bottom">新增</h4>
+    <h4 class="heading_a uk-margin-bottom">Import</h4>
     @if (count($errors) > 0)
         <div class="alert alert-danger parsley-errors-list filled">
             <strong>您好</strong>，您輸入的資料有問題，請在確認後重新輸入！<br><br>

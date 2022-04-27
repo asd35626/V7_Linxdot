@@ -20,6 +20,7 @@ class DimHotspot extends Model
       'MacAddress',
       'Firmware',
       'AnimalName',
+      'OnBoardingKey',
       'IsVerify',
       'IfVerifyDate',
       'IfGetName',
@@ -27,6 +28,12 @@ class DimHotspot extends Model
       'IfRegister',
       'IfOnline',
       'LastUpdateOnLineTime',
+      'DewiStatus',
+      'IsShipped',
+      'ShippedDate',
+      'TrackNo',
+      'ManufactureID',
+      'WarehouseID',
       'IfValid',
       'IfNotValidBy',
       'IfNotValidDate',
@@ -34,6 +41,7 @@ class DimHotspot extends Model
       'IfDeleteBy',
       'IfDeleteDate',
       'CreateBy',
-      'CreateDate'
+      'CreateDate',
+      'OwnerID'
     ];
 }

@@ -16,13 +16,14 @@
 @section('title', $functionname)
 
 {{-- 設定內容的主標題區 --}}
-@section('pageTitle', $functionname)
+@section('pageTitle','IMPORT')
 
 {{-- 設定內容的主標題區 --}}
 @section('breadcrumbArea')
     <ul id="breadcrumbs">
         <li><a href="/Default">Home</a></li>
-        <li><span>Device</span></li>
+        <li><a href="{!! $functionURL !!}">{!! $TOPname !!}</a></li>
+        <li><a href="{!! $functionURL !!}">{!! $functionname !!}</a></li>
     </ul>
 @endsection
 
@@ -47,7 +48,7 @@
                                 </div>
                                 <div class="uk-width-10-10" style="margin-top:20px;" >
                                     <div class="uk-width-1-1">
-                                        <div onclick="search();" class="md-btn md-btn-primary">Inquire</div>
+                                        <div onclick="search();" class="md-btn md-btn-primary">Search</div>
                                         @if($IfSearch == '1') 
                                             <div onclick="resetForm();" class="md-btn md-btn-warning">Clear inquiry</div>
                                         @endif

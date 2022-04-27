@@ -27,9 +27,15 @@ class B2BHotspotsController extends Controller
 
     // 這個資料表的主要鍵值
     public static $primaryKey = "id";
+    
+    // 設定功能主選單名稱名稱
+    public static $TOPname = "Device";
 
     // 設定功能名稱
     public static $functionname = "Hotspots";
+
+    // 設定功能名稱
+    public static $functionURL = "/Device/B2BHotspots";
 
     // 定義搜尋的欄位設定;
     public function defineSearchFields() {
@@ -181,6 +187,8 @@ class B2BHotspotsController extends Controller
                     ->with('orderBy', $orderBy)
                     ->with('isAsc', $isAsc)
                     ->with('pageNumEachPage', $pageNumEachPage)
-                    ->with('functionname', self::$functionname);
+                    ->with('functionname', self::$functionname)
+                    ->with('functionURL', self::$functionURL)
+                    ->with('TOPname', self::$TOPname);
     }
 }

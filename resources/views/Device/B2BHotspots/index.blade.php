@@ -22,7 +22,7 @@
 @section('breadcrumbArea')
     <ul id="breadcrumbs">
         <li><a href="/Default">Home</a></li>
-        <li><span>Device</span></li>
+        <li><span>{!! $TOPname !!}</span></li>
     </ul>
 @endsection
 
