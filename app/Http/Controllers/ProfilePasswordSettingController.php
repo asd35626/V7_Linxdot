@@ -24,37 +24,37 @@ class ProfilePasswordSettingController extends Controller
     public function defineSearchFields($IfSearch) {
 
         $fields = [
-	                'OldPassword' =>  [
-	                            'name' => 'OldPassword',
-	                            'id' => 'OldPassword',
-	                            'label' => '請輸入舊密碼',
-	                            'type' => 'password',
-	                            'value' => '',
-	                            // 'validation' => 'required',
-	                            'class' => 'md-input label-fixed',
-	                            // 'extras' => ['placeholder'=>'請輸入舊密碼'],
-	                            ],
-	                'NewPassowrd' =>  [
-	                            'name' => 'NewPassowrd',
-	                            'id' => 'NewPassowrd',
-	                            'label' => '請輸入新密碼',
-	                            'type' => 'password',
-	                            'value' => '',
-	                            // 'validation' => 'required',
-	                            'class' => 'md-input label-fixed',
-	                            // 'extras' => ['placeholder'=>'請輸入新密碼'],
-	                            ],
-	                'NewPassowrdCheck' =>  [
-	                            'name' => 'NewPassowrdCheck',
-	                            'id' => 'NewPassowrdCheck',
-	                            'label' => '請再輸入一次新密碼',
-	                            'type' => 'password',
-	                            'value' => '',
-	                            // 'validation' => 'required',
-	                            'class' => 'md-input label-fixed',
-	                            // 'extras' => ['placeholder'=>'請再輸入一次新密碼'],
-	                            ],
-                ];
+            'OldPassword' =>  [
+                'name' => 'OldPassword',
+                'id' => 'OldPassword',
+                'label' => 'Please enter the current password',
+                'type' => 'password',
+                'value' => '',
+                // 'validation' => 'required',
+                'class' => 'md-input label-fixed',
+                // 'extras' => ['placeholder'=>'Please enter the current password'],
+            ],
+            'NewPassowrd' =>  [
+                'name' => 'NewPassowrd',
+                'id' => 'NewPassowrd',
+                'label' => 'Please enter the new password',
+                'type' => 'password',
+                'value' => '',
+                // 'validation' => 'required',
+                'class' => 'md-input label-fixed',
+                // 'extras' => ['placeholder'=>'Please enter the new password'],
+            ],
+            'NewPassowrdCheck' =>  [
+                'name' => 'NewPassowrdCheck',
+                'id' => 'NewPassowrdCheck',
+                'label' => 'Please enter the new password again',
+                'type' => 'password',
+                'value' => '',
+                // 'validation' => 'required',
+                'class' => 'md-input label-fixed',
+                // 'extras' => ['placeholder'=>'Please enter the new password again'],
+            ],
+        ];
 
         if ($IfSearch == '1'){
             $fields['OldPassword']['validation'] = 'required';
@@ -68,9 +68,6 @@ class ProfilePasswordSettingController extends Controller
 
     public function index(Request $request)
     {
-        // $pageNumEachPage = 50;                              // 每頁的基本資料量
-        // $pageNo = (int) $request->input('Page', '1');       // 目前的頁碼
-        // $IsNewSearch = $request->input('IfNewSearch', '');  // 是否為新開始搜尋
         $IfSearch = $request->input('IfSearch', '');        // 是否為搜尋
 
         // 產生搜尋的欄位;
@@ -105,11 +102,11 @@ class ProfilePasswordSettingController extends Controller
             	// if (Hash::check($OldPassword, $user->UserPassword)) {
                 if( md5($OldPassword) == $user->UserPassword){
             		// The passwords match...保留輸入
-            		$searchFields['OldPassword']['completeField']='<div class="parsley-row"><label for="OldPassword">請輸入舊密碼<span class="req">*</span></label><input id="OldPassword" class="md-input label-fixed" name="OldPassword" type="password" value="'.$OldPassword.'"></div><div class="parsley-errors-list filled"><span class="parsley-required"></span></div>';
+            		$searchFields['OldPassword']['completeField']='<div class="parsley-row"><label for="OldPassword">Please enter the current password<span class="req">*</span></label><input id="OldPassword" class="md-input label-fixed" name="OldPassword" type="password" value="'.$OldPassword.'"></div><div class="parsley-errors-list filled"><span class="parsley-required"></span></div>';
             	}else{
             		$checkStatus = false;
-            		$searchFields['OldPassword']['error']='舊密碼不符合';
-            		$searchFields['OldPassword']['completeField']='<div class="parsley-row"><label for="OldPassword">請輸入舊密碼<span class="req">*</span></label><input id="OldPassword" class="md-input label-fixed" name="OldPassword" type="password" value=""></div><div class="parsley-errors-list filled"><span class="parsley-required">舊密碼不符合</span></div>';
+            		$searchFields['OldPassword']['error']='Incorrect password';
+            		$searchFields['OldPassword']['completeField']='<div class="parsley-row"><label for="OldPassword">Please enter the current password<span class="req">*</span></label><input id="OldPassword" class="md-input label-fixed" name="OldPassword" type="password" value=""></div><div class="parsley-errors-list filled"><span class="parsley-required">Incorrect password</span></div>';
             	}
             }
 
@@ -118,11 +115,11 @@ class ProfilePasswordSettingController extends Controller
             	if ($NewPassowrd == $OldPassword) {
             		$checkStatus = false;
             		$searchFields['NewPassowrd']['error']='新密碼與舊密碼相同';
-            		$searchFields['NewPassowrd']['completeField']='<div class="parsley-row"><label for="NewPassowrd">請再輸入一次新密碼<span class="req">*</span></label><input id="NewPassowrd" class="md-input label-fixed" name="NewPassowrd" type="password" value=""></div><div class="parsley-errors-list filled"><span class="parsley-required">新密碼與舊密碼相同</span></div>';
+            		$searchFields['NewPassowrd']['completeField']='<div class="parsley-row"><label for="NewPassowrd">Please enter the new password again<span class="req">*</span></label><input id="NewPassowrd" class="md-input label-fixed" name="NewPassowrd" type="password" value=""></div><div class="parsley-errors-list filled"><span class="parsley-required">新密碼與舊密碼相同</span></div>';
             	}else{
             		// match...保留輸入
-            		$searchFields['NewPassowrd']['completeField']='<div class="parsley-row"><label for="NewPassowrd">請輸入新密碼<span class="req">*</span></label><input id="NewPassowrd" class="md-input label-fixed" name="NewPassowrd" type="password" value="'.$NewPassowrd.'"></div><div class="parsley-errors-list filled"><span class="parsley-required"></span></div>';
-            		$searchFields['NewPassowrdCheck']['completeField']='<div class="parsley-row"><label for="NewPassowrdCheck">請再輸入一次新密碼<span class="req">*</span></label><input id="NewPassowrdCheck" class="md-input label-fixed" name="NewPassowrdCheck" type="password" value="'.$NewPassowrdCheck.'"></div><div class="parsley-errors-list filled"><span class="parsley-required"></span></div>';
+            		$searchFields['NewPassowrd']['completeField']='<div class="parsley-row"><label for="NewPassowrd">Please enter the new password<span class="req">*</span></label><input id="NewPassowrd" class="md-input label-fixed" name="NewPassowrd" type="password" value="'.$NewPassowrd.'"></div><div class="parsley-errors-list filled"><span class="parsley-required"></span></div>';
+            		$searchFields['NewPassowrdCheck']['completeField']='<div class="parsley-row"><label for="NewPassowrdCheck">Please enter the new password again<span class="req">*</span></label><input id="NewPassowrdCheck" class="md-input label-fixed" name="NewPassowrdCheck" type="password" value="'.$NewPassowrdCheck.'"></div><div class="parsley-errors-list filled"><span class="parsley-required"></span></div>';
             	}
             }
 
@@ -132,8 +129,8 @@ class ProfilePasswordSettingController extends Controller
             		// match...
             	}else{
             		$checkStatus = false;
-            		$searchFields['NewPassowrdCheck']['error']='新密碼確認不符合';
-            		$searchFields['NewPassowrdCheck']['completeField']='<div class="parsley-row"><label for="NewPassowrdCheck">請再輸入一次新密碼<span class="req">*</span></label><input id="NewPassowrdCheck" class="md-input label-fixed" name="NewPassowrdCheck" type="password" value=""></div><div class="parsley-errors-list filled"><span class="parsley-required">新密碼兩次輸入不相同</span></div>';
+            		$searchFields['NewPassowrdCheck']['error']='New passwords are not consistent';
+            		$searchFields['NewPassowrdCheck']['completeField']='<div class="parsley-row"><label for="NewPassowrdCheck">Please enter the new password again<span class="req">*</span></label><input id="NewPassowrdCheck" class="md-input label-fixed" name="NewPassowrdCheck" type="password" value=""></div><div class="parsley-errors-list filled"><span class="parsley-required">New passwords are not consistent</span></div>';
             	}
             }
 
@@ -148,9 +145,9 @@ class ProfilePasswordSettingController extends Controller
                 DimUser::on('mysql2')->find(WebLib::getCurrentUserID())->update($updateArr);
 
             	//reset searchFields and add sucess message
-            	$searchFields['OldPassword']['completeField']='<div class="parsley-row"><label for="OldPassword">請輸入舊密碼<span class="req">*</span></label><input id="OldPassword" class="md-input label-fixed" name="OldPassword" type="password" value=""></div><div class="parsley-errors-list filled"><span class="parsley-required"></span></div>';
-            	$searchFields['NewPassowrd']['completeField']='<div class="parsley-row"><label for="NewPassowrd">請再輸入一次新密碼<span class="req">*</span></label><input id="NewPassowrd" class="md-input label-fixed" name="NewPassowrd" type="password" value=""></div><div class="parsley-errors-list filled"><span class="parsley-required"></span></div>';
-            	$searchFields['NewPassowrdCheck']['completeField']='<div class="parsley-row"><label for="NewPassowrdCheck">請再輸入一次新密碼<span class="req">*</span></label><input id="NewPassowrdCheck" class="md-input label-fixed" name="NewPassowrdCheck" type="password" value=""></div><div class="parsley-errors-list filled"><span class="parsley-required">修改完成</span></div>';
+            	$searchFields['OldPassword']['completeField']='<div class="parsley-row"><label for="OldPassword">Please enter the current password<span class="req">*</span></label><input id="OldPassword" class="md-input label-fixed" name="OldPassword" type="password" value=""></div><div class="parsley-errors-list filled"><span class="parsley-required"></span></div>';
+            	$searchFields['NewPassowrd']['completeField']='<div class="parsley-row"><label for="NewPassowrd">Please enter the new password again<span class="req">*</span></label><input id="NewPassowrd" class="md-input label-fixed" name="NewPassowrd" type="password" value=""></div><div class="parsley-errors-list filled"><span class="parsley-required"></span></div>';
+            	$searchFields['NewPassowrdCheck']['completeField']='<div class="parsley-row"><label for="NewPassowrdCheck">Please enter the new password again<span class="req">*</span></label><input id="NewPassowrdCheck" class="md-input label-fixed" name="NewPassowrdCheck" type="password" value=""></div><div class="parsley-errors-list filled"><span class="parsley-required">修改完成</span></div>';
             	return view(self::$viewPath.'.index')
             			->with('IfSearch', '')
             			->with('searchFields',  $searchFields)
@@ -160,13 +157,9 @@ class ProfilePasswordSettingController extends Controller
         }
 
         return view(self::$viewPath.'.index' )
-                    // ->with('i', ($pageNo - 1) * $pageNumEachPage)
                     ->with('IfSearch', $IfSearch)
                     ->with('searchFields',  $searchFields)
                     ->with('routePath', self::$routePath)
                     ->with('viewPath', self::$viewPath);
-                    // ->with('result', $result)
-                    // ->with('pageNumEachPage', $pageNumEachPage);
-
     }
 }

@@ -122,7 +122,7 @@
                             </tr>
                         @endforeach
                     @else
-                        <td colspan="9" style="text-align: center;">查無資料</td>
+                        <td colspan="500" style="text-align: center;">No data found</td>
                     @endif
                 </table>
             </div>

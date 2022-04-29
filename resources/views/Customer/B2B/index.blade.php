@@ -176,7 +176,7 @@
                             </tr>
                         @endforeach
                     @else
-                        <td colspan="500" style="text-align: center;">No data matched</td>
+                        <td colspan="500" style="text-align: center;">No data found</td>
                     @endif
                 </table>
             </div>

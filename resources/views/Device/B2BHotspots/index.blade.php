@@ -70,7 +70,7 @@
                                     <div class="uk-width-1-1">
                                         <div onclick="search();" class="md-btn md-btn-primary">Search</div>
                                         @if($IfSearch == '1') 
-                                            <div onclick="resetForm();" class="md-btn md-btn-warning">Clear inquiry</div>
+                                            <div onclick="resetForm();" class="md-btn md-btn-warning">Clear</div>
                                         @endif
                                     </div>
                                 </div>
@@ -132,7 +132,7 @@
                             </tr>
                         @endforeach
                     @else
-                        <td colspan="500" style="text-align: center;">查無資料</td>
+                        <td colspan="500" style="text-align: center;">No data found</td>
                     @endif
                 </table>
             </div>

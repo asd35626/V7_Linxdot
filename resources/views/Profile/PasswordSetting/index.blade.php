@@ -14,16 +14,16 @@
 
 
 {{-- 設定視窗的標題 --}}
-@section('title', '修改密碼')
+@section('title', 'change password')
 
 {{-- 設定內容的主標題區 --}}
-@section('pageTitle', '修改密碼')
+@section('pageTitle', 'change password')
 
 {{-- 設定內容的主標題區 --}}
 @section('breadcrumbArea')
     <ul id="breadcrumbs">
         <li><a href="/Default">Home</a></li>
-        <li><span>修改密碼</span></li>
+        <li><span>change password</span></li>
     </ul>
 @endsection
 
@@ -64,9 +64,9 @@
                             <div class="uk-width-5-10" style="margin-top:20px;" >
                                 <div class="uk-width-1-1">
                                     <!--<button type="submit" href="#" class="md-btn md-btn-primary">查詢</button>-->
-                                    <div onclick="search();" class="md-btn md-btn-primary">送出修改</div>
+                                    <div onclick="search();" class="md-btn md-btn-primary">Submit</div>
                                     @if($IfSearch == '1')
-                                        <div onclick="resetForm();" class="md-btn md-btn-warning">重新輸入</div>
+                                        <div onclick="resetForm();" class="md-btn md-btn-warning">Retry</div>
                                     @endif
                                 </div>
                             </div>

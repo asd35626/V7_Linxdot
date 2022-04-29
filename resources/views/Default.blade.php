@@ -24,5 +24,5 @@
 
 {{-- 設定內容 --}}
 @section('content')
-    <p>歡迎進入本系統！</p>
+    <p>Welcome to Linxdot Admin！</p>
 @endsection
