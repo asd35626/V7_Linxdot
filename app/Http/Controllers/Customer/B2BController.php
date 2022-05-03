@@ -6,9 +6,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Model\DimUser;
-use App\Model\DimUserType;
-use App\Model\DimUserDegreeToUserType;
-use App\Model\DimMember;
+use App\Model\DimHotspot;
 use Hash;
 use Uuid;
 use Mail;
@@ -364,22 +362,30 @@ class B2BController extends Controller
         }else{
             $pageNo = 1;
         }
+        $count = '';
 
-        $data = DimUser::where('IfDelete', '0')
-                        ->where('UserType', 20)
-                        ->where('DegreeId', 50)
+        $data = DimUser::where('Dim_User.IfDelete', '0')
+                        ->leftJoin('Dim_Hotspot', function($join){
+                            $join->on('Dim_Hotspot.OwnerID','=','Dim_User.Id')
+                                ->where('Dim_Hotspot.IfValid' , 1)
+                                ->where('Dim_Hotspot.IfDelete' , 0);
+                        })
+                        ->where('Dim_User.UserType', 20)
+                        ->where('Dim_User.DegreeId', 50)
+                        ->where('Dim_User.IfDelete', 0)
                         ->select(
-                            'Id',
-                            'MemberNo',
-                            'RealName',
-                            'UserEmail',
-                            'ContactPhone',
-                            'ContactAddress',
-                            'CompanyName',
-                            'CompanyPhone',
-                            'CompanyEmail',
-                            'IfValid',
-                            'LoginFailTimes',
+                            DB::raw("count(Dim_Hotspot.id) as count"),
+                            'Dim_User.Id',
+                            'Dim_User.MemberNo',
+                            'Dim_User.RealName',
+                            'Dim_User.UserEmail',
+                            'Dim_User.ContactPhone',
+                            'Dim_User.ContactAddress',
+                            'Dim_User.CompanyName',
+                            'Dim_User.CompanyPhone',
+                            'Dim_User.CompanyEmail',
+                            'Dim_User.IfValid',
+                            'Dim_User.LoginFailTimes',
                         );
 
         if ($IfSearch == '1') {
@@ -390,15 +396,13 @@ class B2BController extends Controller
 
             $data= $data->where(function($query) use ($searchArray) {
                 if($searchArray['selectKeyword'] != '') {
-                    $query->Where('MemberNo', 'like', '%'.$searchArray['selectKeyword'].'%' )
-                        ->orWhere('RealName', 'like', '%'.$searchArray['selectKeyword'].'%' )
-                        ->orWhere('UserMobile', 'like', '%'.$searchArray['selectKeyword'].'%')
-                        ->orWhere('UserEmail', 'like', '%'.$searchArray['selectKeyword'].'%');
+                    $query->Where('Dim_User.MemberNo', 'like', '%'.$searchArray['selectKeyword'].'%' )
+                        ->orWhere('Dim_User.RealName', 'like', '%'.$searchArray['selectKeyword'].'%' )
+                        ->orWhere('Dim_User.UserMobile', 'like', '%'.$searchArray['selectKeyword'].'%')
+                        ->orWhere('Dim_User.UserEmail', 'like', '%'.$searchArray['selectKeyword'].'%');
                 }
             });
         }
-
-        $data = $data->where('IfDelete', 0);
 
         //排序
         $forward = '';

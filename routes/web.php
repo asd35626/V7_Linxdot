@@ -90,8 +90,10 @@ Route::group(['prefix' => 'Fulfillment'],function () {
 
 //會員管理
 Route::group(['prefix' => 'Customer'],function () {
-    // 物流商管理
+    // B2B會員
     Route::resource('B2B', 'Customer\B2BController');
+    // B2B會員的hotspots列表
+    Route::resource('B2B/{ID}/Hotspots', 'Customer\B2BHotspotsController');
 });
 
 

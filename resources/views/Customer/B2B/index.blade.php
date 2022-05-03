@@ -139,6 +139,7 @@
                             {!! generateHTML('CompanyName','Contact',$isAsc, $orderBy) !!}
                             {!! generateHTML('CompanyPhone','Contact Phone',$isAsc, $orderBy) !!}
                             {!! generateHTML('CompanyEmail','Contact Email',$isAsc, $orderBy) !!}
+                            <th class="uk-width-1-10 uk-text-center uk-text-small">Hotspot Qty</th>
                             {!! generateHTML('IfValid','Active/ Inactive',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-center uk-text-small">Function</th>
                         </tr>
@@ -156,7 +157,10 @@
                                 <td class="uk-text-small">{{ isset($object->CompanyName) ? $object->CompanyName : '' }}</td>
                                 <td class="uk-text-small">{{ isset($object->CompanyPhone) ? $object->CompanyPhone : '' }}</td>
                                 <td class="uk-text-small">{{ isset($object->CompanyEmail) ? $object->CompanyEmail : '' }}</td>
-                                <td class="uk-text-small Status">
+                                <td class="uk-text-center uk-text-small">
+                                    <span class="uk-badge uk-badge-primary" onclick="goto('{{ '/Customer/B2B/'.$object->$primaryKey.'/Hotspots' }}')" style="cursor: pointer;">{{ $object->count }}</span>
+                                </td>
+                                <td class="uk-text-center uk-text-small Status">
                                     @if($object->IfValid == 0) 
                                         <span class="uk-badge uk-badge-danger">Inactive</span>
                                     @elseif($object->LoginFailTimes > 2)
@@ -206,7 +210,12 @@
             $('#Page').val(pageNo);
             $('#IfNewSearch').val('0');
             $('#searchForm').submit();
-        } 
+        }
+
+        function goto(url){
+            // alert(url);
+            window.location.href = url;
+        }
 
         function orderBy(type){
             $('#excel').val(0);
