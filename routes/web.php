@@ -93,7 +93,11 @@ Route::group(['prefix' => 'Customer'],function () {
     // B2B會員
     Route::resource('B2B', 'Customer\B2BController');
     // B2B會員的hotspots列表
-    Route::resource('B2B/{ID}/Hotspots', 'Customer\B2BHotspotsController');
+    Route::resource('B2B/{ID}/HotspotsList', 'Customer\HotspotsListController', [
+        'names' => [
+            'index' => 'Customer.B2B.HotspotsList.index'
+        ]
+    ]);
 });
 
 

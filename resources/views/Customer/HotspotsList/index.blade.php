@@ -31,7 +31,7 @@
 @section('content')
     <!-- search area start-->
     <h4 class="heading_a uk-margin-bottom">Search</h4>
-    {!! Form::open(array('route' => $routePath.'.index','method'=>'GET', 'id'=> 'searchForm')) !!}
+    {!! Form::open(array('url' => $url,'method'=>'GET', 'id'=> 'searchForm')) !!}
         {{ Form::hidden('IfNewSearch', '', array('id' => 'IfNewSearch')) }}
         {{ Form::hidden('IfSearch', '', array('id' => 'IfSearch')) }}
         {{ Form::hidden('Page', '', array('id' => 'Page')) }}

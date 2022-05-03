@@ -158,7 +158,7 @@
                                 <td class="uk-text-small">{{ isset($object->CompanyPhone) ? $object->CompanyPhone : '' }}</td>
                                 <td class="uk-text-small">{{ isset($object->CompanyEmail) ? $object->CompanyEmail : '' }}</td>
                                 <td class="uk-text-center uk-text-small">
-                                    <span class="uk-badge uk-badge-primary" onclick="goto('{{ '/Customer/B2B/'.$object->$primaryKey.'/Hotspots' }}')" style="cursor: pointer;">{{ $object->count }}</span>
+                                    <span class="uk-badge uk-badge-primary" onclick="goto('{{ '/Customer/B2B/'.$object->$primaryKey.'/HotspotsList' }}')" style="cursor: pointer;">{{ $object->count }}</span>
                                 </td>
                                 <td class="uk-text-center uk-text-small Status">
                                     @if($object->IfValid == 0) 

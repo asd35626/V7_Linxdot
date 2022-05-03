@@ -12,7 +12,7 @@ use App\V7Idea\GenerateData;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-class B2BHotspotsController extends Controller
+class HotspotsListController extends Controller
 {
     /// <summary>
     /// 檢查權限
@@ -21,10 +21,10 @@ class B2BHotspotsController extends Controller
         WebLib::checkUserPermission('B2B');
     }
     // 設定blade目錄的位置
-    public static $viewPath = "Customer.B2BHotspots";
+    public static $viewPath = "Customer.HotspotsList";
     
     // 設定route目錄的位置
-    public static $routePath = "B2BHotspots";
+    public static $routePath = "Customer.B2B.HotspotsList";
 
     // 這個資料表的主要鍵值
     public static $primaryKey = "id";
@@ -350,6 +350,7 @@ class B2BHotspotsController extends Controller
         $orderBy = $request->input('orderBy', '');          // 排序欄位
         $isAsc = $request->input('isAsc', '');              // 是否順序排序
         $excel = $request->input('excel', 0);               // 是否匯出excel
+        $url = '/Customer/B2B/'.$mid.'/HotspotsList';
 
         // 產生搜尋的欄位;
         $searchFields = WebLib::generateInputs(self::defineSearchFields(), true)["data"];
@@ -497,6 +498,7 @@ class B2BHotspotsController extends Controller
         return view(self::$viewPath.'.index', compact('data'))
                     ->with('i', ($pageNo - 1) * $pageNumEachPage)
                     ->with('username', $username)
+                    ->with('url', $url)
                     ->with('IfSearch', $IfSearch)
                     ->with('pageNo', $pageNo)
                     ->with('searchFields',  $searchFields)
