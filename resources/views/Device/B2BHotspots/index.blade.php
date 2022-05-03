@@ -97,7 +97,8 @@
                             {!! generateHTML('DeviceSN','s/n',$isAsc, $orderBy) !!}
                             {!! generateHTML('MacAddress','lan mac',$isAsc, $orderBy) !!}
                             {!! generateHTML('AnimalName','animal name',$isAsc, $orderBy) !!}
-                            {!! generateHTML('IfVerifyDate','verify status',$isAsc, $orderBy) !!}
+                            {!! generateHTML('OnBoardingKey','onboarding key status',$isAsc, $orderBy) !!}
+                            {!! generateHTML('IfVerifyDate','status',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small">register status</th>
                         </tr>
                     </thead>
@@ -107,6 +108,7 @@
                                 <td class="uk-text-small">{{ $object->DeviceSN }}</td>
                                 <td class="uk-text-small">{{ $object->MacAddress }}</td>
                                 <td class="uk-text-small">{{ $object->AnimalName }}</td>
+                                <td class="uk-text-small">{{ $object->OnBoardingKey }}</td>
                                 <td class="uk-text-small">
                                     @if($object->IsVerify == 1) 
                                         {{Carbon\Carbon::parse($object->IfVerifyDate)->format('Y-m-d H:i:s')}}
