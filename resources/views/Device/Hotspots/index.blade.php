@@ -3,12 +3,22 @@
 
 {{-- 額外增加所需要的css檔案 --}}
 @section('extraCssArea')
-
+    <style>
+        .userMOUSE{ cursor: pointer; }
+    </style>
 @endsection
 
 {{-- 增加所需要的Script; 將會放置在主板型的後面 --}}
 @section('scriptArea')
-
+    <!-- common functions -->
+    <script src="/assets/js/common.min.js"></script>
+    <!-- uikit functions -->
+    <script src="/assets/js/uikit_custom.min.js"></script>
+    <style type="text/css">
+        .uk-modal #hotspotOwner .selectize-dropdown {
+            top: 85px !important;
+        }
+    </style>
 @endsection
 
 
@@ -161,8 +171,11 @@
                                         @endif
                                     @endif
                                 </td>
-                                <td class="uk-text-center uk-text-small">
+                                <td class="uk-text-small">
                                     <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}"><i class="md-icon material-icons">&#xE254;</i></a>
+
+                                    <div class="uk-badge uk-badge-primary userMOUSE" onclick="showUserList('{{ $object->$primaryKey }}')">User</div>
+
                                     {{-- {!! Form::open(['id' => 'formDeleteAction'.$i , 'method' => 'DELETE','route' => [ $routePath.'.destroy', $object->$primaryKey],'style'=>'display:inline']  ) !!}
                                         <a href="javascript:if(confirm('Are you sure to delete this datum?'))$('{{ '#formDeleteAction'.$i }}').submit();"><i class="md-icon material-icons">&#xE872;</i></a>
                                     {!! Form::close() !!} --}}
@@ -178,6 +191,22 @@
         </div>
     </div>
     <!-- table end -->
+
+    {{-- 變更會員 --}}
+    <div class="uk-modal" id="update_hotspotOwner" aria-hidden="true" style="display: none; overflow-y: auto;">
+            <div class="uk-modal-dialog" style="top: 199px;">
+                <div class="uk-modal-header">
+                    <h3 class="uk-modal-title">User</h3>
+                </div>
+                <p><input type="hidden" id="HID"></p>
+                <div id="hotspotOwner"></div>
+                <div class="uk-modal-footer uk-text-right">
+                    <button type="button" class="md-btn md-btn-flat uk-modal-close">取消</button>
+                    <button onclick="javascript:updateUID()" type="button" class="md-btn md-btn-flat md-btn-flat-primary">更新</button>
+                </div>
+            </div>
+        </div>
+    {{-- 變更會員 --}}
 
     <script>
         function search() {
@@ -229,6 +258,125 @@
             }
               
             $('#searchForm').submit();
+        }
+
+        // 顯示會員選單
+        function showUserList(ID) {
+            $.ajax({
+                url: '/api/v1/showUserList',
+                type: 'POST',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : { 
+                    'ID' : ID,
+                },
+                success: function(response) {
+                    if(response.status == 0){
+                        // hideen the button
+                        let hotspotOwner = '';
+
+                        hotspotOwner += `<option value="" selected hidden>Select...</option>`;
+                        
+                        response.data.users.forEach(element => {
+                            let selected = '';
+                            if(response.data.select == element.Id) selected = 'selected';
+                            hotspotOwner += `<option value="${element.Id}" ${selected}>${element.RealName}(${element.MemberNo})</option>`;
+                        });
+                        let userSelect = `<select name="UID" id="UID">${hotspotOwner}</select>`;
+                        $('#hotspotOwner').html(userSelect);
+                    }else{
+                        // console.log(response.message);
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log('error');
+                    UIkit.modal.alert('讀取失敗！(error)').on('hide.uk.modal', function() {
+                        // custome js code
+                        console.log('close');
+                        // window.location.reload();
+                    });
+                },
+                complete: function () {
+                    $('#UID').selectize({
+                        plugins: {
+                            'remove_button': {
+                                label: ''
+                            }
+                        },
+                    });
+
+                    $('#update_hotspotOwner #HID').val(ID);
+                    console.log(`update_hotspotOwner HID: ${$('#update_hotspotOwner #HID').val()}`);
+                    UIkit.modal("#update_hotspotOwner").show();
+
+                },
+                cache: false
+            });
+
+        }
+
+        // 更新所屬會員
+        function updateUID() {
+            //機器ID
+            let HID = $('#update_hotspotOwner #HID').val();
+            //會員ID
+            let newUID = $('#update_hotspotOwner #UID').val();
+            console.log(`HID: ${HID}`, `newUID: ${newUID}`);
+
+            // if(newUID == '') {
+            //     UIkit.modal.alert('請選擇商品').on('hide.uk.modal', function() {
+            //         // custome js code
+            //         console.log('close');
+            //     });
+            // } else {
+                $.ajax({
+                    url: '/api/v1/updateUID',
+                    type: 'POST',
+                    async: false,
+                    headers: {
+                        'Authorization': Cookies.get('authToken')
+                    },
+                    data : { 
+                        'ID' : HID,
+                        'newUID' : newUID,
+                    },
+                    success: function(response) {
+                        if(response.status == 0){
+                            // hideen the button
+                            UIkit.modal.alert('更新成功！').on('hide.uk.modal', function() {
+                                // custome js code
+                                console.log('close');
+                                let topic = `{{env('mqtt_prefix', '')}}/LiveShow/${HID}`;
+                                // console.log(`topic: ${topic}`);
+                                let sendData = {
+                                                type          : "PrimaryProductUpdate",
+                                            };
+                                client.publish(topic, JSON.stringify(sendData), 1);
+                            });
+                        }else{
+                            UIkit.modal.alert('更新失敗！').on('hide.uk.modal', function() {
+                                // custome js code
+                                console.log('close');
+                            });
+                            // console.log(response.message);
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        console.log('error');
+                        UIkit.modal.alert('更新失敗！(error)').on('hide.uk.modal', function() {
+                            // custome js code
+                            console.log('close');
+                        });
+                    },
+                    complete: function () {
+                        UIkit.modal("#update_hotspotOwner").hide();
+                    },
+                    cache: false
+                });
+            // }
+
         }
     </script>
 

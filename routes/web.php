@@ -35,6 +35,10 @@ Route::group(['prefix' => 'api/v1'],function () {
     Route::post('ChangeSpeakAuth', 'Member\MemberManagementController@changeSpeakAuth');
     // 解除鎖定
     Route::post('User/Unlock', 'User\UserController@Unlock');
+    // 顯示會員2050
+    Route::post('showUserList', 'Device\HotspotsController@showUserList');
+    // 更改所屬會員
+    Route::post('updateUID', 'Device\HotspotsController@updateUID');
 });
 
 //帳號相關API

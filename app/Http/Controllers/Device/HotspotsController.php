@@ -4,7 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Controller;
 use App\Model\DimHotspot;
+use App\Model\DimUser;
 use Uuid;
+use Response;
 use Carbon\Carbon;
 use App\V7Idea\WebLib;
 use App\V7Idea\GenerateData;
@@ -856,5 +858,84 @@ class HotspotsController extends Controller
             return redirect()->route(self::$routePath.'.index')
                             ->with('success','資料已經刪除');
         }
+    }
+
+    public function showUserList(Request $request){
+        // init status
+        $responseBody = array(
+          'status' => 0,
+          'errorCode' => '9999',
+          'message' => 'Unknown error.',
+          
+        );
+        // get param
+        $ID = $request->input('ID', '');
+
+        if($ID === ''){
+            $responseBody['status'] = 1;
+            $responseBody['message'] = 'No id parameter.';
+            $responseBody['errorCode'] = '0001';
+        }else{
+            $users = DimUser::where('UserType', 20)
+                                ->where('DegreeId', 50)
+                                ->where('IfValid', 1)
+                                ->where('IfDelete', 0)
+                                ->select(
+                                    'Id',
+                                    'RealName',
+                                    'MemberNo'
+                                )->get();
+
+            $Hotspots = DimHotspot::select('OwnerID')
+                                ->where('id', $ID)
+                                ->where('IfValid', 1)
+                                ->where('IfDelete', 0);
+        }
+
+        if($responseBody['status'] == 0) {
+            $responseBody['status'] = 0;
+            $responseBody['message'] = 'change success!';
+            $responseBody['errorCode'] = '0000';
+            $responseBody['data'] = [
+                'select' => ($Hotspots->count() != 0) ? $Hotspots->first()->OwnerID : '',
+                'users' => $users,
+            ];
+        }
+        return Response::json($responseBody, 200);
+    }
+
+    public function updateUID(Request $request){
+        // init status
+        $responseBody = array(
+          'status' => 0,
+          'errorCode' => '9999',
+          'message' => 'Unknown error.',
+          
+        );
+        // get param
+        // dd($request->all());
+        $UID = $request->input('newUID', '');
+        $ID = $request->input('ID', '');
+        // dd($$UID,$ID);
+        // 檢查輸入
+        if($ID === ''){
+            $responseBody['status'] = 1;
+            $responseBody['message'] = 'No HID parameter.';
+            $responseBody['errorCode'] = '0002';
+        }elseif($UID === ''){
+            $UID = unll;
+        }
+
+        if($responseBody['status'] == 0) {
+            // 更新OID
+            DimHotspot::on('mysql2')
+                    ->where('id',$ID)
+                    ->update(['OwnerID' => $UID]);
+            
+            $responseBody['status'] = 0;
+            $responseBody['message'] = 'change success!';
+            $responseBody['errorCode'] = '0000';
+        }
+        return Response::json($responseBody, 200);
     }
 }
