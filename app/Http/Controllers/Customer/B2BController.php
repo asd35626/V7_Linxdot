@@ -365,11 +365,6 @@ class B2BController extends Controller
         $count = '';
 
         $data = DimUser::where('Dim_User.IfDelete', '0')
-                        ->leftJoin('Dim_Hotspot', function($join){
-                            $join->on('Dim_Hotspot.OwnerID','=','Dim_User.Id')
-                                ->where('Dim_Hotspot.IfValid' , 1)
-                                ->where('Dim_Hotspot.IfDelete' , 0);
-                        })
                         ->where('Dim_User.UserType', 20)
                         ->where('Dim_User.DegreeId', 50)
                         ->where('Dim_User.IfDelete', 0)
@@ -386,7 +381,13 @@ class B2BController extends Controller
                             'Dim_User.CompanyEmail',
                             'Dim_User.IfValid',
                             'Dim_User.LoginFailTimes',
-                        );
+                        )
+                        ->groupBy('Dim_User.Id')
+                        ->leftJoin('Dim_Hotspot', function($join){
+                            $join->on('Dim_Hotspot.OwnerID','=','Dim_User.Id')
+                                ->where('Dim_Hotspot.IfValid' , 1)
+                                ->where('Dim_Hotspot.IfDelete' , 0);
+                        });
 
         if ($IfSearch == '1') {
             // 表示會需要參考搜尋的變數
