@@ -3,7 +3,47 @@
 
 {{-- 額外增加所需要的css檔案 --}}
 @section('extraCssArea')
+<style type="text/css">
+    .container-1{
+        /*width: 300px;*/
+        vertical-align: middle;
+        white-space: nowrap;
+        position: relative;
+    }
+    .container-1 input#search{
+        width: 90%;
+        height: 30px;
+        border: none;
+        font-size: 10pt;
+        float: right;
+        color: #63717f;
+        padding-left: 35px;
+        border-radius: 15px;
+    }
+    .container-1 .icon{
+        position: absolute;
+        margin-left: 35px;
+        margin-top: 5px;
+        z-index: 1;
+        color: #4f5b66;
+    }
+    .container-1 input#search::-webkit-input-placeholder {
+       color: #65737e;
+    }
+     
+    .container-1 input#search:-moz-placeholder { /* Firefox 18- */
+       color: #65737e;  
+    }
+     
+    .container-1 input#search::-moz-placeholder {  /* Firefox 19+ */
+       color: #65737e;  
+    }
+     
+    .container-1 input#search:-ms-input-placeholder {  
+       color: #65737e;  
+    }
 
+</style>
 @endsection
 
 {{-- 增加所需要的Script; 將會放置在主板型的後面 --}}
@@ -29,7 +69,6 @@
 {{-- 設定內容 --}}
 @section('content')
     <!-- search area start-->
-    <h4 class="heading_a uk-margin-bottom">Search</h4>
     {!! Form::open(array('route' => $routePath.'.index','method'=>'GET', 'id'=> 'searchForm')) !!}
         {{ Form::hidden('IfNewSearch', '', array('id' => 'IfNewSearch')) }}
         {{ Form::hidden('IfSearch', '', array('id' => 'IfSearch')) }}
@@ -37,35 +76,12 @@
         {{ Form::hidden('excel', '', array('id' => 'excel', 'value' => 0)) }}
         {{ Form::hidden('orderBy', '', array('id' => 'orderBy')) }}
         {{ Form::hidden('isAsc', '', array('id' => 'isAsc')) }}
-        <div class="uk-grid uk-margin-medium-bottom" >
-            <div class="uk-width-medium-5-5 uk-row-first">
+        <div class="uk-grid uk-margin-medium-bottom"  style="display:none">
+            <div class="uk-width-medium-1-5 uk-row-first">
                 <div class="md-card">
-                    <div class="md-card-content">
+                    <div class="md-card-right">
                         <div data-dynamic-fields="field_template_a" dynamic-fields-counter="0">
                             <div class="uk-grid uk-grid-medium form_section" data-uk-grid-match="">
-                                <div class="uk-width-10-10">
-                                    <!-- uk-grid start -->
-                                    <div class="uk-grid">
-                                        <div class="uk-width-1-3">
-                                            {!! $searchFields['S/N']['completeField'] !!}
-                                        </div>
-                                        <div class="uk-width-1-3">
-                                            {!! $searchFields['Mac']['completeField'] !!}
-                                        </div>
-                                        <div class="uk-width-1-3">
-                                            {!! $searchFields['AnimalName']['completeField'] !!}
-                                        </div>
-                                    </div>
-                                    <div class="uk-grid">
-                                        <div class="uk-width-1-3">
-                                            {!! $searchFields['IsVerify']['completeField'] !!}
-                                        </div>
-                                        <div class="uk-width-1-3">
-                                            {!! $searchFields['IfRegister']['completeField'] !!}
-                                        </div>
-                                    </div>
-                                    <!-- uk-grid end -->
-                                </div>
                                 <div class="uk-width-10-10" style="margin-top:20px;" >
                                     <div class="uk-width-1-1">
                                         <div onclick="search();" class="md-btn md-btn-primary">Search</div>
@@ -73,6 +89,7 @@
                                             <div onclick="resetForm();" class="md-btn md-btn-warning">Clear</div>
                                         @endif
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -84,22 +101,31 @@
             </div>
         </div>
     {!! Form::close() !!}
-    <!-- search area end-->
+    <!-- search area end-->    
+
+    <div class="uk-grid">
+        <div class="uk-width-7-10"></div>
+        <div class="container-1 uk-width-3-10">
+            <span class="material-icons icon"> search </span>
+            <input type="search" id="search" placeholder="Search..." />
+        </div>
+    </div>
 
     <!-- table start -->
-    <h4 class="heading_a uk-margin-bottom">List</h4>
     <div class="md-card uk-margin-medium-bottom">
         <div class="md-card-content">
             <div class="uk-overflow-container">
                 <table id="grid-basic" class="uk-table uk-table-nowrap table_check">
                     <thead>
                         <tr>
-                            {!! generateHTML('DeviceSN','s/n',$isAsc, $orderBy) !!}
-                            {!! generateHTML('MacAddress','lan mac',$isAsc, $orderBy) !!}
-                            {!! generateHTML('AnimalName','animal name',$isAsc, $orderBy) !!}
-                            {!! generateHTML('OnBoardingKey','onboarding key status',$isAsc, $orderBy) !!}
-                            {!! generateHTML('IfVerifyDate','status',$isAsc, $orderBy) !!}
-                            <th class="uk-width-1-10 uk-text-small">register status</th>
+                            {!! generateHTML('DeviceSN','S/N',$isAsc, $orderBy) !!}
+                            {!! generateHTML('MacAddress','MAC Address',$isAsc, $orderBy) !!}
+                            {!! generateHTML('AnimalName','Animal name',$isAsc, $orderBy) !!}
+                            {!! generateHTML('DewiStatus','Dewi status',$isAsc, $orderBy) !!}
+                            {!! generateHTML('BlockHeight','Block height',$isAsc, $orderBy) !!}
+                            {!! generateHTML('LastUpdateOnLineTime','Latest online time',$isAsc, $orderBy) !!}
+                            {!! generateHTML('Firmware','ROM version',$isAsc, $orderBy) !!}
+                            {!! generateHTML('MinerVersion','Miner version',$isAsc, $orderBy) !!}
                         </tr>
                     </thead>
                     @if($data->count() > 0)
@@ -108,29 +134,11 @@
                                 <td class="uk-text-small">{{ $object->DeviceSN }}</td>
                                 <td class="uk-text-small">{{ $object->MacAddress }}</td>
                                 <td class="uk-text-small">{{ $object->AnimalName }}</td>
-                                <td class="uk-text-small">{{ $object->OnBoardingKey }}</td>
-                                <td class="uk-text-small">
-                                    @if($object->IsVerify == 1) 
-                                        {{Carbon\Carbon::parse($object->IfVerifyDate)->format('Y-m-d H:i:s')}}
-                                    @else
-                                        N/A
-                                    @endif
-                                </td>
-                                <td class="uk-text-small">
-                                    @if($object->IfRegister == 1) 
-                                        Y
-                                    @else
-                                        @if($object->IfKey == 0) 
-                                            @if($object->IfAnimal == 1) 
-                                                No Key
-                                            @else
-                                                N/A
-                                            @endif
-                                        @else
-                                            No Animal
-                                        @endif
-                                    @endif
-                                </td>
+                                <td class="uk-text-small">{{ $object->DewiStatus }}</td>
+                                <td class="uk-text-small">{{ $object->BlockHeight }}</td>
+                                <td class="uk-text-small">{{ $object->LastUpdateOnLineTime }}</td>
+                                <td class="uk-text-small">{{ $object->Firmware }}</td>
+                                <td class="uk-text-small">{{ $object->MinerVersion }}</td>
                             </tr>
                         @endforeach
                     @else
