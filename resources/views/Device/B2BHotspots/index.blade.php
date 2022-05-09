@@ -22,10 +22,11 @@
     }
     .container-1 .icon{
         position: absolute;
-        margin-left: 35px;
-        margin-top: 5px;
         z-index: 1;
         color: #4f5b66;
+        position: absolute;
+        margin-left: 45px;
+        margin-top: 7px;
     }
     .container-1 input#search::-webkit-input-placeholder {
        color: #65737e;
@@ -42,6 +43,8 @@
     .container-1 input#search:-ms-input-placeholder {  
        color: #65737e;  
     }
+
+    .material-icons {font-size: 20px;}
 
 </style>
 @endsection
