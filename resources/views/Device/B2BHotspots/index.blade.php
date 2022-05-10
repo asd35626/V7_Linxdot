@@ -51,7 +51,19 @@
 
 {{-- 增加所需要的Script; 將會放置在主板型的後面 --}}
 @section('scriptArea')
-
+    <script>
+        $(document).ready(function() {
+            $('#search').keypress(function(event) {
+                if (event.which == 13) {
+                    $('#excel').val(0);
+                    $('#IfSearch').val('1');
+                    $('#IfNewSearch').val('1');
+                    $('#Page').val('1');
+                    $('#searchForm').submit();
+                }
+            });
+        })
+    </script>
 @endsection
 
 
@@ -76,26 +88,12 @@
         {{ Form::hidden('IfNewSearch', '', array('id' => 'IfNewSearch')) }}
         {{ Form::hidden('IfSearch', '', array('id' => 'IfSearch')) }}
         {{ Form::hidden('Page', '', array('id' => 'Page')) }}
-        {{ Form::hidden('excel', '', array('id' => 'excel', 'value' => 0)) }}
         {{ Form::hidden('orderBy', '', array('id' => 'orderBy')) }}
         {{ Form::hidden('isAsc', '', array('id' => 'isAsc')) }}
         <div class="uk-grid uk-margin-medium-bottom"  style="display:none">
             <div class="uk-width-medium-1-5 uk-row-first">
                 <div class="md-card">
                     <div class="md-card-right">
-                        <div data-dynamic-fields="field_template_a" dynamic-fields-counter="0">
-                            <div class="uk-grid uk-grid-medium form_section" data-uk-grid-match="">
-                                <div class="uk-width-10-10" style="margin-top:20px;" >
-                                    <div class="uk-width-1-1">
-                                        <div onclick="search();" class="md-btn md-btn-primary">Search</div>
-                                        @if($IfSearch == '1') 
-                                            <div onclick="resetForm();" class="md-btn md-btn-warning">Clear</div>
-                                        @endif
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
                         <script id="field_template_a" type="text/x-handlebars-template">
                             {{--<hr class="form_hr">--}}
                         </script>
@@ -103,16 +101,15 @@
                 </div>
             </div>
         </div>
-    {!! Form::close() !!}
-    <!-- search area end-->    
-
-    <div class="uk-grid">
-        <div class="uk-width-7-10"></div>
-        <div class="container-1 uk-width-3-10">
-            <span class="material-icons icon"> search </span>
-            <input type="search" id="search" placeholder="Search..." />
+        <div class="uk-grid  uk-margin-medium-bottom">
+            <div class="uk-width-7-10"></div>
+            <div class="container-1 uk-width-3-10">
+                <span class="material-icons icon"> search </span>
+                <input type="search" id="search" name="search" placeholder="Search..." value="{!! $search !!}">
+            </div>
         </div>
-    </div>
+    {!! Form::close() !!}
+    <!-- search area end-->
 
     <!-- table start -->
     <div class="md-card uk-margin-medium-bottom">
@@ -156,11 +153,10 @@
 
     <script>
         function search() {
-            $('#excel').val(0);
             $('#IfSearch').val('1');
             $('#IfNewSearch').val('1');
             $('#Page').val('1');
-            $('#searchForm').submit();
+            $('#searchForm2').submit();
         }
 
         function resetForm() {
