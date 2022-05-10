@@ -201,8 +201,8 @@
                 <p><input type="hidden" id="HID"></p>
                 <div id="hotspotOwner"></div>
                 <div class="uk-modal-footer uk-text-right">
-                    <button type="button" class="md-btn md-btn-flat uk-modal-close">取消</button>
-                    <button onclick="javascript:updateUID()" type="button" class="md-btn md-btn-flat md-btn-flat-primary">更新</button>
+                    <button type="button" class="md-btn md-btn-flat uk-modal-close">BACK</button>
+                    <button onclick="javascript:updateUID()" type="button" class="md-btn md-btn-flat md-btn-flat-primary">OK</button>
                 </div>
             </div>
         </div>
