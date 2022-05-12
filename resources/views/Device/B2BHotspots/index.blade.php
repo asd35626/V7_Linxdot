@@ -62,6 +62,13 @@
                     $('#searchForm').submit();
                 }
             });
+            $('#search').change(function(event) {
+                $('#excel').val(0);
+                $('#IfSearch').val('1');
+                $('#IfNewSearch').val('1');
+                $('#Page').val('1');
+                $('#searchForm').submit();
+            });
         })
     </script>
 @endsection
@@ -110,7 +117,6 @@
         </div>
     {!! Form::close() !!}
     <!-- search area end-->
-
     <!-- table start -->
     <div class="md-card uk-margin-medium-bottom">
         <div class="md-card-content">
@@ -156,7 +162,7 @@
             $('#IfSearch').val('1');
             $('#IfNewSearch').val('1');
             $('#Page').val('1');
-            $('#searchForm2').submit();
+            $('#searchForm').submit();
         }
 
         function resetForm() {

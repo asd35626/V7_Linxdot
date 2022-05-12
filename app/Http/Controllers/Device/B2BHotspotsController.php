@@ -62,6 +62,18 @@ class B2BHotspotsController extends Controller
         $isAsc = $request->input('isAsc', '');              // 是否順序排序
         $user = WebLib::getCurrentUserID();                 // 使用者ID
         $search = $request->input('search', '');            // 查詢
+        $MacAddress = $search;
+        $MacAddress = strtolower(str_replace("-","",$MacAddress));
+        $MacAddress = strtolower(str_replace(":","",$MacAddress));
+        $newMacAddress = '';
+        for ($i=0; $i < 11; $i+=2) { 
+            $str = substr($MacAddress, $i, 2);
+            if($i != 10){
+                $newMacAddress .= $str.":";
+            }else{
+                $newMacAddress .= $str;
+            }
+        }
         // dd($search);
 
         // 產生搜尋的欄位;
@@ -83,9 +95,10 @@ class B2BHotspotsController extends Controller
         if($IfSearch == 1) {
             // 表示會需要參考搜尋的變數
             if($search != '') {
-                $data= $data->where(function($query) use ($search) {
+                $data= $data->where(function($query) use ($search,$newMacAddress) {
                     $query->where('DeviceSN', 'like', '%'.$search.'%' )
-                        ->orwhere('AnimalName', 'like', '%'.$search.'%' );
+                        ->orwhere('AnimalName', 'like', '%'.$search.'%' )
+                        ->orwhere('MacAddress', 'like', '%'.$newMacAddress.'%' );
                 });
                 $pageNo = 1;
                 $IfSearch = 0;
