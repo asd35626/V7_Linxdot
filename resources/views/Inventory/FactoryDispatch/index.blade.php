@@ -130,11 +130,11 @@
                             {!! generateHTML('SkuID','Sku No',$isAsc, $orderBy) !!}
                             {!! generateHTML('PalletID','Pallet No',$isAsc, $orderBy) !!}
                             {!! generateHTML('CartonID','Carton No',$isAsc, $orderBy) !!}
-                            {!! generateHTML('DeviceSN','Device S/N status',$isAsc, $orderBy) !!}
-                            {!! generateHTML('MacAddress','Mac Addresss status',$isAsc, $orderBy) !!}
-                            {!! generateHTML('HWModelNo','HW Mode No status',$isAsc, $orderBy) !!}
-                            {!! generateHTML('RegsionID','Region status',$isAsc, $orderBy) !!}
-                            {!! generateHTML('FactoryID','Factory status',$isAsc, $orderBy) !!}
+                            {!! generateHTML('DeviceSN','Device S/N',$isAsc, $orderBy) !!}
+                            {!! generateHTML('MacAddress','Mac Addresss',$isAsc, $orderBy) !!}
+                            {!! generateHTML('HWModelNo','HW Mode No',$isAsc, $orderBy) !!}
+                            {!! generateHTML('RegsionID','Region',$isAsc, $orderBy) !!}
+                            {!! generateHTML('FactoryID','Factory',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small">edit</th>
                         </tr>
                     </thead>
