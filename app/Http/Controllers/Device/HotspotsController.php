@@ -651,7 +651,8 @@ class HotspotsController extends Controller
                 ->with('Action', "NEW")
                 ->with('viewPath', self::$viewPath)
                 ->with('functionname', self::$functionname)
-                ->with('functionURL', self::$functionURL);
+                ->with('functionURL', self::$functionURL)
+                ->with('TOPname', self::$TOPname);
         }
     }
     /**
