@@ -127,11 +127,13 @@
                             {!! generateHTML('DeviceSN','S/N',$isAsc, $orderBy) !!}
                             {!! generateHTML('MacAddress','MAC Address',$isAsc, $orderBy) !!}
                             {!! generateHTML('AnimalName','Animal name',$isAsc, $orderBy) !!}
-                            {!! generateHTML('DewiStatus','Dewi status',$isAsc, $orderBy) !!}
-                            {!! generateHTML('BlockHeight','Block height',$isAsc, $orderBy) !!}
+                            {!! generateHTML('LastUpdateOnLineTime','Status',$isAsc, $orderBy) !!}
+                            {!! generateHTML('DewiStatus','Dewi',$isAsc, $orderBy) !!}
+                            {{-- {!! generateHTML('BlockHeight','Block height',$isAsc, $orderBy) !!} --}}
                             {!! generateHTML('LastUpdateOnLineTime','Latest online time',$isAsc, $orderBy) !!}
                             {!! generateHTML('Firmware','ROM version',$isAsc, $orderBy) !!}
                             {!! generateHTML('MinerVersion','Miner version',$isAsc, $orderBy) !!}
+                            <th class="uk-width-1-10 uk-text-small">More</th>
                         </tr>
                     </thead>
                     @if($data->count() > 0)
@@ -140,11 +142,35 @@
                                 <td class="uk-text-small">{{ $object->DeviceSN }}</td>
                                 <td class="uk-text-small">{{ $object->MacAddress }}</td>
                                 <td class="uk-text-small">{{ $object->AnimalName }}</td>
+                                <td class="uk-text-small">
+                                    @if($object->LastUpdateOnLineTime)
+                                        <?php 
+                                            $now = date_create( date('Y-m-d H:i:s'));
+                                            $LastUpdateOnLineTime = date_create( $object->LastUpdateOnLineTime);
+                                            $time = date_diff($now, $LastUpdateOnLineTime);
+                                            $minutes = $time->days * 24 * 60;
+                                            $minutes += $time->h * 60;
+                                            $minutes += $time->i;
+                                            if($minutes >= 10){
+                                                print('🟢 offline');
+                                            }else{
+                                                print('🔴 online');
+                                            }
+                                        ?>
+                                    @else
+                                        🔴 offline
+                                    @endif
+                                </td>
                                 <td class="uk-text-small">{{ $object->DewiStatus }}</td>
-                                <td class="uk-text-small">{{ $object->BlockHeight }}</td>
-                                <td class="uk-text-small">{{ $object->LastUpdateOnLineTime }}</td>
+                                {{-- <td class="uk-text-small">{{ $object->BlockHeight }}</td> --}}
+                                <td class="uk-text-small">
+                                    @if($object->LastUpdateOnLineTime)
+                                        {{ Carbon\Carbon::parse($object->LastUpdateOnLineTime)->format('Y-m-d H:i:s') }}
+                                    @endif
+                                </td>
                                 <td class="uk-text-small">{{ $object->Firmware }}</td>
                                 <td class="uk-text-small">{{ $object->MinerVersion }}</td>
+                                <td class="uk-text-small">⋮</td>
                             </tr>
                         @endforeach
                     @else
