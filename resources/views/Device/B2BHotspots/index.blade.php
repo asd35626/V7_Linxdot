@@ -145,9 +145,10 @@
                                 <td class="uk-text-small">
                                     @if($object->LastUpdateOnLineTime)
                                         <?php 
-                                            $now = date_create( date('Y-m-d H:i:s'));
+                                            $now = date_create( date('Y-m-d H:i:s',time() - (8 * 3600)));
                                             $LastUpdateOnLineTime = date_create( $object->LastUpdateOnLineTime);
                                             $time = date_diff($now, $LastUpdateOnLineTime);
+
                                             $minutes = $time->days * 24 * 60;
                                             $minutes += $time->h * 60;
                                             $minutes += $time->i;
