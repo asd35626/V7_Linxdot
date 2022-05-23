@@ -152,9 +152,9 @@
                                             $minutes += $time->h * 60;
                                             $minutes += $time->i;
                                             if($minutes >= 10){
-                                                print('🟢 offline');
+                                                print('🔴 offline');
                                             }else{
-                                                print('🔴 online');
+                                                print('🟢 online');
                                             }
                                         ?>
                                     @else
