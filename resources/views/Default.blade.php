@@ -24,5 +24,6 @@
 
 {{-- 設定內容 --}}
 @section('content')
-    <p>Welcome to Linxdot Admin！</p>
+    {{-- <p>Welcome to Linxdot Admin！</p> --}}
+    <embed src="https://linxdot-api.v7idea.com/worldmap/" width="100%" height="500">
 @endsection
