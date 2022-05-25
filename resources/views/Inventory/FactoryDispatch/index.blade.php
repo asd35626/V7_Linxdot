@@ -114,11 +114,11 @@
             <div class="uk-overflow-container">
                 {{-- <div class="uk-width-1-10" style="float:right">
                     <button type="submit" onclick="exportExcel()" class="md-btn md-btn-primary">Export</button>
-                </div>
+                </div> --}}
                 <div class="uk-width-1-10" style="float:right">
-                    <button type="submit" onclick="window.location.href='{{ route('Excel.create') }}';" class="md-btn md-btn-primary">Import</button>
+                    <button type="submit" onclick="window.location.href='{{ route('FactoryDispatchExcel.create') }}';" class="md-btn md-btn-primary">Import</button>
                 </div>
-                <div class="uk-width-1-10" style="float:right">
+                {{-- <div class="uk-width-1-10" style="float:right">
                     <button type="submit" onclick="window.location.href='{{ route( $routePath.'.create') }}';" class="md-btn md-btn-primary">Add</button>
                 </div> --}}
             </div>
