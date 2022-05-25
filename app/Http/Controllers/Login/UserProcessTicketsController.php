@@ -145,8 +145,8 @@ class UserProcessTicketsController extends Controller
                 $errorMsg = 'Login Fail(Key not found)';
                 // 找不到登入Key
                 $this->loginFailLog($user, $request, $errorMsg);
-                $responseBody['status'] = 1;
                 // 未取得驗證金鑰
+                $responseBody['status'] = 1;
                 $responseBody['message'] = 'Operation error (0001)';
             }
         } else if($count == 0){

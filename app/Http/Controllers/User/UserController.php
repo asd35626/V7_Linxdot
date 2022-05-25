@@ -54,8 +54,9 @@ class UserController extends Controller
                 $responseBody['message'] = 'Token 無效';
             }else{
                 //失敗次數歸零
-                $user->LoginFailTimes = 0;
-                $user->save();
+                DimUser::on('mysql2')
+                        ->find($UID)
+                        ->update(['LoginFailTimes' => 0]);
                 //log
                 $logId = Uuid::generate(4);
                 $check = DimUserUnlockHistory::find($logId);
@@ -63,7 +64,7 @@ class UserController extends Controller
                   $logId = Uuid::generate(4);
                   $check = DimUserUnlockHistory::find($logId);
                 }
-                DimUserUnlockHistory::create([
+                DimUserUnlockHistory::on('mysql2')->create([
                     'ID'              => $logId->string,
                     'UID'             => $UID,
                     'CreateDate'      => Carbon::now('Asia/Taipei')->toDateTimeString(),
