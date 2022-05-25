@@ -90,6 +90,7 @@ class UserProcessTicketsController extends Controller
             // 檢查錯誤次數
             if($user->LoginFailTimes > 5){
                 // 密碼錯誤次數過多，已被鎖定，無法登入
+                $responseBody['status'] = 1;
                 $responseBody['message'] = 'Too many incorrect password entered, Account is locked';
                 return Response::json($responseBody, 200);
             }
