@@ -53,4 +53,10 @@ class DimHotspot extends Model
       'create_time',
       'update_time'
     ];
+
+    // 生產者
+    public function Manufacturer()
+    {
+        return $this->belongsTo('App\Model\DimUser', 'ManufactureID','Id');
+    }
 }

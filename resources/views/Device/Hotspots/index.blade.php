@@ -137,6 +137,7 @@
                             {!! generateHTML('IssueDate','issue date',$isAsc, $orderBy) !!}
                             {!! generateHTML('IfVerifyDate','verify status',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small">register status</th>
+                            {!! generateHTML('ShippedDate','customerInfo',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small">edit</th>
                         </tr>
                     </thead>
@@ -169,6 +170,17 @@
                                         @else
                                             No Animal
                                         @endif
+                                    @endif
+                                </td>
+                                <td class="uk-text-small">
+                                    @if($object->IsShipped == 1)
+                                        {{ $object->TrackNo }}
+                                        <br>
+                                        {{ $object->Manufacturer->RealName }}
+                                        <br>
+                                        {{Carbon\Carbon::parse($object->ShippedDate)->format('Y-m-d H:i:s')}}
+                                    @else
+                                        N/A
                                     @endif
                                 </td>
                                 <td class="uk-text-small">
