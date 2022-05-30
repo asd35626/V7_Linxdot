@@ -337,7 +337,16 @@ class FactoryDispatchController extends Controller
             $pageNo = 1;
         }
 
-        $data = LinxdotFactoryDispatch::where('IfDelete','0');
+        $data = LinxdotFactoryDispatch::where('Linxdot_Factory_Dispatch.IfDelete','0')
+            ->select(
+            'Dim_ProductModel.ModelNo',
+            'Linxdot_Factory_Dispatch.*'
+        )
+        ->leftJoin('Dim_ProductModel', function($join){
+            $join->on('Dim_ProductModel.ModelID','=','Linxdot_Factory_Dispatch.HWModelNo')
+                ->where('Dim_ProductModel.IfValid' , 1)
+                ->where('Dim_ProductModel.IfDelete' , 0);
+        });;
 
         if ($IfSearch == '1') {
             // 表示會需要參考搜尋的變數
@@ -388,7 +397,7 @@ class FactoryDispatchController extends Controller
                 $data = $data->orderBy($orderBy, 'DESC');
             }
         }else{
-            $data = $data->orderBy('IssueDate');
+            $data = $data->orderBy('Linxdot_Factory_Dispatch.IssueDate');
         }
 
         // dd($data);

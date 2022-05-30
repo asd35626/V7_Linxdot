@@ -149,7 +149,9 @@
                                 <td class="uk-text-small">{{ $object->CartonID }}</td>
                                 <td class="uk-text-small">{{ $object->DeviceSN }}</td>
                                 <td class="uk-text-small">{{ $object->MacAddress }}</td>
-                                <td class="uk-text-small">{{ $object->HWModelNo }}</td>
+                                <td class="uk-text-small">
+                                    {{ $object->ModelNo }}
+                                </td>
                                 <td class="uk-text-small">{{ $object->RegsionID }}</td>
                                 <td class="uk-text-small">{{ $object->FactoryID }}</td>
                                 <td class="uk-text-small">
