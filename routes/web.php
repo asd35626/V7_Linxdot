@@ -82,8 +82,6 @@ Route::group(['prefix' => 'Device'],function () {
     Route::resource('Excel', 'Device\ExcelController');
     //B2B會員設備管理
     Route::resource('B2BHotspots', 'Device\B2BHotspotsController');
-    //工廠設備管理
-    Route::resource('FactoryDispatch', 'Device\FactoryDispatchController');
 });
 
 //人員管理
@@ -98,6 +96,12 @@ Route::group(['prefix' => 'Fulfillment'],function () {
 Route::group(['prefix' => 'Inventory'],function () {
     //工廠設備管理
     Route::resource('FactoryDispatch', 'Inventory\FactoryDispatchController');
+    //工廠設備匯入管理
+    Route::resource('FactoryDispatchExcel', 'Inventory\FactoryDispatchExcelController');
+    //工廠設備管理
+    Route::resource('ShippedStatus', 'Inventory\ShippedStatusController');
+    //工廠設備匯入管理
+    Route::resource('ShippedStatusExcel', 'Inventory\ShippedStatusExcelController');
 });
 
 //會員管理

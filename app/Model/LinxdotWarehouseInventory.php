@@ -36,4 +36,9 @@ class LinxdotWarehouseInventory extends Model
       'LastModifyDate',
       'LastModifiedByRecordID'
     ];
+    // 機器本體
+    public function Hotspot()
+    {
+        return $this->belongsTo('App\Model\DimHotspot', 'MacAddress','MacAddress');
+    }
 }
