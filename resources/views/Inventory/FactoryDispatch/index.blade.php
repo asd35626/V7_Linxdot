@@ -135,7 +135,7 @@
                             {!! generateHTML('HWModelNo','HW Mode No',$isAsc, $orderBy) !!}
                             {!! generateHTML('RegsionID','Region',$isAsc, $orderBy) !!}
                             {!! generateHTML('FactoryID','Factory',$isAsc, $orderBy) !!}
-                            <th class="uk-width-1-10 uk-text-small">edit</th>
+                            {{-- <th class="uk-width-1-10 uk-text-small">edit</th> --}}
                         </tr>
                     </thead>
                     @if($data->count() > 0)
@@ -149,18 +149,20 @@
                                 <td class="uk-text-small">{{ $object->CartonID }}</td>
                                 <td class="uk-text-small">{{ $object->DeviceSN }}</td>
                                 <td class="uk-text-small">{{ $object->MacAddress }}</td>
-                                <td class="uk-text-small">
-                                    {{ $object->ModelNo }}
-                                </td>
+                                <td class="uk-text-small">{{ $object->ModelNo }}</td>
                                 <td class="uk-text-small">{{ $object->RegsionID }}</td>
-                                <td class="uk-text-small">{{ $object->FactoryID }}</td>
                                 <td class="uk-text-small">
-                                    {{-- <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}"><i class="md-icon material-icons">&#xE254;</i></a>
+                                    @if(isset($object->Factory->RealName))
+                                        {{ $object->Factory->RealName }}
+                                    @endif
+                                </td>
+                                {{-- <td class="uk-text-small">
+                                    <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}"><i class="md-icon material-icons">&#xE254;</i></a>
 
                                     {!! Form::open(['id' => 'formDeleteAction'.$i , 'method' => 'DELETE','route' => [ $routePath.'.destroy', $object->$primaryKey],'style'=>'display:inline']  ) !!}
                                         <a href="javascript:if(confirm('Are you sure to delete this datum?'))$('{{ '#formDeleteAction'.$i }}').submit();"><i class="md-icon material-icons">&#xE872;</i></a>
-                                    {!! Form::close() !!} --}}
-                                </td>
+                                    {!! Form::close() !!}
+                                </td> --}}
                             </tr>
                         @endforeach
                     @else

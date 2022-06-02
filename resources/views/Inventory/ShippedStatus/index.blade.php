@@ -134,25 +134,29 @@
                 <table id="grid-basic" class="uk-table uk-table-nowrap table_check">
                     <thead>
                         <tr>
-                            {!! generateHTML('warehouse','WarehouseID',$isAsc, $orderBy) !!}
+                            {!! generateHTML('WarehouseID','Warehouse',$isAsc, $orderBy) !!}
                             {!! generateHTML('SkuID','Sku No.',$isAsc, $orderBy) !!}
                             {!! generateHTML('PalletID','Pallet No.',$isAsc, $orderBy) !!}
                             {!! generateHTML('CatronID','Carton No.',$isAsc, $orderBy) !!}
                             {!! generateHTML('DeviceSN','Device S/N',$isAsc, $orderBy) !!}
-                            {!! generateHTML('DeviceSN','Register Status',$isAsc, $orderBy) !!}
+                            {!! generateHTML('IfRegister','Register',$isAsc, $orderBy) !!}
 
                             {!! generateHTML('MacAddress','Mac Address',$isAsc, $orderBy) !!}
                             {!! generateHTML('Location','Location',$isAsc, $orderBy) !!}
-                            {!! generateHTML('IfShipped','Shipped Starus',$isAsc, $orderBy) !!}
+                            {!! generateHTML('IfShipped','Shipped',$isAsc, $orderBy) !!}
                             {!! generateHTML('CustomInfo','Customer Info',$isAsc, $orderBy) !!}
                             {!! generateHTML('ShippedDate','Shipped Date.',$isAsc, $orderBy) !!}
-                            <th class="uk-width-1-10 uk-text-small">edit</th>
+                            {{-- <th class="uk-width-1-10 uk-text-small">edit</th> --}} 
                         </tr>
                     </thead>
                     @if($data->count() > 0)
                         @foreach ($data as $object)
                             <tr>
-                                <td class="uk-text-small">{{ $object->WarehouseID }}</td>
+                                <td class="uk-text-small">
+                                    @if(isset($object->Warehouse->RealName)) 
+                                        {{ $object->Warehouse->RealName }}
+                                    @endif
+                                </td>
                                 <td class="uk-text-small">{{ $object->SkuID }}</td>
                                 <td class="uk-text-small">{{ $object->PalletID }}</td>
                                 <td class="uk-text-small">{{ $object->CatronID }}</td>
@@ -181,17 +185,21 @@
                                         N
                                     @endif
                                 </td>
-                                <td class="uk-text-small">{{ $object->CustomInfo }}</td>
+                                <td class="uk-text-small">
+                                    @if(isset($object->B2B->RealName)) 
+                                        {{ $object->B2B->RealName }}
+                                    @endif
+                                </td>
                                 <td class="uk-text-small">
                                     {{Carbon\Carbon::parse($object->ShippedDate)->format('Y-m-d H:i:s')}}
                                 </td>
-                                <td class="uk-text-small">
-                                    {{-- <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}"><i class="md-icon material-icons">&#xE254;</i></a>
+                                {{-- <td class="uk-text-small">
+                                    <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}"><i class="md-icon material-icons">&#xE254;</i></a>
 
                                     {!! Form::open(['id' => 'formDeleteAction'.$i , 'method' => 'DELETE','route' => [ $routePath.'.destroy', $object->$primaryKey],'style'=>'display:inline']  ) !!}
                                         <a href="javascript:if(confirm('Are you sure to delete this datum?'))$('{{ '#formDeleteAction'.$i }}').submit();"><i class="md-icon material-icons">&#xE872;</i></a>
-                                    {!! Form::close() !!} --}}
-                                </td>
+                                    {!! Form::close() !!}
+                                </td> --}}
                             </tr>
                         @endforeach
                     @else

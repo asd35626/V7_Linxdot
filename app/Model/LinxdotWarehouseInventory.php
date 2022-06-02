@@ -41,4 +41,14 @@ class LinxdotWarehouseInventory extends Model
     {
         return $this->belongsTo('App\Model\DimHotspot', 'MacAddress','MacAddress');
     }
+    // 物流商
+    public function Warehouse()
+    {
+        return $this->belongsTo('App\Model\DimUser', 'WarehouseID','Id');
+    }
+    // B2B會員
+    public function B2B()
+    {
+        return $this->belongsTo('App\Model\DimUser', 'CustomInfo','Id');
+    }
 }

@@ -33,4 +33,15 @@ class LinxdotFactoryDispatch extends Model
       'CreateBy',
       'CreateDate'
     ];
+
+    // 機器本體
+    public function Hotspot()
+    {
+        return $this->belongsTo('App\Model\DimHotspot', 'MacAddress','MacAddress');
+    }
+    // 製造商
+    public function Factory()
+    {
+        return $this->belongsTo('App\Model\DimUser', 'FactoryID','Id');
+    }
 }
