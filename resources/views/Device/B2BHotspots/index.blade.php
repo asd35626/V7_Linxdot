@@ -145,7 +145,7 @@
                                 <td class="uk-text-small">{{ $object->DeviceSN }}</td>
                                 <td class="uk-text-small">{{ $object->MacAddress }}</td>
                                 <td class="uk-text-small">{{ $object->AnimalName }}</td>
-                                <td class="uk-text-small"></td>
+                                <td class="uk-text-small">{{ $object->BlockHeight }}</td>
                                 <td class="uk-text-small">
                                     @if($object->LastUpdateOnLineTime)
                                         <?php 
@@ -157,19 +157,56 @@
                                             $minutes += $time->h * 60;
                                             $minutes += $time->i;
                                             if($minutes >= 10){
-                                                print('🔴 offline');
+                                                print('<span class="material-icons" style="color:#FF5959"> circle </span> offline');
                                             }else{
-                                                print('🟢 online');
+                                                print('<span class="material-icons" style="color:#59FF59"> circle </span> online');
                                             }
                                         ?>
                                     @else
-                                        🔴 offline
+                                        <span class="material-icons" style="color:#FF5959"> circle </span> offline
                                     @endif
                                 </td>
-                                <td class="uk-text-small"></td>
-                                <td class="uk-text-small"></td>
-                                <td class="uk-text-small"></td>
-                                <td class="uk-text-small"></td>
+                                <td class="uk-text-small">
+                                    @if($object->P2P_Connected)
+                                        @if($object->P2P_Connected == 1)
+                                            <span class="material-icons" style="color:#59FF59"> circle </span>Yes
+                                        @elseif($object->P2P_Connected == 0)
+                                            <span class="material-icons" style="color:#FF5959"> circle </span>No
+                                        @else
+                                            <span class="material-icons" style="color:#ABABAB"> circle </span>
+                                        @endif
+                                    @else
+                                        <span class="material-icons" style="color:#ABABAB"> circle </span>
+                                    @endif
+                                </td>
+                                <td class="uk-text-small">
+                                    @if($object->P2P_Dialable)
+                                        @if($object->P2P_Dialable == 1)
+                                            <span class="material-icons" style="color:#59FF59"> circle </span>Yes
+                                        @elseif($object->P2P_Dialable == 0)
+                                            <span class="material-icons" style="color:#FF5959"> circle </span>No
+                                        @else
+                                            <span class="material-icons" style="color:#ABABAB"> circle </span>
+                                        @endif
+                                    @else
+                                        <span class="material-icons" style="color:#ABABAB"> circle </span>
+                                    @endif
+                                </td>
+                                <td class="uk-text-small">
+                                    @if($object->P2P_NatType)
+                                        @if($object->P2P_NatType == 1)
+                                            <span class="material-icons" style="color:#59FF59"> circle </span>Yes
+                                        @elseif($object->P2P_NatType == 0)
+                                            <span class="material-icons" style="color:#FF5959"> circle </span>No
+                                        @else
+                                            <span class="material-icons" style="color:#ABABAB"> circle </span>
+                                        @endif
+                                    @else
+                                        <span class="material-icons" style="color:#ABABAB"> circle </span>
+                                    @endif
+                                </td>
+                                <td class="uk-text-small">{{ $object->Region }}</td>
+
                                 <td class="uk-text-small">
                                     @if($object->LastUpdateOnLineTime)
                                         {{ Carbon\Carbon::parse($object->LastUpdateOnLineTime)->format('Y-m-d H:i:s') }}
