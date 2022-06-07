@@ -138,6 +138,12 @@
                             {!! generateHTML('IfVerifyDate','verify status',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small">register status</th>
                             {!! generateHTML('ShippedDate','customerInfo',$isAsc, $orderBy) !!}
+                            <th class="uk-width-1-10 uk-text-small">Height</th>
+                            {!! generateHTML('LastUpdateOnLineTime','Status',$isAsc, $orderBy) !!}
+                            {!! generateHTML('P2P_Connected','p2p_connected',$isAsc, $orderBy) !!}
+                            {!! generateHTML('P2P_Dialable','dialable',$isAsc, $orderBy) !!}
+                            {!! generateHTML('P2P_NatType','nat_type',$isAsc, $orderBy) !!}
+                            {!! generateHTML('Region','regions',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small">edit</th>
                         </tr>
                     </thead>
@@ -183,6 +189,33 @@
                                         N/A
                                     @endif
                                 </td>
+
+                                <td class="uk-text-small"></td>
+                                <td class="uk-text-small">
+                                    @if($object->LastUpdateOnLineTime)
+                                        <?php 
+                                            $now = date_create( date('Y-m-d H:i:s',time() - (8 * 3600)));
+                                            $LastUpdateOnLineTime = date_create( $object->LastUpdateOnLineTime);
+                                            $time = date_diff($now, $LastUpdateOnLineTime);
+
+                                            $minutes = $time->days * 24 * 60;
+                                            $minutes += $time->h * 60;
+                                            $minutes += $time->i;
+                                            if($minutes >= 10){
+                                                print('🔴 offline');
+                                            }else{
+                                                print('🟢 online');
+                                            }
+                                        ?>
+                                    @else
+                                        🔴 offline
+                                    @endif
+                                </td>
+                                <td class="uk-text-small">{{ $object->P2P_Connected }}</td>
+                                <td class="uk-text-small">{{ $object->P2P_Dialable }}</td>
+                                <td class="uk-text-small">{{ $object->P2P_NatType }}</td>
+                                <td class="uk-text-small">{{ $object->Region }}</td>
+
                                 <td class="uk-text-small">
                                     <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}"><i class="md-icon material-icons">&#xE254;</i></a>
 

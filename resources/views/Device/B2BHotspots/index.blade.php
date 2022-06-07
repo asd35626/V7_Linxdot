@@ -127,11 +127,14 @@
                             {!! generateHTML('DeviceSN','S/N',$isAsc, $orderBy) !!}
                             {!! generateHTML('MacAddress','MAC Address',$isAsc, $orderBy) !!}
                             {!! generateHTML('AnimalName','Animal name',$isAsc, $orderBy) !!}
+                            <th class="uk-width-1-10 uk-text-small">Height</th>
                             {!! generateHTML('LastUpdateOnLineTime','Status',$isAsc, $orderBy) !!}
-                            {!! generateHTML('DewiStatus','Dewi',$isAsc, $orderBy) !!}
-                            {{-- {!! generateHTML('BlockHeight','Block height',$isAsc, $orderBy) !!} --}}
+                            {!! generateHTML('P2P_Connected','p2p_connected',$isAsc, $orderBy) !!}
+                            {!! generateHTML('P2P_Dialable','dialable',$isAsc, $orderBy) !!}
+                            {!! generateHTML('P2P_NatType','nat_type',$isAsc, $orderBy) !!}
+                            {!! generateHTML('Region','regions',$isAsc, $orderBy) !!}
                             {!! generateHTML('LastUpdateOnLineTime','Latest online time',$isAsc, $orderBy) !!}
-                            {!! generateHTML('Firmware','ROM version',$isAsc, $orderBy) !!}
+                            {!! generateHTML('DewiStatus','Dewi',$isAsc, $orderBy) !!}
                             {!! generateHTML('MinerVersion','Miner version',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small">More</th>
                         </tr>
@@ -142,6 +145,7 @@
                                 <td class="uk-text-small">{{ $object->DeviceSN }}</td>
                                 <td class="uk-text-small">{{ $object->MacAddress }}</td>
                                 <td class="uk-text-small">{{ $object->AnimalName }}</td>
+                                <td class="uk-text-small"></td>
                                 <td class="uk-text-small">
                                     @if($object->LastUpdateOnLineTime)
                                         <?php 
@@ -162,15 +166,17 @@
                                         🔴 offline
                                     @endif
                                 </td>
-                                <td class="uk-text-small">{{ $object->DewiStatus }}</td>
-                                {{-- <td class="uk-text-small">{{ $object->BlockHeight }}</td> --}}
+                                <td class="uk-text-small"></td>
+                                <td class="uk-text-small"></td>
+                                <td class="uk-text-small"></td>
+                                <td class="uk-text-small"></td>
                                 <td class="uk-text-small">
                                     @if($object->LastUpdateOnLineTime)
                                         {{ Carbon\Carbon::parse($object->LastUpdateOnLineTime)->format('Y-m-d H:i:s') }}
                                     @endif
                                 </td>
-                                <td class="uk-text-small">{{ $object->Firmware }}</td>
-                                <td class="uk-text-small">{{ $object->MinerVersion }}</td>
+                                <td class="uk-text-small">{{ $object->DewiStatus }}</td>
+                                <td class="uk-text-small">{{ substr($object->MinerVersion, -15) }}</td>
                                 <td class="uk-text-small">⋮</td>
                             </tr>
                         @endforeach
