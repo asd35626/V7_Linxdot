@@ -191,7 +191,7 @@
                                     @endif
                                 </td>
                                 <td class="uk-text-small">
-                                    {{Carbon\Carbon::parse($object->ShippedDate)->format('Y-m-d H:i:s')}}
+                                    {{Carbon\Carbon::parse($object->ShippedDate)->format('Y-m-d')}}
                                 </td>
                                 {{-- <td class="uk-text-small">
                                     <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}"><i class="md-icon material-icons">&#xE254;</i></a>

@@ -132,7 +132,7 @@
                             {!! generateHTML('CartonID','Carton No',$isAsc, $orderBy) !!}
                             {!! generateHTML('DeviceSN','Device S/N',$isAsc, $orderBy) !!}
                             {!! generateHTML('MacAddress','Mac Addresss',$isAsc, $orderBy) !!}
-                            {!! generateHTML('HWModelNo','HW Mode No',$isAsc, $orderBy) !!}
+                            {!! generateHTML('HWModelNo','Mode No',$isAsc, $orderBy) !!}
                             {!! generateHTML('RegsionID','Region',$isAsc, $orderBy) !!}
                             {!! generateHTML('FactoryID','Factory',$isAsc, $orderBy) !!}
                             {{-- <th class="uk-width-1-10 uk-text-small">edit</th> --}}
@@ -142,7 +142,7 @@
                         @foreach ($data as $object)
                             <tr>
                                 <td class="uk-text-small">
-                                    {{Carbon\Carbon::parse($object->IssueDate)->format('Y-m-d H:i:s')}}
+                                    {{Carbon\Carbon::parse($object->IssueDate)->format('Y-m-d')}}
                                 </td>
                                 <td class="uk-text-small">{{ $object->SkuID }}</td>
                                 <td class="uk-text-small">{{ $object->PalletID }}</td>

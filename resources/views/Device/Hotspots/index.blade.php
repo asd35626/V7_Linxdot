@@ -148,11 +148,11 @@
                                 <td class="uk-text-small">{{ $object->MacAddress }}</td>
                                 <td class="uk-text-small">{{ $object->AnimalName }}</td>
                                 <td class="uk-text-small">
-                                    {{Carbon\Carbon::parse($object->IssueDate)->format('Y-m-d H:i:s')}}
+                                    {{Carbon\Carbon::parse($object->IssueDate)->format('Y-m-d')}}
                                 </td>
                                 <td class="uk-text-small">
                                     @if($object->IsVerify == 1) 
-                                        {{Carbon\Carbon::parse($object->IfVerifyDate)->format('Y-m-d H:i:s')}}
+                                        {{Carbon\Carbon::parse($object->IfVerifyDate)->format('Y-m-d')}}
                                     @else
                                         N/A
                                     @endif
@@ -178,7 +178,7 @@
                                         <br>
                                         {{ $object->Manufacturer->RealName }}
                                         <br>
-                                        {{Carbon\Carbon::parse($object->ShippedDate)->format('Y-m-d H:i:s')}}
+                                        {{Carbon\Carbon::parse($object->ShippedDate)->format('Y-m-d')}}
                                     @else
                                         N/A
                                     @endif
