@@ -100,7 +100,7 @@ class ShippedStatusController extends Controller
             'IfShipped' => [
                 'name' => 'IfShipped',
                 'id' => 'IfShipped',
-                'label' => 'Shipped Starus',
+                'label' => 'Shipped Status',
                 'type' => 'select',
                 'selectLists' => [
                     '' => 'Choose',
@@ -113,7 +113,7 @@ class ShippedStatusController extends Controller
             'ShippedDateFrom' => [
                 'name' => 'ShippedDateFrom',
                 'id' => 'ShippedDateFrom',
-                'label' => 'Shipped Date. From',
+                'label' => 'Shipped Date From',
                 'type' => 'date',
                 'value' => '',
                 'extras' => [
