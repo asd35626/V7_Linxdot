@@ -24,6 +24,7 @@ class LinxdotFactoryDispatch extends Model
       'RegsionID',
       'FactoryID',
       'WarehouseID',
+      'OuterCasingColor',
       'IfValid',
       'IfNotValidBy',
       'IfNotValidDate',

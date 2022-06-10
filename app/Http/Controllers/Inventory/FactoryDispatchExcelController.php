@@ -76,7 +76,7 @@ class FactoryDispatchExcelController extends Controller
                         // 如果是是標題就跳過
                         if($key != 0){
                             // 檢查有沒有資料
-                            if($data[1] != '' && $data[2] != '' && $data[3] != '' && $data[4] != '' && $data[5] != '' && $data[6] != '' && $data[7] != ''){
+                            if($data[1] != '' && $data[2] != '' && $data[5] != '' && $data[6] != '' && $data[7] != ''){
                                 // 總筆數+1
                                 $totle += 1;
                                 // dd($totle);
@@ -103,6 +103,7 @@ class FactoryDispatchExcelController extends Controller
                                         }
                                     }
                                 }
+                                //把IssueDate轉成資料庫需要的格式
                                 $IssueDate = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data[0]))->format('Y-m-d H:i:s');
 
                                 LinxdotExcelFactoryDispatchDetail::on('mysql2')->create([
@@ -127,28 +128,16 @@ class FactoryDispatchExcelController extends Controller
                     }                        
                 }
 
-                // 把暫存的資料取出來組成陣列
+                // 把暫存的資料取出來組成陣列，ImportStatus=0代表有錯誤
                 $DetailData = LinxdotExcelFactoryDispatchDetail::where('ImportID',$id)->where('ImportStatus','!=',0)->get();
                 // 找有沒有重複資料
                 foreach ($DetailData as $key => $data) {
                     // dd($DetailData);
                     $Hotspot = LinxdotFactoryDispatch::where('MacAddress',$data->MacAddress)
                             ->where('DeviceSN',$data->DeviceSN);
-                    
+
+                    // 如果MAC號跟SN重複                    
                     if($Hotspot->count() > 0){
-                        // 重複的資料把IsVerify改成0，Memo資料重複
-                        // $update = [
-                        //     'IssueDate' => $data->IssueDate,
-                        //     'PalletId' => $data->PalletId,
-                        //     'CartonId' => $data->CartonId,
-                        //     'HWModelNo' => $data->HWModelNo,
-                        //     'OuterCasingColor' => $data->OuterCasingColor,
-                        //     'IsVerify' => 0
-                        // ];
-                        // LinxdotFactoryDispatch::on('mysql2')
-                        //             ->where('MacAddress',$data->MacAddress)
-                        //             ->where('DeviceSN',$data->DeviceSN)
-                        //             ->update($update);
                         LinxdotExcelFactoryDispatchDetail::on('mysql2')
                                 ->where('id',$data->id)
                                 ->update(['IfCompletedImport' => 1,
@@ -159,6 +148,7 @@ class FactoryDispatchExcelController extends Controller
                                                 ->where('DeviceSN','!=',$data->DeviceSN);
                         $HotspotSN = LinxdotFactoryDispatch::where('DeviceSN',$data->DeviceSN)
                                                 ->where('MacAddress','!=',$data->MacAddress);
+                        // 如果MAC重複S/N不一樣
                         if($HotspotMac->count() > 0){
                             LinxdotExcelFactoryDispatchDetail::on('mysql2')
                                     ->where('id',$data->id)
@@ -166,6 +156,7 @@ class FactoryDispatchExcelController extends Controller
                                             'ImportStatus' => 0,
                                             'ImportMemo' => 'MacAddress重複，請確認資料']);
                         }elseif($HotspotSN->count() > 0){
+                            // 如果S/N重複MAC不一樣
                             LinxdotExcelFactoryDispatchDetail::on('mysql2')
                                     ->where('id',$data->id)
                                     ->update(['IfCompletedImport' => 1,
@@ -188,17 +179,17 @@ class FactoryDispatchExcelController extends Controller
                                 'CreateDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
                             ];
                             LinxdotFactoryDispatch::on('mysql2')->create($newdata);
-                            LinxdotExcelFactoryDispatchImport::on('mysql2')
+                            LinxdotExcelFactoryDispatchDetail::on('mysql2')
                                     ->where('id',$data->id)
                                     ->update(['IfCompletedImport' => 1,
                                             'ImportStatus' => 1]);
                         }
                     }
                 }
-                // 修改 LinxdotExcelHotspotImport 筆數資料
+                // 修改 LinxdotExcelFactoryDispatchImport 筆數資料
                 $ImportUpdate = ['TotalRecords' => $totle,
                                 'IfCompleteImport' => 1];
-                LinxdotExcelHotspotImport::on('mysql2')
+                LinxdotExcelFactoryDispatchImport::on('mysql2')
                         ->where('id',$id)
                         ->update($ImportUpdate);
 
