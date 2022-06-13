@@ -76,7 +76,7 @@ class FactoryDispatchExcelController extends Controller
                         // 如果是是標題就跳過
                         if($key != 0){
                             // 檢查有沒有資料
-                            if($data[1] != '' && $data[2] != '' && $data[5] != '' && $data[6] != '' && $data[7] != ''){
+                            if($data[0] != '' && $data[1] != '' && $data[5] != '' && $data[6] != '' && $data[7] != ''){
                                 // 總筆數+1
                                 $totle += 1;
                                 // dd($totle);
