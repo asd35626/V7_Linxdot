@@ -185,11 +185,7 @@
                                         N
                                     @endif
                                 </td>
-                                <td class="uk-text-small">
-                                    @if(isset($object->B2B->RealName)) 
-                                        {{ $object->B2B->RealName }}
-                                    @endif
-                                </td>
+                                <td class="uk-text-small">{{ $object->B2B->CustomInfo }}</td>
                                 <td class="uk-text-small">
                                     {{Carbon\Carbon::parse($object->ShippedDate)->format('Y-m-d')}}
                                 </td>
