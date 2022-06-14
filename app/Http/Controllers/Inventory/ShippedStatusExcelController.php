@@ -173,7 +173,7 @@ class ShippedStatusExcelController extends Controller
                             $newdata = [
                                 'SkuID' => $data->SkuID,
                                 'PalletID' => $data->PalletID,
-                                'CatronID' => $data->CatronID,
+                                'CatronID' => $data->CartonId,
                                 'DeviceSN' => $data->DeviceSN,
                                 'MacAddress' => $data->MacAddress,
                                 'IfShipped' => $data->IfShipped,
