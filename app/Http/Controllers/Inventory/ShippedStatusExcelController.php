@@ -104,7 +104,13 @@ class ShippedStatusExcelController extends Controller
                                     }
                                 }
                                 //把ShippedDate轉成資料庫需要的格式
-                                $ShippedDate = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data[7]))->format('Y-m-d H:i:s');
+                                // dd($data[7]);
+                                if($data[7] != '' && $data[7] != null){
+                                    $ShippedDate = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data[7]))->format('Y-m-d H:i:s');
+                                }else{
+                                    $ShippedDate = null;
+                                }
+                                // dd($ShippedDate);
 
                                 LinxdotExcelWarehouseInventoryDetail::on('mysql2')->create([
                                     'ImportID' => $id,
