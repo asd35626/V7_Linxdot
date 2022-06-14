@@ -148,23 +148,27 @@
                                 <td class="uk-text-small">{{ $object->AnimalName }}</td>
                                 <td class="uk-text-small">{{ $object->BlockHeight }}</td>
                                 <td class="uk-text-small">
-                                    @if($object->LastUpdateOnLineTime)
-                                        <?php 
-                                            $now = date_create( date('Y-m-d H:i:s',time() - (8 * 3600)));
-                                            $LastUpdateOnLineTime = date_create( $object->LastUpdateOnLineTime);
-                                            $time = date_diff($now, $LastUpdateOnLineTime);
+                                    @if($object->DewiStatus == 'Onboarded')
+                                        @if($object->LastUpdateOnLineTime)
+                                            <?php 
+                                                $now = date_create( date('Y-m-d H:i:s',time() - (8 * 3600)));
+                                                $LastUpdateOnLineTime = date_create( $object->LastUpdateOnLineTime);
+                                                $time = date_diff($now, $LastUpdateOnLineTime);
 
-                                            $minutes = $time->days * 24 * 60;
-                                            $minutes += $time->h * 60;
-                                            $minutes += $time->i;
-                                            if($minutes >= 10){
-                                                print('<span class="material-icons" style="color:#FF5959"> circle </span> offline');
-                                            }else{
-                                                print('<span class="material-icons" style="color:#59FF59"> circle </span> online');
-                                            }
-                                        ?>
+                                                $minutes = $time->days * 24 * 60;
+                                                $minutes += $time->h * 60;
+                                                $minutes += $time->i;
+                                                if($minutes <= 10 && $object->P2P_Connected == 1){
+                                                    print('<span class="material-icons" style="color:#59BBBC"> circle </span> online');
+                                                }else{
+                                                    print('<span class="material-icons" style="color:#FF5959"> circle </span> offline');
+                                                }
+                                            ?>
+                                        @else
+                                            <span class="material-icons" style="color:#FF5959"> circle </span> offline
+                                        @endif
                                     @else
-                                        <span class="material-icons" style="color:#FF5959"> circle </span> offline
+                                        <span class="material-icons" style="color:#ABABAB"> circle </span>notonboarded
                                     @endif
                                 </td>
                                 <td class="uk-text-small">
@@ -193,19 +197,7 @@
                                         <span class="material-icons" style="color:#ABABAB"> circle </span>
                                     @endif
                                 </td>
-                                <td class="uk-text-small">
-                                    @if($object->P2P_NatType)
-                                        @if($object->P2P_NatType == 1)
-                                            <span class="material-icons" style="color:#59FF59"> circle </span>Yes
-                                        @elseif($object->P2P_NatType == 0)
-                                            <span class="material-icons" style="color:#FF5959"> circle </span>No
-                                        @else
-                                            <span class="material-icons" style="color:#ABABAB"> circle </span>
-                                        @endif
-                                    @else
-                                        <span class="material-icons" style="color:#ABABAB"> circle </span>
-                                    @endif
-                                </td>
+                                <td class="uk-text-small">{{ $object->P2P_NatType }}</td>
                                 <td class="uk-text-small">{{ $object->Region }}</td>
 
                                 <td class="uk-text-small">
