@@ -208,9 +208,7 @@
                                 <td class="uk-text-small">{{ $object->DewiStatus }}</td>
                                 <td class="uk-text-small">{{ substr($object->MinerVersion, -15) }}</td>
                                 <td class="uk-text-small">
-                                    <button type="button" class="btn btn-secondary" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Bottom popover">
-                                        Popover on bottom
-                                    </button>
+                                    
                                     <span class="material-icons userMOUSE" >more_vert</span>
                                 </td>
                             </tr>
