@@ -178,7 +178,7 @@ class ShippedStatusExcelController extends Controller
                                 'MacAddress' => $data->MacAddress,
                                 'IfShipped' => $data->IfShipped,
                                 'ShippedDate' => $data->ShippedDate,
-                                'TrackingNo' => $data->TrackingNo,
+                                'CustomInfo' => $data->TrackingNo,
                                 'IfValid' => 1,
                                 'IfDelete' => 0,
                                 'CreateBy' => WebLib::getCurrentUserID(),
