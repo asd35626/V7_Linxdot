@@ -167,8 +167,8 @@ class FactoryDispatchExcelController extends Controller
                             $newdata = [
                                 'IssueDate' => $data->IssueDate,
                                 'SkuID' => $data->SkuID,
-                                'PalletID' => $data->PalletID,
-                                'CartonID' => $data->CartonID,
+                                'PalletID' => $data->PalletId,
+                                'CartonID' => $data->CartonId,
                                 'DeviceSN' => $data->DeviceSN,        
                                 'MacAddress' => $data->MacAddress,
                                 'HWModelNo' => $data->HWModelNo,
