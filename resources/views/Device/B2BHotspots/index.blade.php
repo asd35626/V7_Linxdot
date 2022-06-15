@@ -131,7 +131,7 @@
                             {!! generateHTML('LastUpdateOnLineTime','Status',$isAsc, $orderBy) !!}
                             {!! generateHTML('BlockHeight','Miner height',$isAsc, $orderBy) !!}
                             {!! generateHTML('LastUpdateOnLineTime','Latest online time',$isAsc, $orderBy) !!}
-                            {!! generateHTML('Firmware','Rom Version',$isAsc, $orderBy) !!}
+                            {!! generateHTML('Firmware','ROM version',$isAsc, $orderBy) !!}
                             {!! generateHTML('MinerVersion','Miner version',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small">More</th>
                         </tr>
