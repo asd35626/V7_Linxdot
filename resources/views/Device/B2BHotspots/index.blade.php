@@ -128,14 +128,10 @@
                             {!! generateHTML('DeviceSN','S/N',$isAsc, $orderBy) !!}
                             {!! generateHTML('MacAddress','MAC Address',$isAsc, $orderBy) !!}
                             {!! generateHTML('AnimalName','Animal name',$isAsc, $orderBy) !!}
-                            <th class="uk-width-1-10 uk-text-small">Height</th>
                             {!! generateHTML('LastUpdateOnLineTime','Status',$isAsc, $orderBy) !!}
-                            {!! generateHTML('P2P_Connected','p2p_connected',$isAsc, $orderBy) !!}
-                            {!! generateHTML('P2P_Dialable','dialable',$isAsc, $orderBy) !!}
-                            {!! generateHTML('P2P_NatType','nat_type',$isAsc, $orderBy) !!}
-                            {!! generateHTML('Region','regions',$isAsc, $orderBy) !!}
+                            {!! generateHTML('BlockHeight','Miner height',$isAsc, $orderBy) !!}
                             {!! generateHTML('LastUpdateOnLineTime','Latest online time',$isAsc, $orderBy) !!}
-                            {!! generateHTML('DewiStatus','Dewi',$isAsc, $orderBy) !!}
+                            {!! generateHTML('Firmware','Rom Version',$isAsc, $orderBy) !!}
                             {!! generateHTML('MinerVersion','Miner version',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small">More</th>
                         </tr>
@@ -146,7 +142,6 @@
                                 <td class="uk-text-small">{{ $object->DeviceSN }}</td>
                                 <td class="uk-text-small">{{ $object->MacAddress }}</td>
                                 <td class="uk-text-small">{{ $object->AnimalName }}</td>
-                                <td class="uk-text-small">{{ $object->BlockHeight }}</td>
                                 <td class="uk-text-small">
                                     @if($object->DewiStatus == 'Onboarded')
                                         @if($object->LastUpdateOnLineTime)
@@ -171,44 +166,18 @@
                                         <span class="material-icons" style="color:#ABABAB"> circle </span>notonboarded
                                     @endif
                                 </td>
-                                <td class="uk-text-small">
-                                    @if($object->P2P_Connected)
-                                        @if($object->P2P_Connected == 1)
-                                            <span class="material-icons" style="color:#59FF59"> circle </span>Yes
-                                        @elseif($object->P2P_Connected == 0)
-                                            <span class="material-icons" style="color:#FF5959"> circle </span>No
-                                        @else
-                                            <span class="material-icons" style="color:#ABABAB"> circle </span>
-                                        @endif
-                                    @else
-                                        <span class="material-icons" style="color:#ABABAB"> circle </span>
-                                    @endif
-                                </td>
-                                <td class="uk-text-small">
-                                    @if($object->P2P_Dialable)
-                                        @if($object->P2P_Dialable == 1)
-                                            <span class="material-icons" style="color:#59FF59"> circle </span>Yes
-                                        @elseif($object->P2P_Dialable == 0)
-                                            <span class="material-icons" style="color:#FF5959"> circle </span>No
-                                        @else
-                                            <span class="material-icons" style="color:#ABABAB"> circle </span>
-                                        @endif
-                                    @else
-                                        <span class="material-icons" style="color:#ABABAB"> circle </span>
-                                    @endif
-                                </td>
-                                <td class="uk-text-small">{{ $object->P2P_NatType }}</td>
-                                <td class="uk-text-small">{{ $object->Region }}</td>
-
+                                <td class="uk-text-small">{{ $object->BlockHeight }}</td>
                                 <td class="uk-text-small">
                                     @if($object->LastUpdateOnLineTime)
                                         {{ Carbon\Carbon::parse($object->LastUpdateOnLineTime)->format('Y-m-d H:i:s') }}
                                     @endif
                                 </td>
-                                <td class="uk-text-small">{{ $object->DewiStatus }}</td>
+                                <td class="uk-text-small">{{ $object->Firmware }}</td>
                                 <td class="uk-text-small">{{ substr($object->MinerVersion, -15) }}</td>
                                 <td class="uk-text-small">
-                                    
+                                    {{-- <button type="button" class="btn btn-secondary" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="left" data-bs-content="Left popover">
+                                        Popover on left
+                                    </button> --}}
                                     <span class="material-icons userMOUSE" >more_vert</span>
                                 </td>
                             </tr>
@@ -224,6 +193,11 @@
     <!-- table end -->
 
     <script>
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+          return new bootstrap.Popover(popoverTriggerEl)
+        })
+
         function search() {
             $('#IfSearch').val('1');
             $('#IfNewSearch').val('1');
