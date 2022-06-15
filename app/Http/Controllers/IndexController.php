@@ -23,8 +23,18 @@ class IndexController extends Controller
 {
     public function index(Request $request)
     {
+    	// 取得會員ID
         $UID = WebLib::getCurrentUserID();
-        // dd($UID);
-        return view('/Default');
+        // 取得會員資料並獲得UserType、DegreeId
+        $user = DimUser::where('Id',$UID)->select('DegreeId','UserType')->first();
+        $UserType = $user->UserType;
+        $DegreeId = $user->DegreeId;
+        // dd($UID,$UserType,$DegreeId);
+
+        if($UserType == 20 && $DegreeId == 50){
+        	return redirect()->route('B2BHotspots.index');
+        }else{
+        	return view('/Default');
+        }
     }
 }
