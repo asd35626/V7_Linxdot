@@ -224,6 +224,20 @@ function getContent(data, UserType){
             }
             navMenuContent += "</li>";
         });
+    }else if(UserType == 20){
+        $.each(data, function(index, obj){
+            if(obj.SubList.length > 0){
+                $.each(obj.SubList, function(key, subObj){
+                    if(subObj.IfAccess){
+                        navMenuContent += "<li>";
+                        navMenuContent += "<a href=\"" +subObj.Url + "\">" + subObj.Name + "</a>";
+                        navMenuContent += "</li>";
+                    }
+                });
+                navMenuContent += "</ul>";
+                navMenuContent += "</li>";
+            }
+        });
     }else{
         $.each(data, function(index, obj){
             if(obj.SubList.length > 0){
