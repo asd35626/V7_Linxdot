@@ -169,7 +169,7 @@
                                 <td class="uk-text-small">{{ $object->BlockHeight }}</td>
                                 <td class="uk-text-small">
                                     @if($object->LastUpdateOnLineTime)
-                                        {{ Carbon\Carbon::parse($object->LastUpdateOnLineTime)->format('Y-m-d H:i:s') }}
+                                        {{ Carbon\Carbon::parse($object->LastUpdateOnLineTime)->format('Y/m/d H:i:s') }}
                                     @endif
                                 </td>
                                 <td class="uk-text-small">{{ $object->Firmware }}</td>
