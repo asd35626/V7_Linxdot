@@ -183,7 +183,7 @@
                                                     margin-block-start:0px;margin-block-end:0px;margin-inline-start:0px;
                                                     margin-inline-end:0px;padding-inline-start:0px;line-height: 25px;">
                                                         {{--地圖--}}
-                                                        <li><a href="/Map">Show on map</a></li>
+                                                        <li><a href="/B2B/Map">Show on map</a></li>
                                                         {{-- <li><a href="#">Reboot</a></li>
                                                         <li><a href="#">Upgrade firmware</a></li>
                                                         <li><a href="#">Restart miner</a></li>
