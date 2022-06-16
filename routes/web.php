@@ -116,6 +116,13 @@ Route::group(['prefix' => 'Customer'],function () {
     ]);
 });
 
+//會員使用畫面
+Route::group(['prefix' => 'B2B'],function () {
+    //地圖畫面
+    Route::resource('Map', 'B2B\MapController');
+    //設備管理
+    Route::resource('Dashboard', 'B2B\DashboardController');
+});
 
 //修改後台帳密碼(右上角的個人選單)
 Route::resource('/Profile/PasswordSetting', 'ProfilePasswordSettingController');

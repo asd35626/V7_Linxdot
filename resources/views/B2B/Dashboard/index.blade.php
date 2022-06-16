@@ -187,11 +187,10 @@
                                                         {{-- <li><a href="#">Reboot</a></li>
                                                         <li><a href="#">Upgrade firmware</a></li>
                                                         <li><a href="#">Restart miner</a></li>
-                                                        <li><a href="#">Trigger fast sync</a></li> --}}
-                                                        {{--問題回報--}}
+                                                        <li><a href="#">Trigger fast sync</a></li>
+                                                        
                                                         <li><a href="#">Report issue</a></li>
-                                                        {{--圖表--}}
-                                                        <li><a href="#">Device heartbeat</a></li>
+                                                        <li><a href="#">Device heartbeat</a></li> --}}
                                                     </ul>
                                                 </div>
                                             </div>
