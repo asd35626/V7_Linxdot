@@ -32,7 +32,7 @@ class IndexController extends Controller
         // dd($UID,$UserType,$DegreeId);
 
         if($UserType == 20 && $DegreeId == 50){
-        	return redirect()->route('B2BHotspots.index');
+        	return redirect()->route('Dashboard.index');
         }else{
         	return view('/Default');
         }
