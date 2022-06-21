@@ -76,7 +76,7 @@ class ShippedStatusExcelController extends Controller
                         // 如果是是標題就跳過
                         if($key != 0){
                             // 檢查有沒有資料
-                            if($data[0] != '' && $data[2] != '' && $data[4] != '' && $data[5] != '' && $data[6] != ''){
+                            if($data[0] != '' && $data[2] != '' && $data[4] != '' && $data[5] != ''){
                                 // 總筆數+1
                                 $totle += 1;
                                 // dd($totle);
@@ -111,6 +111,11 @@ class ShippedStatusExcelController extends Controller
                                     $ShippedDate = null;
                                 }
                                 // dd($ShippedDate);
+                                if($data[6] == 1){
+                                    $IfShipped = 1;
+                                }else{
+                                    $IfShipped = 0;
+                                }
 
                                 LinxdotExcelWarehouseInventoryDetail::on('mysql2')->create([
                                     'ImportID' => $id,
@@ -119,7 +124,7 @@ class ShippedStatusExcelController extends Controller
                                     'CartonId' => $data[1],
                                     'DeviceSN' => $data[5],
                                     'MacAddress' => $newMacAddress,
-                                    'IfShipped' => $data[6],
+                                    'IfShipped' => $IfShipped,
                                     'ShippedDate' => $ShippedDate,
                                     'TrackingNo' => $data[8],
                                     'IfCompletedImport' => 0,
