@@ -112,7 +112,7 @@
             var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loding...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
             $.ajax({
                 type: "POST",
-                url:"http://linxdotadmin.v7idea.com:49880/rebootHotspot",
+                url:"http://linxdotapi.v7idea.com/rebootHotspot",
                 data:{
                     mac: MAC 
                 },
