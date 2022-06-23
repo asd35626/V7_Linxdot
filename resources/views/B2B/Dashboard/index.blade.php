@@ -108,10 +108,11 @@
         })
 
         function rebootHotspot(MAC){
-            var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><br/><div class=\"md-preloader uk-text-center\"><svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"48\" width=\"48\" viewbox=\"0 0 75 75\"><circle cx=\"37.5\" cy=\"37.5\" r=\"33.5\" stroke-width=\"4\"/></svg></div></div>');
+            // var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><br/><div class=\"md-preloader uk-text-center\"><svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"48\" width=\"48\" viewbox=\"0 0 75 75\"><circle cx=\"37.5\" cy=\"37.5\" r=\"33.5\" stroke-width=\"4\"/></svg></div></div>');
+            var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loding...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
             $.ajax({
                 type: "POST",
-                url:"http://192.168.150.163:49880/rebootHotspot",
+                url:"http://linxdotadmin.v7idea.com/rebootHotspot",
                 data:{
                     mac: MAC 
                 },
