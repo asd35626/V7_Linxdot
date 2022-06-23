@@ -18,6 +18,8 @@ Route::get('/Admin/Login', function () {
     return view('AdminLogin');
 });
 
+Route::resource('test', 'testController');
+
 // For Login
 Route::group(['prefix' => 'api/v1'],function () {
     // 登入檢查
@@ -126,3 +128,6 @@ Route::group(['prefix' => 'B2B'],function () {
 
 //修改後台帳密碼(右上角的個人選單)
 Route::resource('/Profile/PasswordSetting', 'ProfilePasswordSettingController');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

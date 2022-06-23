@@ -12,7 +12,6 @@ class DimHotspot extends Model
     public $incrementing = false;
     public $timestamps = false;
     protected $fillable = [
-
       'id',
       'IssueDate',
       'PalletId',
@@ -47,6 +46,10 @@ class DimHotspot extends Model
       'P2P_Dialable',
       'P2P_NatType',
       'Region',
+      'IfUpdateLocation',
+      'UpdateLocationMemo',
+      'map_lat',
+      'map_lng',
       'IfValid',
       'IfNotValidBy',
       'IfNotValidDate',

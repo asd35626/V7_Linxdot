@@ -31,12 +31,19 @@
     <link rel="stylesheet" href="/assets/skins/dropify/css/dropify.css">
     <link rel="stylesheet" href="/assets/css/fix.css" media="all">
 
+
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
     <style>
         .text-center {
             text-align: center;
         }
     </style>
+
+    <!-- map -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css' rel='stylesheet' />
+
+    
     @yield('extraCssArea')
 </head>
 <body class="sidebar_main_open sidebar_main_swipe page_heading_active">

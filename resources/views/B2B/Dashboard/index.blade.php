@@ -47,6 +47,41 @@
 
     .material-icons {font-size: 20px;}
 
+    .bd-example-modal-lg .modal-dialog{
+        display: table;
+        position: relative;
+        margin: 0 auto;
+        top: calc(50% - 24px);
+      }
+      
+      .bd-example-modal-lg .modal-dialog .modal-content{
+        background-color: transparent;
+        border: none;
+      }
+
+    /*map標記設定*/
+    .mapboxgl-ctrl{
+        display: none;
+    }
+
+    /*mapicon設定*/
+    .marker {
+        background-image: url('/favicon.ico');
+        background-size: cover;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    /*map設定*/
+    #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+    }
+
 </style>
 @endsection
 
@@ -71,6 +106,38 @@
                 $('#searchForm').submit();
             });
         })
+
+        function rebootHotspot(MAC){
+            $.ajax({
+                type: "POST",
+                url:"http://192.168.150.163:49880/rebootHotspot",
+                data:{
+                    mac: MAC 
+                },
+                success: function(response){
+                    // alert(response);
+                    if(response.status == 0){
+                        alert('成功');
+                    }else{
+                        alert(response.errorMessage);
+                    }
+                },
+                error : function(xhr, ajaxOptions, thrownError){
+                    canSendGift = true;
+                    switch (xhr.status) {
+                        case 422:
+                            if(check()){
+                            // grecaptcha.reset();
+                                alert("Error(422)");
+                            }
+                        break;
+                        default:
+                          // grecaptcha.reset();
+                          alert('server error');
+                    }
+                }
+            });
+        }
     </script>
 @endsection
 
@@ -183,9 +250,11 @@
                                                     margin-block-start:0px;margin-block-end:0px;margin-inline-start:0px;
                                                     margin-inline-end:0px;padding-inline-start:0px;line-height: 25px;">
                                                         {{--地圖--}}
-                                                        <li><a href="/B2B/Map">Show on map</a></li>
-                                                        {{-- <li><a href="#">Reboot</a></li>
-                                                        <li><a href="#">Upgrade firmware</a></li>
+                                                        @if($object->map_lat != null || $object->map_lat != '' && $object->map_lng != null || $object->map_lng != '')
+                                                            <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}')">Show on map</a></li>
+                                                        @endif
+                                                        <li><a onclick="rebootHotspot('{{ $object->MacAddress }}')">Reboot</a></li>
+                                                        {{-- <li><a href="#">Upgrade firmware</a></li>
                                                         <li><a href="#">Restart miner</a></li>
                                                         <li><a href="#">Trigger fast sync</a></li>
                                                         
@@ -209,7 +278,32 @@
     {{-- </div>--}}
     <!-- table end -->
 
-            
+    <div class="uk-modal uk-modal-card-fullscreen" id="modal_full" aria-hidden="true" style="display: none; overflow-y: auto;">
+        <div class="uk-modal-dialog uk-modal-dialog-blank">
+            <div class="md-card uk-height-viewport">
+                <div class="md-card-toolbar">
+                    <div class="md-card-toolbar-actions">
+                        <div class="md-card-dropdown" data-uk-dropdown="{pos:'bottom-right'}">
+                            {{-- <i class="md-icon material-icons"></i>
+                            <div class="uk-dropdown">
+                                <ul class="uk-nav">
+                                    <li><a href="#">Action 1</a></li>
+                                    <li><a href="#">Action 2</a></li>
+                                </ul>
+                            </div> --}}
+                        </div>
+                    </div>
+                     <span class="md-icon material-icons uk-modal-close"></span>
+                    <h3 class="md-card-toolbar-heading-text">
+                        Map
+                    </h3>
+                </div>
+                <div class="md-card-content">
+                    <div id='map' style='width: 95%; height: 95%;'></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         function search() {
@@ -261,6 +355,48 @@
               
             $('#searchForm').submit();
         }
+        function map(lng,lat){
+            mapboxgl.accessToken = 'pk.eyJ1IjoiYXNkMzU2MjYiLCJhIjoiY2w0cDdlNDk2MDd2ZTNlbWpycnNrdW0wcCJ9._Q--d12cdqSM5jAdabU08w';
+            const map = new mapboxgl.Map({
+                container: 'map', // container ID
+                style: 'mapbox://styles/mapbox/streets-v11', // style URL
+                // center: [-74.5, 40], // starting position [lng, lat]
+                center: [lng,lat],
+                zoom: 15, // starting zoom
+            });
+            map.on('idle',function(){
+                // alert(123);
+                map.resize()
+            });
+
+            const geojson = {
+                type: 'FeatureCollection',
+                features: [
+                    {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [lng,lat]
+                        },
+                        properties: {
+                            title: 'Mapbox',
+                            description: 'Washington, D.C.'
+                        }
+                    }
+                ]
+            };
+
+            // add markers to map
+            for (const feature of geojson.features) {
+                // create a HTML element for each feature
+                const el = document.createElement('div');
+                el.className = 'marker';
+
+                // make a marker for each feature and add to the map
+                new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(map);
+            }
+        }
+            
     </script>
 
     <?php 

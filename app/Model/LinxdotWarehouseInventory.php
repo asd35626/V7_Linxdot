@@ -24,6 +24,7 @@ class LinxdotWarehouseInventory extends Model
       'IfShipped',
       'ShippedDate',
       'TrackingNo',
+      'CustomInfo',
       'IfValid',
       'IfNotValidBy',
       'IfNotValidDate',
