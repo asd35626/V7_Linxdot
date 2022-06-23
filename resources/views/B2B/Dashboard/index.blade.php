@@ -189,97 +189,91 @@
     {!! Form::close() !!}
     <!-- search area end-->
     <!-- table start -->
-    {{-- <div class="md-card uk-margin-medium-bottom"> --}}
-        <div class="md-card-content">
-            <div class="uk-overflow-container">
-                <table id="grid-basic" class="uk-table uk-table-nowrap table_check">
-                    <thead>
-                        <tr>
-                            {!! generateHTML('DeviceSN','S/N',$isAsc, $orderBy) !!}
-                            {!! generateHTML('MacAddress','MAC Address',$isAsc, $orderBy) !!}
-                            {!! generateHTML('AnimalName','Animal name',$isAsc, $orderBy) !!}
-                            {!! generateHTML('LastUpdateOnLineTime','Status',$isAsc, $orderBy) !!}
-                            {!! generateHTML('BlockHeight','Miner height',$isAsc, $orderBy) !!}
-                            {!! generateHTML('LastUpdateOnLineTime','Latest online time',$isAsc, $orderBy) !!}
-                            {!! generateHTML('Firmware','ROM version',$isAsc, $orderBy) !!}
-                            {!! generateHTML('MinerVersion','Miner version',$isAsc, $orderBy) !!}
-                            <th class="uk-width-1-10 uk-text-small" style="cursor: pointer;color:black;font-weight:bold;">More</th>
-                        </tr>
-                    </thead>
-                    @if($data->count() > 0)
-                        @foreach ($data as $object)
-                            <tr bgcolor="#C8E0E5" style="color:black;">
-                                <td class="uk-text-small">{{ $object->DeviceSN }}</td>
-                                <td class="uk-text-small">{{ $object->MacAddress }}</td>
-                                <td class="uk-text-small">{{ $object->AnimalName }}</td>
-                                <td class="uk-text-small">
-                                    @if($object->DewiStatus == 'Onboarded')
-                                        @if($object->LastUpdateOnLineTime)
-                                            <?php 
-                                                $now = date_create( date('Y-m-d H:i:s',time() - (8 * 3600)));
-                                                $LastUpdateOnLineTime = date_create( $object->LastUpdateOnLineTime);
-                                                $time = date_diff($now, $LastUpdateOnLineTime);
+    <table id="grid-basic" class="uk-table uk-table-nowrap table_check">
+        <thead>
+            <tr>
+                {!! generateHTML('DeviceSN','S/N',$isAsc, $orderBy) !!}
+                {!! generateHTML('MacAddress','MAC Address',$isAsc, $orderBy) !!}
+                {!! generateHTML('AnimalName','Animal name',$isAsc, $orderBy) !!}
+                {!! generateHTML('LastUpdateOnLineTime','Status',$isAsc, $orderBy) !!}
+                {!! generateHTML('BlockHeight','Miner height',$isAsc, $orderBy) !!}
+                {!! generateHTML('LastUpdateOnLineTime','Latest online time',$isAsc, $orderBy) !!}
+                {!! generateHTML('Firmware','ROM version',$isAsc, $orderBy) !!}
+                {!! generateHTML('MinerVersion','Miner version',$isAsc, $orderBy) !!}
+                <th class="uk-width-1-10 uk-text-small" style="cursor: pointer;color:black;font-weight:bold;">More</th>
+            </tr>
+        </thead>
+        @if($data->count() > 0)
+            @foreach ($data as $object)
+                <tr bgcolor="#C8E0E5" style="color:black;">
+                    <td class="uk-text-small">{{ $object->DeviceSN }}</td>
+                    <td class="uk-text-small">{{ $object->MacAddress }}</td>
+                    <td class="uk-text-small">{{ $object->AnimalName }}</td>
+                    <td class="uk-text-small">
+                        @if($object->DewiStatus == 'Onboarded')
+                            @if($object->LastUpdateOnLineTime)
+                                <?php 
+                                    $now = date_create( date('Y-m-d H:i:s',time() - (8 * 3600)));
+                                    $LastUpdateOnLineTime = date_create( $object->LastUpdateOnLineTime);
+                                    $time = date_diff($now, $LastUpdateOnLineTime);
 
-                                                $minutes = $time->days * 24 * 60;
-                                                $minutes += $time->h * 60;
-                                                $minutes += $time->i;
-                                                if($minutes <= 10 && $object->P2P_Connected == 1){
-                                                    print('<span class="material-icons" style="color:#59BBBC"> circle </span> online');
-                                                }else{
-                                                    print('<span class="material-icons" style="color:#FF5959"> circle </span> offline');
-                                                }
-                                            ?>
-                                        @else
-                                            <span class="material-icons" style="color:#FF5959"> circle </span> offline
-                                        @endif
-                                    @else
-                                        <span class="material-icons" style="color:#ABABAB"> circle </span>notonboarded
-                                    @endif
-                                </td>
-                                <td class="uk-text-small">{{ $object->BlockHeight }}</td>
-                                <td class="uk-text-small">
-                                    @if($object->LastUpdateOnLineTime)
-                                        {{ Carbon\Carbon::parse($object->LastUpdateOnLineTime)->format('Y/m/d H:i:s') }}
-                                    @endif
-                                </td>
-                                <td class="uk-text-small">{{ $object->Firmware }}</td>
-                                <td class="uk-text-small">{{ substr($object->MinerVersion, -15) }}</td>
-                                <td class="uk-text-small">
-                                    <div class="md-card-list-wrapper">
-                                        <div class="md-card-list" style="margin-top:0px">
-                                            <div class="md-card-list-item-menu" data-uk-dropdown="{mode:'click',pos:'bottom-right'}">
-                                                <a class="md-icon material-icons">&#xE5D4;</a>
-                                                <div class="uk-dropdown" style="background:#C4C4C4">
-                                                    <ul style="text-align:left;list-style:none;display: block;
-                                                    margin-block-start:0px;margin-block-end:0px;margin-inline-start:0px;
-                                                    margin-inline-end:0px;padding-inline-start:0px;line-height: 25px;">
-                                                        {{--地圖--}}
-                                                        @if($object->map_lat != null || $object->map_lat != '' && $object->map_lng != null || $object->map_lng != '')
-                                                            <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}')">Show on map</a></li>
-                                                        @endif
-                                                        <li><a onclick="rebootHotspot('{{ $object->MacAddress }}')">Reboot</a></li>
-                                                        {{-- <li><a href="#">Upgrade firmware</a></li>
-                                                        <li><a href="#">Restart miner</a></li>
-                                                        <li><a href="#">Trigger fast sync</a></li>
-                                                        
-                                                        <li><a href="#">Report issue</a></li>
-                                                        <li><a href="#">Device heartbeat</a></li> --}}
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    $minutes = $time->days * 24 * 60;
+                                    $minutes += $time->h * 60;
+                                    $minutes += $time->i;
+                                    if($minutes <= 10 && $object->P2P_Connected == 1){
+                                        print('<span class="material-icons" style="color:#59BBBC"> circle </span> online');
+                                    }else{
+                                        print('<span class="material-icons" style="color:#FF5959"> circle </span> offline');
+                                    }
+                                ?>
+                            @else
+                                <span class="material-icons" style="color:#FF5959"> circle </span> offline
+                            @endif
+                        @else
+                            <span class="material-icons" style="color:#ABABAB"> circle </span>notonboarded
+                        @endif
+                    </td>
+                    <td class="uk-text-small">{{ $object->BlockHeight }}</td>
+                    <td class="uk-text-small">
+                        @if($object->LastUpdateOnLineTime)
+                            {{ Carbon\Carbon::parse($object->LastUpdateOnLineTime)->format('Y/m/d H:i:s') }}
+                        @endif
+                    </td>
+                    <td class="uk-text-small">{{ $object->Firmware }}</td>
+                    <td class="uk-text-small">{{ substr($object->MinerVersion, -15) }}</td>
+                    <td class="uk-text-small">
+                        <div class="md-card-list-wrapper">
+                            <div class="md-card-list" style="margin-top:0px">
+                                <div class="md-card-list-item-menu" data-uk-dropdown="{mode:'click',pos:'bottom-right'}">
+                                    <a class="md-icon material-icons">&#xE5D4;</a>
+                                    <div class="uk-dropdown" style="background:#C4C4C4">
+                                        <ul style="text-align:left;list-style:none;display: block;
+                                        margin-block-start:0px;margin-block-end:0px;margin-inline-start:0px;
+                                        margin-inline-end:0px;padding-inline-start:0px;line-height: 25px;">
+                                            {{--地圖--}}
+                                            @if($object->map_lat != null || $object->map_lat != '' && $object->map_lng != null || $object->map_lng != '')
+                                                <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}')">Show on map</a></li>
+                                            @endif
+                                            <li><a onclick="rebootHotspot('{{ $object->MacAddress }}')">Reboot</a></li>
+                                            {{-- <li><a href="#">Upgrade firmware</a></li>
+                                            <li><a href="#">Restart miner</a></li>
+                                            <li><a href="#">Trigger fast sync</a></li>
+                                            
+                                            <li><a href="#">Report issue</a></li>
+                                            <li><a href="#">Device heartbeat</a></li> --}}
+                                        </ul>
                                     </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @else
-                        <td colspan="500" style="text-align: center;">No data found</td>
-                    @endif
-                </table>
-            </div>
-            @include('Pagination')
-        </div>
-    {{-- </div>--}}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
+        @else
+            <td colspan="500" style="text-align: center;">No data found</td>
+        @endif
+    </table>
+    @include('Pagination')
     <!-- table end -->
 
     <div class="uk-modal uk-modal-card-fullscreen" id="modal_full" aria-hidden="true" style="display: none; overflow-y: auto;">
