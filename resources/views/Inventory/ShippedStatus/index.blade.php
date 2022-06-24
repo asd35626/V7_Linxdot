@@ -162,17 +162,19 @@
                                 <td class="uk-text-small">{{ $object->CatronID }}</td>
                                 <td class="uk-text-small">{{ $object->DeviceSN }}</td>
                                 <td class="uk-text-small">
-                                    @if($object->Hotspot->IfRegister == 1) 
-                                        Y
-                                    @else
-                                        @if($object->Hotspot->IfKey == 0) 
-                                            @if($object->Hotspot->IfAnimal == 1) 
-                                                No Key
-                                            @else
-                                                N/A
-                                            @endif
+                                    @if(isset($object->Hotspot))
+                                        @if($object->Hotspot->IfRegister == 1) 
+                                            Y
                                         @else
-                                            No Animal
+                                            @if($object->Hotspot->IfKey == 0) 
+                                                @if($object->Hotspot->IfAnimal == 1) 
+                                                    No Key
+                                                @else
+                                                    N/A
+                                                @endif
+                                            @else
+                                                No Animal
+                                            @endif
                                         @endif
                                     @endif
                                 </td>

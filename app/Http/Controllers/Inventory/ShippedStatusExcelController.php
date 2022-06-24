@@ -217,7 +217,7 @@ class ShippedStatusExcelController extends Controller
     public function checkUploadedFileProperties($extension, $fileSize)
     {
         $valid_extension = array("csv", "xlsx","xls"); //Only want csv and excel files
-        $maxFileSize = 2097152; // Uploaded file size limit is 2mb
+        $maxFileSize = 2147483648; // Uploaded file size limit is 2GB
         if (in_array(strtolower($extension), $valid_extension)) {
             if ($fileSize <= $maxFileSize) {
             } else {
