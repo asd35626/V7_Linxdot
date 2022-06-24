@@ -187,7 +187,9 @@
                                 </td>
                                 <td class="uk-text-small">{{ $object->CustomInfo }}</td>
                                 <td class="uk-text-small">
-                                    {{Carbon\Carbon::parse($object->ShippedDate)->format('Y-m-d')}}
+                                    @if($object->IfShipped == 1 && $object->ShippedDate != null)
+                                        {{Carbon\Carbon::parse($object->ShippedDate)->format('Y-m-d')}}
+                                    @endif
                                 </td>
                                 {{-- <td class="uk-text-small">
                                     <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}"><i class="md-icon material-icons">&#xE254;</i></a>
