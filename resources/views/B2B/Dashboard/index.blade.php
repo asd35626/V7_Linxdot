@@ -120,7 +120,7 @@
                     modal.hide();
                     // alert(response);
                     if(response.status == 0){
-                        alert('成功');
+                        alert('Reboot Successfully');
                     }else{
                         alert(response.errorMessage);
                     }
