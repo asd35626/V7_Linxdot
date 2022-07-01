@@ -108,7 +108,6 @@
         })
 
         function rebootHotspot(MAC){
-            // var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><br/><div class=\"md-preloader uk-text-center\"><svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"48\" width=\"48\" viewbox=\"0 0 75 75\"><circle cx=\"37.5\" cy=\"37.5\" r=\"33.5\" stroke-width=\"4\"/></svg></div></div>');
             var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
             $.ajax({
                 type: "POST",
@@ -239,7 +238,13 @@
                             {{ Carbon\Carbon::parse($object->LastUpdateOnLineTime)->format('Y/m/d H:i:s') }}
                         @endif
                     </td>
-                    <td class="uk-text-small">{{ $object->Firmware }}</td>
+                    <td class="uk-text-small">
+                        @if(isset($object->Version->VersionNo))
+                            {{ $object->Version->VersionNo }}
+                        @else
+                            {{ $object->Firmware }}
+                        @endif
+                    </td>
                     <td class="uk-text-small">{{ substr($object->MinerVersion, -15) }}</td>
                     <td class="uk-text-small">
                         <div class="md-card-list-wrapper">

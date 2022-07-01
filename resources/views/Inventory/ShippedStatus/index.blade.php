@@ -84,6 +84,9 @@
                                         <div class="uk-width-1-3">
                                             {!! $searchFields['IfShipped']['completeField'] !!}
                                         </div>
+                                        <div class="uk-width-1-3">
+                                            {!! $searchFields['CustomInfo']['completeField'] !!}
+                                        </div>
                                     </div>
                                     <div class="uk-grid">
                                         <div class="uk-width-1-3">
@@ -146,7 +149,8 @@
                             {!! generateHTML('IfShipped','Shipped',$isAsc, $orderBy) !!}
                             {!! generateHTML('CustomInfo','Customer Info',$isAsc, $orderBy) !!}
                             {!! generateHTML('ShippedDate','Shipped Date.',$isAsc, $orderBy) !!}
-                            {{-- <th class="uk-width-1-10 uk-text-small">edit</th> --}} 
+                            {!! generateHTML('LastModifyDate','Last Update Time',$isAsc, $orderBy) !!}
+                            {{-- <th class="uk-width-1-15 uk-text-small">edit</th> --}} 
                         </tr>
                     </thead>
                     @if($data->count() > 0)
@@ -162,6 +166,7 @@
                                 <td class="uk-text-small">{{ $object->CatronID }}</td>
                                 <td class="uk-text-small">{{ $object->DeviceSN }}</td>
                                 <td class="uk-text-small">
+                                    <!-- 沒有key->no key，沒有animal->no animal，都沒有->N/A -->
                                     @if(isset($object->Hotspot))
                                         @if($object->Hotspot->IfRegister == 1) 
                                             Y
@@ -191,6 +196,11 @@
                                 <td class="uk-text-small">
                                     @if($object->IfShipped == 1 && $object->ShippedDate != null)
                                         {{Carbon\Carbon::parse($object->ShippedDate)->format('Y-m-d')}}
+                                    @endif
+                                </td>
+                                <td class="uk-text-small">
+                                    @if($object->LastModifyBy)
+                                        {{ Carbon\Carbon::parse($object->LastModifyBy)->format('Y/m/d') }}
                                     @endif
                                 </td>
                                 {{-- <td class="uk-text-small">
@@ -268,7 +278,7 @@
     <?php 
         //產生列表的 title(id, 名稱, 排列方式, 當前排序欄位)
         function generateHTML($rawId,$rawName,$isAsc,$orderBy){
-            $html = '<th class="uk-width-1-10 uk-text-small">
+            $html = '<th class="uk-width-1-15 uk-text-small">
                         <span onclick="orderBy(\''.$rawId.'\');" style="cursor: pointer;">';
             $html .= $rawName;
             $html .= '</span>';

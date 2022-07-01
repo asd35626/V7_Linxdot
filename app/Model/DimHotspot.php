@@ -67,4 +67,9 @@ class DimHotspot extends Model
     {
         return $this->belongsTo('App\Model\DimUser', 'ManufactureID','Id');
     }
+    // 分位
+    public function Version()
+    {
+        return $this->belongsTo('App\Model\DimFirmware', 'Firmware','Version Code');
+    }
 }

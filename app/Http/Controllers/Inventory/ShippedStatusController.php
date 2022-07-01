@@ -68,6 +68,14 @@ class ShippedStatusController extends Controller
             'CatronID' =>  [
                 'name' => 'CatronID',
                 'id' => 'CatronID',
+                'label' => 'Customer Info',
+                'type' => 'text',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'CustomInfo' =>  [
+                'name' => 'CustomInfo',
+                'id' => 'CustomInfo',
                 'label' => 'Carton No',
                 'type' => 'text',
                 'value' => '',
@@ -371,6 +379,7 @@ class ShippedStatusController extends Controller
                 'MacAddress' => strtolower(str_replace("-",":",$searchFields['MacAddress']['value'])),
                 'Location' => $searchFields['Location']['value'],
                 'IfShipped' => $searchFields['IfShipped']['value'],
+                'CustomInfo' => $searchFields['CustomInfo']['value'],
                 'ShippedDateTo' => $searchFields['ShippedDateTo']['value'],
                 'ShippedDateFrom' => $searchFields['ShippedDateFrom']['value'],
             );
@@ -399,6 +408,9 @@ class ShippedStatusController extends Controller
                 }
                 if($searchArray['IfShipped'] != '') {
                     $query->where('IfShipped', $searchArray['IfShipped']);
+                }
+                if($searchArray['CustomInfo'] != '') {
+                    $query->where('CustomInfo', $searchArray['CustomInfo']);
                 }
                 if ($searchArray['ShippedDateFrom'] != '') {
                     $query->where('ShippedDate', '>=', ($searchArray['ShippedDateFrom'] . ' 00:00:00'));
