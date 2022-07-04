@@ -19,6 +19,85 @@
             top: 85px !important;
         }
     </style>
+    <script>
+        function rebootHotspot(MAC){
+            var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
+            $.ajax({
+                type: "POST",
+                url:"https://linxdotapi.v7idea.com/rebootHotspot",
+                data:{
+                    mac: MAC 
+                },
+                success: function(response){
+                    modal.hide();
+                    // alert(response);
+                    if(response.status == 0){
+                        alert('Reboot Successfully');
+                    }else{
+                        alert(response.errorMessage);
+                    }
+                },
+                error : function(xhr, ajaxOptions, thrownError){
+                    modal.hide();
+                    canSendGift = true;
+                    switch (xhr.status) {
+                        case 422:
+                            if(check()){
+                            // grecaptcha.reset();
+                                alert("Error(422)");
+                            }
+                        break;
+                        default:
+                          // grecaptcha.reset();
+                          alert('server error');
+                    }
+                }
+            });
+        }
+
+        function map(lng,lat){
+            mapboxgl.accessToken = 'pk.eyJ1IjoiYXNkMzU2MjYiLCJhIjoiY2w0cDdlNDk2MDd2ZTNlbWpycnNrdW0wcCJ9._Q--d12cdqSM5jAdabU08w';
+            const map = new mapboxgl.Map({
+                container: 'map', // container ID
+                style: 'mapbox://styles/mapbox/streets-v11', // style URL
+                // center: [-74.5, 40], // starting position [lng, lat]
+                center: [lng,lat],
+                zoom: 15, // starting zoom
+            });
+            map.on('idle',function(){
+                // alert(123);
+                map.resize()
+            });
+
+            const geojson = {
+                type: 'FeatureCollection',
+                features: [
+                    {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [lng,lat]
+                        },
+                        properties: {
+                            title: 'Mapbox',
+                            description: 'Washington, D.C.'
+                        }
+                    }
+                ]
+            };
+
+            // add markers to map
+            for (const feature of geojson.features) {
+                // create a HTML element for each feature
+                const el = document.createElement('div');
+                el.className = 'marker';
+
+                // make a marker for each feature and add to the map
+                new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(map);
+            }
+        }
+
+    </script>
 @endsection
 
 
@@ -127,7 +206,7 @@
                     <button type="submit" onclick="window.location.href='{{ route( $routePath.'.create') }}';" class="md-btn md-btn-primary">Add</button>
                 </div>
             </div>
-            <div class="uk-overflow-container">
+            <div class="uk-overflow-container" >
                 <table id="grid-basic" class="uk-table uk-table-nowrap table_check">
                     <thead>
                         <tr>
@@ -139,11 +218,8 @@
                             {!! generateHTML('ShippedDate','customerInfo',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small">Height</th>
                             {!! generateHTML('LastUpdateOnLineTime','Status',$isAsc, $orderBy) !!}
-                            {!! generateHTML('P2P_Connected','p2p_connected',$isAsc, $orderBy) !!}
-                            {!! generateHTML('P2P_Dialable','dialable',$isAsc, $orderBy) !!}
-                            {!! generateHTML('P2P_NatType','nat_type',$isAsc, $orderBy) !!}
-                            {!! generateHTML('Region','regions',$isAsc, $orderBy) !!}
-                            <th class="uk-width-1-10 uk-text-small">edit</th>
+                            {{-- {!! generateHTML('Region','regions',$isAsc, $orderBy) !!} --}}
+                            <th class="uk-width-1-10 uk-text-small">More</th>
                         </tr>
                     </thead>
                     @if($data->count() > 0)
@@ -207,43 +283,38 @@
                                         <span class="material-icons" style="color:#ABABAB"> circle </span>notonboarded
                                     @endif
                                 </td>
-                                <td class="uk-text-small">
-                                    @if($object->P2P_Connected)
-                                        @if($object->P2P_Connected == 1)
-                                            <span class="material-icons" style="color:#59BBBC"> circle </span>Yes
-                                        @elseif($object->P2P_Connected == 0)
-                                            <span class="material-icons" style="color:#FF5959"> circle </span>No
-                                        @else
-                                            <span class="material-icons" style="color:#ABABAB"> circle </span>
-                                        @endif
-                                    @else
-                                        <span class="material-icons" style="color:#ABABAB"> circle </span>
-                                    @endif
-                                </td>
-                                <td class="uk-text-small">
-                                    @if($object->P2P_Dialable)
-                                        @if($object->P2P_Dialable == 1)
-                                            <span class="material-icons" style="color:#59BBBC"> circle </span>Yes
-                                        @elseif($object->P2P_Dialable == 0)
-                                            <span class="material-icons" style="color:#FF5959"> circle </span>No
-                                        @else
-                                            <span class="material-icons" style="color:#ABABAB"> circle </span>
-                                        @endif
-                                    @else
-                                        <span class="material-icons" style="color:#ABABAB"> circle </span>
-                                    @endif
-                                </td>
-                                <td class="uk-text-small">{{ $object->P2P_NatType }}</td>
-                                <td class="uk-text-small">{{ $object->Region }}</td>
+                                {{-- <td class="uk-text-small">{{ $object->Region }}</td> --}}
 
                                 <td class="uk-text-small">
-                                    <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}"><i class="md-icon material-icons">&#xE254;</i></a>
-
-                                    <div class="uk-badge uk-badge-primary userMOUSE" onclick="showUserList('{{ $object->$primaryKey }}')">User</div>
-
-                                    {{-- {!! Form::open(['id' => 'formDeleteAction'.$i , 'method' => 'DELETE','route' => [ $routePath.'.destroy', $object->$primaryKey],'style'=>'display:inline']  ) !!}
-                                        <a href="javascript:if(confirm('Are you sure to delete this datum?'))$('{{ '#formDeleteAction'.$i }}').submit();"><i class="md-icon material-icons">&#xE872;</i></a>
-                                    {!! Form::close() !!} --}}
+                                    <div class="md-card-list-wrapper">
+                                        <div class="md-card-list" style="margin-top:0px">
+                                            <div class="md-card-list-item-menu" data-uk-dropdown="{mode:'click',pos:'bottom-right'}">
+                                                <a class="md-icon material-icons">&#xE5D4;</a>
+                                                <div class="uk-dropdown" style="background:#C4C4C4">
+                                                    <ul style="text-align:left;list-style:none;display: block;
+                                                    margin-block-start:0px;margin-block-end:0px;margin-inline-start:0px;
+                                                    margin-inline-end:0px;padding-inline-start:0px;line-height: 25px;">
+                                                        {{--地圖--}}
+                                                        @if($object->map_lat != null || $object->map_lat != '' && $object->map_lng != null || $object->map_lng != '')
+                                                            <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}')">Show on map</a></li>
+                                                        @endif
+                                                        {{-- 重開機 --}}
+                                                        <li><a onclick="rebootHotspot('{{ $object->MacAddress }}')">Reboot</a></li>
+                                                        {{-- <li><a href="#">Upgrade firmware</a></li>
+                                                        <li><a href="#">Restart miner</a></li>
+                                                        <li><a href="#">Trigger fast sync</a></li>
+                                                        回報問題 --}}
+                                                        {{-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> --}}
+                                                        {{-- <li><a href="#">Device heartbeat</a></li> --}}
+                                                        {{-- 編輯 --}}
+                                                        <li><a href="{{ route($routePath.'.edit',$object->$primaryKey) }}">Edit</a></li>
+                                                        {{-- 會員 --}}
+                                                        <li><a onclick="showUserList('{{ $object->$primaryKey }}')">User</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -272,6 +343,28 @@
             </div>
         </div>
     {{-- 變更會員 --}}
+
+    {{-- MAP --}}
+    <div class="uk-modal uk-modal-card-fullscreen" id="modal_full" aria-hidden="true" style="display: none; overflow-y: auto;">
+        <div class="uk-modal-dialog uk-modal-dialog-blank">
+            <div class="md-card uk-height-viewport">
+                <div class="md-card-toolbar">
+                    <div class="md-card-toolbar-actions">
+                        <div class="md-card-dropdown" data-uk-dropdown="{pos:'bottom-right'}">
+                        </div>
+                    </div>
+                    <span class="md-icon material-icons uk-modal-close"></span>
+                    <h3 class="md-card-toolbar-heading-text">
+                        Map
+                    </h3>
+                </div>
+                <div class="md-card-content">
+                    <div id='map' style='width: 95%; height: 95%;'></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- MAP --}}
 
     <script>
         function search() {

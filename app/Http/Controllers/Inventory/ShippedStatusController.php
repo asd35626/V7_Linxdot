@@ -68,7 +68,7 @@ class ShippedStatusController extends Controller
             'CatronID' =>  [
                 'name' => 'CatronID',
                 'id' => 'CatronID',
-                'label' => 'Customer Info',
+                'label' => 'Catron No.',
                 'type' => 'text',
                 'value' => '',
                 'class' => 'md-input label-fixed',
@@ -76,7 +76,7 @@ class ShippedStatusController extends Controller
             'CustomInfo' =>  [
                 'name' => 'CustomInfo',
                 'id' => 'CustomInfo',
-                'label' => 'Carton No',
+                'label' => 'Custom Info.',
                 'type' => 'text',
                 'value' => '',
                 'class' => 'md-input label-fixed',
@@ -366,7 +366,13 @@ class ShippedStatusController extends Controller
             $pageNo = 1;
         }
 
-        $data = LinxdotWarehouseInventory::where('IfDelete','0');
+        $data = LinxdotWarehouseInventory::where('Linxdot_Warehouse_Inventory.IfDelete','0')
+                        ->leftJoin('Dim_Hotspot', function($join){
+                            $join->on('Dim_Hotspot.MacAddress','=','Linxdot_Warehouse_Inventory.MacAddress')
+                                ->where('Dim_Hotspot.IfValid' , 1)
+                                ->where('Dim_Hotspot.IfDelete' , 0);
+                        })
+                        ->select('Dim_Hotspot.IfRegister','Linxdot_Warehouse_Inventory.*');
 
         if ($IfSearch == '1') {
             // 表示會需要參考搜尋的變數
@@ -386,50 +392,61 @@ class ShippedStatusController extends Controller
 
             $data= $data->where(function($query) use ($searchArray) {
                 if($searchArray['WarehouseID'] != '') {
-                    $query->where('WarehouseID', 'like', '%'.$searchArray['WarehouseID'].'%' );
+                    $query->where('Linxdot_Warehouse_Inventory.WarehouseID', 'like', '%'.$searchArray['WarehouseID'].'%' );
                 }
                 if($searchArray['SkuID'] != '') {
-                    $query->where('SkuID', $searchArray['SkuID']);
+                    $query->where('Linxdot_Warehouse_Inventory.SkuID','like', '%'.$searchArray['SkuID'].'%');
                 }
                 if($searchArray['PalletID'] != '') {
-                    $query->where('PalletID', $searchArray['PalletID']);
+                    $query->where('Linxdot_Warehouse_Inventory.PalletID','like', '%'.$searchArray['PalletID'].'%');
                 }
                 if($searchArray['CatronID'] != '') {
-                    $query->where('CatronID', $searchArray['CatronID']);
+                    $query->where('Linxdot_Warehouse_Inventory.CatronID','like', '%'.$searchArray['CatronID'].'%');
                 }
                 if($searchArray['DeviceSN'] != '') {
-                    $query->where('DeviceSN', $searchArray['DeviceSN']);
+                    $query->where('Linxdot_Warehouse_Inventory.DeviceSN','like', '%'.$searchArray['DeviceSN'].'%');
                 }
                 if($searchArray['MacAddress'] != '') {
-                    $query->where('MacAddress', 'like', '%'.$searchArray['MacAddress'].'%' );
+                    $query->where('Linxdot_Warehouse_Inventory.MacAddress','like', '%'.$searchArray['MacAddress'].'%');
                 }
                 if($searchArray['Location'] != '') {
-                    $query->where('Location', 'like', '%'.$searchArray['Location'].'%' );
+                    $query->where('Linxdot_Warehouse_Inventory.Location','like', '%'.$searchArray['Location'].'%');
                 }
                 if($searchArray['IfShipped'] != '') {
-                    $query->where('IfShipped', $searchArray['IfShipped']);
+                    $query->where('Linxdot_Warehouse_Inventory.IfShipped', $searchArray['IfShipped']);
                 }
                 if($searchArray['CustomInfo'] != '') {
-                    $query->where('CustomInfo', $searchArray['CustomInfo']);
+                    $query->where('Linxdot_Warehouse_Inventory.CustomInfo','like', '%'.$searchArray['CustomInfo'].'%');
                 }
                 if ($searchArray['ShippedDateFrom'] != '') {
-                    $query->where('ShippedDate', '>=', ($searchArray['ShippedDateFrom'] . ' 00:00:00'));
+                    $query->where('Linxdot_Warehouse_Inventory.ShippedDate', '>=', ($searchArray['ShippedDateFrom'] . ' 00:00:00'));
                 }
                 if ($searchArray['ShippedDateTo'] != '') {
-                    $query->where('ShippedDate', '<=', ( $searchArray['ShippedDateTo'] . ' 23:59:59'));
+                    $query->where('Linxdot_Warehouse_Inventory.ShippedDate', '<=', ( $searchArray['ShippedDateTo'] . ' 23:59:59'));
                 }
             });
         }
 
         //排序
-        if(isset($orderBy) && $orderBy != ''){
-            if($isAsc == '1'){
-                $data = $data->orderBy($orderBy, 'ASC');
-            }else{
-                $data = $data->orderBy($orderBy, 'DESC');
-            }
+
+        //排序
+        $forward = '';
+        if($isAsc == '1'){
+            $forward = 'ASC';
         }else{
-            $data = $data->orderBy('IfDeleteDate');
+            $forward = 'DESC';
+        }
+        // dd($orderBy);
+        switch ($orderBy) {
+            case '':
+                $data = $data->orderBy('Linxdot_Warehouse_Inventory.ShippedDate', 'ASC');
+                break;
+            case 'IfRegister':
+                $data = $data->orderBy('Dim_Hotspot.IfRegister', 'ASC');
+                break;
+            default:
+                $data = $data->orderBy('Linxdot_Warehouse_Inventory.'.$orderBy, $forward);
+                break;
         }
 
         // dd($data);
