@@ -18,6 +18,28 @@
         .uk-modal #hotspotOwner .selectize-dropdown {
             top: 85px !important;
         }
+        /*map標記設定*/
+        .mapboxgl-ctrl{
+            display: none;
+        }
+
+        /*mapicon設定*/
+        .marker {
+            background-image: url('/favicon.ico');
+            background-size: cover;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /*map設定*/
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
     </style>
     <script>
         function rebootHotspot(MAC){
