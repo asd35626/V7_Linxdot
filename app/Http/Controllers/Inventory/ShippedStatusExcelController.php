@@ -175,8 +175,8 @@ class ShippedStatusExcelController extends Controller
                             'LastModifyBy' => WebLib::getCurrentUserID(),
                             'LastModifyDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
                         ];
-                        LinxdotWarehouseInventory::on('mysql2')->update($updata)->where('MacAddress',$data->MacAddress)
-                            ->where('DeviceSN',$data->DeviceSN);
+                        LinxdotWarehouseInventory::on('mysql2')->where('MacAddress',$data->MacAddress)
+                            ->where('DeviceSN',$data->DeviceSN)->update($updata);
 
                         LinxdotExcelWarehouseInventoryDetail::on('mysql2')
                                 ->where('id',$data->id)
