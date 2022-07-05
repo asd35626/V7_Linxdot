@@ -145,7 +145,7 @@
             var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
             $.ajax({
                 type: "POST",
-                url:"http://192.168.150.163:49880/ota",
+                url:"https://linxdotapi.v7idea.com/ota",
                 data:{
                     mac: MAC 
                 },
