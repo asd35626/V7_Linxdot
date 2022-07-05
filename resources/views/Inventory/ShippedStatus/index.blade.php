@@ -199,8 +199,8 @@
                                     @endif
                                 </td>
                                 <td class="uk-text-small">
-                                    @if($object->LastModifyBy)
-                                        {{ Carbon\Carbon::parse($object->LastModifyBy)->format('Y/m/d') }}
+                                    @if($object->LastModifyDate)
+                                        {{ Carbon\Carbon::parse($object->LastModifyDate)->format('Y/m/d') }}
                                     @endif
                                 </td>
                                 {{-- <td class="uk-text-small">
