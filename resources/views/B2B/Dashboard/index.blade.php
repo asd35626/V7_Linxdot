@@ -141,6 +141,40 @@
                 }
             });
         }
+        function Upgradefirmware(MAC){
+            var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
+            $.ajax({
+                type: "POST",
+                url:"http://192.168.150.163:49880/ota",
+                data:{
+                    mac: MAC 
+                },
+                success: function(response){
+                    modal.hide();
+                    // alert(response);
+                    if(response.status == 0){
+                        alert('Upgrade Firmware Successfully');
+                    }else{
+                        alert(response.errorMessage);
+                    }
+                },
+                error : function(xhr, ajaxOptions, thrownError){
+                    modal.hide();
+                    canSendGift = true;
+                    switch (xhr.status) {
+                        case 422:
+                            if(check()){
+                            // grecaptcha.reset();
+                                alert("Error(422)");
+                            }
+                        break;
+                        default:
+                          // grecaptcha.reset();
+                          alert('server error');
+                    }
+                }
+            });
+        }
     </script>
 @endsection
 
@@ -259,13 +293,15 @@
                                             @if($object->map_lat != null || $object->map_lat != '' && $object->map_lng != null || $object->map_lng != '')
                                                 <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}')">Show on map</a></li>
                                             @endif
+                                            {{-- 重開機 --}}
                                             <li><a onclick="rebootHotspot('{{ $object->MacAddress }}')">Reboot</a></li>
-                                            {{-- <li><a href="#">Upgrade firmware</a></li>
-                                            <li><a href="#">Restart miner</a></li>
+                                            {{-- 更新分位 --}}
+                                            <li><a onclick="Upgradefirmware('{{ $object->MacAddress }}')">Upgrade firmware</a></li>
+                                            {{-- <li><a href="#">Restart miner</a></li>
                                             <li><a href="#">Trigger fast sync</a></li>
-                                            
-                                            <li><a href="#">Report issue</a></li>
-                                            <li><a href="#">Device heartbeat</a></li> --}}
+                                            回報問題 --}}
+                                            {{-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> --}}
+                                            {{-- <li><a href="#">Device heartbeat</a></li> --}}
                                         </ul>
                                     </div>
                                 </div>
@@ -280,6 +316,25 @@
     </table>
     @include('Pagination')
     <!-- table end -->
+
+
+    <div class="uk-width-medium-1-3">
+        <div class="uk-modal" id="modal_header_footer">
+            <div class="uk-modal-dialog">
+                <div class="uk-modal-header" style="background:#45B7C4;margin-top:-25px;height:50px;display:flex;align-items:center;">
+                    <h3 align="center" valign="center" style="color:#E8F6F8">Report issue</h3>
+                </div>
+                <table align="center">
+                    <tr><td>Animal name：</td><td></td></tr>
+                    <tr><td>Subject：</td><td><input type="" name=""></td></tr>
+                    <tr><td>Description：</td><td><input type="" name=""></td></tr>
+                </table>
+                <div class="uk-modal-footer uk-text-center">
+                    <button type="button" class="md-btn md-btn-flat md-btn-flat-primary" style="background:#45B7C4;color:#E8F6F8 ">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="uk-modal uk-modal-card-fullscreen" id="modal_full" aria-hidden="true" style="display: none; overflow-y: auto;">
         <div class="uk-modal-dialog uk-modal-dialog-blank">
