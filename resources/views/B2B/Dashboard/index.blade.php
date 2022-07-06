@@ -149,6 +149,7 @@
                 data:{
                     mac: MAC 
                 },
+                timeout: 0,
                 success: function(response){
                     modal.hide();
                     // alert(response);
