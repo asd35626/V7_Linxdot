@@ -73,6 +73,7 @@
     <div class="uk-width-medium-1-4">
         <button type="button" class="md-btn" onclick="(function(modal){ modal = UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loding...<br/><img class=\'uk-margin-top\' src=\'assets/img/spinners/spinner.gif\' alt=\'\'>');  })();">Block UI</button>
     </div>
+    <button type="button" onclick="test('0c:86:29:ef:ff:2b')">API</button>
 
 <script>
 
@@ -80,6 +81,38 @@
         var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loding...<br/><img class=\'uk-margin-top\' src=\'assets/img/spinners/spinner.gif\' alt=\'\'>');
         setTimeout(function(){ modal.hide() }, 5000);
     }
+
+    function test(MAC){
+            $.ajax({
+                type: "POST",
+                url:"/api/v1/test",
+                data:{
+                    mac: MAC 
+                },
+                success: function(response){
+                    // alert(response);
+                    if(response.status == 0){
+                        alert('Reboot Successfully');
+                    }else{
+                        alert(response.errorMessage);
+                    }
+                },
+                error : function(xhr, ajaxOptions, thrownError){
+                    canSendGift = true;
+                    switch (xhr.status) {
+                        case 422:
+                            if(check()){
+                            // grecaptcha.reset();
+                                alert("Error(422)");
+                            }
+                        break;
+                        default:
+                          // grecaptcha.reset();
+                          alert('server error');
+                    }
+                }
+            });
+        }
     
 </script>
 

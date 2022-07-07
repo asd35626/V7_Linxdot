@@ -150,11 +150,12 @@ class ShippedStatusExcelController extends Controller
 
                     // 如果MAC號跟SN重複                    
                     if($Hotspot->count() > 0){
+                        $memo = '';
                         $Hotspot = $Hotspot->first();
                         $newdata = [
                             'MacAddress' => $Hotspot->MacAddress,
                             'DeviceSN' => $Hotspot->DeviceSN,
-                            'SkuID' => $Hotspot->SkuID,
+                            'SkuID' => $Hotspot->SkuID, 
                             'IfShipped' => $Hotspot->IfShipped,
                             'ShippedDate' => $Hotspot->ShippedDate,
                             'CustomInfo' => $Hotspot->CustomInfo,
@@ -166,6 +167,27 @@ class ShippedStatusExcelController extends Controller
                             'CreateDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
                         ];
                         LinxdotExcelWarehouseInventoryLog::on('mysql2')->create($newdata);
+                        if($Hotspot->IfShipped == 0 && $data->IfShipped == 1){
+                            $mac = $request->mac;
+                            //設定API網址，要傳給API的json
+                            $api="https://linxdotapi.v7idea.com/registDewi";
+                            $ch = curl_init($api);
+                            $data_string = '{"mac":"'.$Hotspot->MacAddress.'"}';
+
+                            //設定使用POST方式傳輸
+                            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                            // 取出回傳值
+                            $result = curl_exec($ch);
+                            //關閉url
+                            curl_close($ch);
+                            //將回傳值轉為array
+                            $data = json_decode($result,true);
+                            $memo = '資料重複，已更新狀態'.$data->errorMessage;
+                        }else{
+                            $memo = '資料重複，已更新狀態';
+                        }
 
                         $updata = [
                             'SkuID' => $data->SkuID,
@@ -182,7 +204,7 @@ class ShippedStatusExcelController extends Controller
                                 ->where('id',$data->id)
                                 ->update(['IfCompletedImport' => 1,
                                         'ImportStatus' => 1,
-                                        'ImportMemo' => '資料重複，已更新狀態']);
+                                        'ImportMemo' => $memo]);
                     }else{
                         $HotspotMac = LinxdotWarehouseInventory::where('MacAddress',$data->MacAddress)
                                                 ->where('DeviceSN','!=',$data->DeviceSN);
@@ -219,6 +241,19 @@ class ShippedStatusExcelController extends Controller
                                 'CreateDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
                             ];
                             LinxdotWarehouseInventory::on('mysql2')->create($newdata);
+                            $newlog = [
+                            'MacAddress' => $data->MacAddress,
+                            'DeviceSN' => $data->DeviceSN,
+                            
+                            'NewSkuID' => $data->SkuID,
+                            'NewIfShipped' => $data->IfShipped,
+                            'NewShippedDate' => $data->ShippedDate,
+                            'NewCustomInfo' => $data->TrackingNo,
+                            'CreateBy' => WebLib::getCurrentUserID(),
+                            'CreateDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
+                            ];
+                            LinxdotExcelWarehouseInventoryLog::on('mysql2')->create($newlog);
+
                             LinxdotExcelWarehouseInventoryDetail::on('mysql2')
                                     ->where('id',$data->id)
                                     ->update(['IfCompletedImport' => 1,
