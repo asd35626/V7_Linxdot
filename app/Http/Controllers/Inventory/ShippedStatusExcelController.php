@@ -168,7 +168,6 @@ class ShippedStatusExcelController extends Controller
                         ];
                         LinxdotExcelWarehouseInventoryLog::on('mysql2')->create($newdata);
                         if($Hotspot->IfShipped == 0 && $data->IfShipped == 1){
-                            $mac = $request->mac;
                             //設定API網址，要傳給API的json
                             $api="https://linxdotapi.v7idea.com/registDewi";
                             $ch = curl_init($api);
@@ -183,8 +182,8 @@ class ShippedStatusExcelController extends Controller
                             //關閉url
                             curl_close($ch);
                             //將回傳值轉為array
-                            $data = json_decode($result,true);
-                            $memo = '資料重複，已更新狀態'.$data->errorMessage;
+                            $Rdata = json_decode($result,true);
+                            $memo = '資料重複，已更新狀態,'.$Rdata['errorMessage'];
                         }else{
                             $memo = '資料重複，已更新狀態';
                         }
