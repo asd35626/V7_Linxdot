@@ -173,21 +173,30 @@ class ShippedStatusExcelController extends Controller
                         ];
                         LinxdotExcelWarehouseInventoryLog::on('mysql2')->create($newdata);
                         if($Hotspot->IfShipped == 0 && $data->IfShipped == 1){
-                            //設定API網址，要傳給API的json
-                            $api="https://linxdotapi.v7idea.com/registDewi";
-                            $ch = curl_init($api);
-                            $data_string = '{"mac":"'.$Hotspot->MacAddress.'"}';
+                            
+                            $curl = curl_init();
 
-                            //設定使用POST方式傳輸
-                            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-                            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                            // 取出回傳值
-                            $result = curl_exec($ch);
-                            //關閉url
-                            curl_close($ch);
+                            curl_setopt_array($curl, array(
+                              CURLOPT_URL => 'http://192.168.150.163:49880/registDewi',
+                              CURLOPT_RETURNTRANSFER => true,
+                              CURLOPT_ENCODING => '',
+                              CURLOPT_MAXREDIRS => 10,
+                              CURLOPT_TIMEOUT => 0,
+                              CURLOPT_FOLLOWLOCATION => true,
+                              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                              CURLOPT_CUSTOMREQUEST => 'POST',
+                              CURLOPT_POSTFIELDS => 'mac='.$Hotspot->MacAddress,
+                              CURLOPT_HTTPHEADER => array(
+                                'Content-Type: application/x-www-form-urlencoded'
+                              ),
+                            ));
+
+                            $response = curl_exec($curl);
+
+                            curl_close($curl);
+
                             //將回傳值轉為array
-                            $Rdata = json_decode($result,true);
+                            $Rdata = json_decode($response,true);
                             $memo = '資料重複，已更新狀態,'.$Rdata['errorMessage'];
                         }else{
                             $memo = '資料重複，已更新狀態';

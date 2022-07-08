@@ -65,10 +65,35 @@ class testController extends Controller
         );
 
         $mac = $request->mac;
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'http://192.168.150.163:49880/registDewi',
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS => 'mac='.$mac,
+          CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/x-www-form-urlencoded'
+          ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        
+
         //設定API網址，要傳給API的json
         $api="http://192.168.150.163:49880/registDewi";
         $ch = curl_init($api);
-        $data_string = '{"mac":"'.$mac.'"}';
+
+        // $data_string = '{"mac":"0c:86:29:e0:10:9c"}';
+        $data_string = ['mac' => "0c:86:29:e0:10:9c"];
 
         //設定使用POST方式傳輸
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
