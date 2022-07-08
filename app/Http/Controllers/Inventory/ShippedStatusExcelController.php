@@ -19,6 +19,11 @@ use App\Model\LinxdotWarehouseInventory;
 
 class ShippedStatusExcelController extends Controller
 {
+    
+    public function __construct()
+    {
+        set_time_limit(1800);
+    }
     // 設定blade目錄的位置
     public static $viewPath = "Inventory.ShippedStatusExcel";
     
