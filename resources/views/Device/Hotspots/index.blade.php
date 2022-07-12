@@ -95,6 +95,7 @@
                         datahtml += `<br>port:`+response.data.port;
                         datahtml += `<br>command:`+response.data.command;
                         $('#ReverseSSH').html(datahtml);
+                        UIkit.modal("#reverseSSH").show();
                         // alert('Reboot Successfully');
                     }else{
                         alert(response.errorMessage);
@@ -114,11 +115,7 @@
                           // grecaptcha.reset();
                           alert('server error');
                     }
-                },
-                complete: function () {
-                    UIkit.modal("#reverseSSH").show();
-                },
-                cache: false
+                }
             });
         }
 
