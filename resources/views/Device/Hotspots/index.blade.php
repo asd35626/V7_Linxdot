@@ -377,7 +377,7 @@
                                                         <li><a href="{{ route($routePath.'.edit',$object->$primaryKey) }}">Edit</a></li>
                                                         {{-- 會員 --}}
                                                         <li><a onclick="showUserList('{{ $object->$primaryKey }}')">User</a></li>
-                                                        {{-- 會員 --}}
+                                                        {{-- Reverse SSH --}}
                                                         <li><a onclick="ReverseSSH('{{ $object->MacAddress }}')">Reverse SSH</a></li>
                                                     </ul>
                                                 </div>
