@@ -13,6 +13,7 @@ class LinxdotExcelWarehouseInventoryDetail extends Model
     public $timestamps = false;
     protected $fillable = [
       'id',
+      'WarehouseID',
       'ImportID',
       'SkuID',
       'PalletId',

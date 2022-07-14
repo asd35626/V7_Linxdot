@@ -148,6 +148,7 @@ class ShippedStatusExcelController extends Controller
 
                                 LinxdotExcelWarehouseInventoryDetail::on('mysql2')->create([
                                     'ImportID' => $id,
+                                    'WarehouseID' => $data[9],
                                     'SkuID' => $data[4],
                                     'PalletId' => $data[3],
                                     'CartonId' => $data[1],
@@ -281,6 +282,7 @@ class ShippedStatusExcelController extends Controller
                                     'IfShipped' => $data->IfShipped,
                                     'ShippedDate' => $data->ShippedDate,
                                     'CustomInfo' => $data->TrackingNo,
+                                    'WarehouseID' => $data->WarehouseID,
                                     'IfValid' => 1,
                                     'IfDelete' => 0,
                                     'CreateBy' => WebLib::getCurrentUserID(),
