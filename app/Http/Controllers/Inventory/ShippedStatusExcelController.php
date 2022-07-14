@@ -16,6 +16,7 @@ use App\Model\LinxdotExcelWarehouseInventoryImport;
 use App\Model\LinxdotExcelWarehouseInventoryDetail;
 use App\Model\LinxdotExcelWarehouseInventoryLog;
 use App\Model\LinxdotWarehouseInventory;
+use App\Model\LinxdotFactoryDispatch;
 
 class ShippedStatusExcelController extends Controller
 {
@@ -149,128 +150,139 @@ class ShippedStatusExcelController extends Controller
                 $DetailData = LinxdotExcelWarehouseInventoryDetail::where('ImportID',$id)->where('ImportStatus','!=',0)->get();
                 // 找有沒有重複資料
                 foreach ($DetailData as $key => $data) {
-                    // dd($DetailData);
-                    $Hotspot = LinxdotWarehouseInventory::where('MacAddress',$data->MacAddress)
+                    // 檢查工廠出貨清單有沒有存在
+                    $FactoryDispatch = LinxdotFactoryDispatch::where('MacAddress',$data->MacAddress)
                             ->where('DeviceSN',$data->DeviceSN);
-
-                    // 如果MAC號跟SN重複                    
-                    if($Hotspot->count() > 0){
-                        $memo = '';
-                        $Hotspot = $Hotspot->first();
-                        $newdata = [
-                            'MacAddress' => $Hotspot->MacAddress,
-                            'DeviceSN' => $Hotspot->DeviceSN,
-                            'SkuID' => $Hotspot->SkuID, 
-                            'IfShipped' => $Hotspot->IfShipped,
-                            'ShippedDate' => $Hotspot->ShippedDate,
-                            'CustomInfo' => $Hotspot->CustomInfo,
-                            'NewSkuID' => $data->SkuID,
-                            'NewIfShipped' => $data->IfShipped,
-                            'NewShippedDate' => $data->ShippedDate,
-                            'NewCustomInfo' => $data->TrackingNo,
-                            'CreateBy' => WebLib::getCurrentUserID(),
-                            'CreateDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
-                        ];
-                        LinxdotExcelWarehouseInventoryLog::on('mysql2')->create($newdata);
-                        if($Hotspot->IfShipped == 0 && $data->IfShipped == 1){
-                            
-                            $curl = curl_init();
-
-                            curl_setopt_array($curl, array(
-                              CURLOPT_URL => 'http://192.168.150.163:49880/registDewi',
-                              CURLOPT_RETURNTRANSFER => true,
-                              CURLOPT_ENCODING => '',
-                              CURLOPT_MAXREDIRS => 10,
-                              CURLOPT_TIMEOUT => 0,
-                              CURLOPT_FOLLOWLOCATION => true,
-                              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                              CURLOPT_CUSTOMREQUEST => 'POST',
-                              CURLOPT_POSTFIELDS => 'mac='.$Hotspot->MacAddress,
-                              CURLOPT_HTTPHEADER => array(
-                                'Content-Type: application/x-www-form-urlencoded'
-                              ),
-                            ));
-
-                            $response = curl_exec($curl);
-
-                            curl_close($curl);
-
-                            //將回傳值轉為array
-                            $Rdata = json_decode($response,true);
-                            $memo = '資料重複，已更新狀態,'.$Rdata['errorMessage'];
-                        }else{
-                            $memo = '資料重複，已更新狀態';
-                        }
-
-                        $updata = [
-                            'SkuID' => $data->SkuID,
-                            'IfShipped' => $data->IfShipped,
-                            'ShippedDate' => $data->ShippedDate,
-                            'CustomInfo' => $data->TrackingNo,
-                            'LastModifyBy' => WebLib::getCurrentUserID(),
-                            'LastModifyDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
-                        ];
-                        LinxdotWarehouseInventory::on('mysql2')->where('MacAddress',$data->MacAddress)
-                            ->where('DeviceSN',$data->DeviceSN)->update($updata);
-
+                    if($FactoryDispatch->count != 1){
                         LinxdotExcelWarehouseInventoryDetail::on('mysql2')
                                 ->where('id',$data->id)
                                 ->update(['IfCompletedImport' => 1,
-                                        'ImportStatus' => 1,
-                                        'ImportMemo' => $memo]);
+                                        'ImportStatus' => 0,
+                                        'ImportMemo' => '此裝置不在工廠出貨清單內']);
                     }else{
-                        $HotspotMac = LinxdotWarehouseInventory::where('MacAddress',$data->MacAddress)
-                                                ->where('DeviceSN','!=',$data->DeviceSN);
-                        $HotspotSN = LinxdotWarehouseInventory::where('DeviceSN',$data->DeviceSN)
-                                                ->where('MacAddress','!=',$data->MacAddress);
-                        // 如果MAC重複S/N不一樣
-                        if($HotspotMac->count() > 0){
-                            LinxdotExcelWarehouseInventoryDetail::on('mysql2')
-                                    ->where('id',$data->id)
-                                    ->update(['IfCompletedImport' => 1,
-                                            'ImportStatus' => 0,
-                                            'ImportMemo' => 'MacAddress重複，請確認資料']);
-                        }elseif($HotspotSN->count() > 0){
-                            // 如果S/N重複MAC不一樣
-                            LinxdotExcelWarehouseInventoryDetail::on('mysql2')
-                                    ->where('id',$data->id)
-                                    ->update(['IfCompletedImport' => 1,
-                                            'ImportStatus' => 0,
-                                            'ImportMemo' => 'DeviceSN重複，請確認資料']);
-                        }else{
-                            // 不重複的資料，檢查MacAddress格式是否正確
+                        // dd($DetailData);
+                        $Hotspot = LinxdotWarehouseInventory::where('MacAddress',$data->MacAddress)
+                                ->where('DeviceSN',$data->DeviceSN);
+
+                        // 如果MAC號跟SN重複                    
+                        if($Hotspot->count() > 0){
+                            $memo = '';
+                            $Hotspot = $Hotspot->first();
                             $newdata = [
-                                'SkuID' => $data->SkuID,
-                                'PalletID' => $data->PalletID,
-                                'CatronID' => $data->CartonId,
-                                'DeviceSN' => $data->DeviceSN,
-                                'MacAddress' => $data->MacAddress,
-                                'IfShipped' => $data->IfShipped,
-                                'ShippedDate' => $data->ShippedDate,
-                                'CustomInfo' => $data->TrackingNo,
-                                'IfValid' => 1,
-                                'IfDelete' => 0,
+                                'MacAddress' => $Hotspot->MacAddress,
+                                'DeviceSN' => $Hotspot->DeviceSN,
+                                'SkuID' => $Hotspot->SkuID, 
+                                'IfShipped' => $Hotspot->IfShipped,
+                                'ShippedDate' => $Hotspot->ShippedDate,
+                                'CustomInfo' => $Hotspot->CustomInfo,
+                                'NewSkuID' => $data->SkuID,
+                                'NewIfShipped' => $data->IfShipped,
+                                'NewShippedDate' => $data->ShippedDate,
+                                'NewCustomInfo' => $data->TrackingNo,
                                 'CreateBy' => WebLib::getCurrentUserID(),
                                 'CreateDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
                             ];
-                            LinxdotWarehouseInventory::on('mysql2')->create($newdata);
-                            $newlog = [
-                            'MacAddress' => $data->MacAddress,
-                            'DeviceSN' => $data->DeviceSN,
-                            
-                            'NewSkuID' => $data->SkuID,
-                            'NewIfShipped' => $data->IfShipped,
-                            'NewShippedDate' => $data->ShippedDate,
-                            'NewCustomInfo' => $data->TrackingNo,
-                            'CreateBy' => WebLib::getCurrentUserID(),
-                            'CreateDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
+                            LinxdotExcelWarehouseInventoryLog::on('mysql2')->create($newdata);
+
+                            $updata = [
+                                'SkuID' => $data->SkuID,
+                                'IfShipped' => $data->IfShipped,
+                                'ShippedDate' => $data->ShippedDate,
+                                'CustomInfo' => $data->TrackingNo,
+                                'LastModifyBy' => WebLib::getCurrentUserID(),
+                                'LastModifyDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
                             ];
-                            LinxdotExcelWarehouseInventoryLog::on('mysql2')->create($newlog);
+                            LinxdotWarehouseInventory::on('mysql2')->where('MacAddress',$data->MacAddress)
+                                ->where('DeviceSN',$data->DeviceSN)->update($updata);
+
+                            if($Hotspot->IfShipped == 0 && $data->IfShipped == 1){
+                                $curl = curl_init();
+
+                                curl_setopt_array($curl, array(
+                                  CURLOPT_URL => 'http://192.168.150.163:49880/registDewi',
+                                  CURLOPT_RETURNTRANSFER => true,
+                                  CURLOPT_ENCODING => '',
+                                  CURLOPT_MAXREDIRS => 10,
+                                  CURLOPT_TIMEOUT => 0,
+                                  CURLOPT_FOLLOWLOCATION => true,
+                                  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                  CURLOPT_CUSTOMREQUEST => 'POST',
+                                  CURLOPT_POSTFIELDS => 'mac='.$Hotspot->MacAddress,
+                                  CURLOPT_HTTPHEADER => array(
+                                    'Content-Type: application/x-www-form-urlencoded'
+                                  ),
+                                ));
+
+                                $response = curl_exec($curl);
+
+                                curl_close($curl);
+
+                                //將回傳值轉為array
+                                $Rdata = json_decode($response,true);
+                                $memo = '已更新Dewi,'.$Rdata['errorMessage'];
+                            }else{
+                                $memo = '資料重複，已更新狀態';
+                            }
 
                             LinxdotExcelWarehouseInventoryDetail::on('mysql2')
                                     ->where('id',$data->id)
                                     ->update(['IfCompletedImport' => 1,
-                                            'ImportStatus' => 1]);
+                                            'ImportStatus' => 1,
+                                            'ImportMemo' => $memo]);
+                        }else{
+                            $HotspotMac = LinxdotWarehouseInventory::where('MacAddress',$data->MacAddress)
+                                                    ->where('DeviceSN','!=',$data->DeviceSN);
+                            $HotspotSN = LinxdotWarehouseInventory::where('DeviceSN',$data->DeviceSN)
+                                                    ->where('MacAddress','!=',$data->MacAddress);
+                            // 如果MAC重複S/N不一樣
+                            if($HotspotMac->count() > 0){
+                                LinxdotExcelWarehouseInventoryDetail::on('mysql2')
+                                        ->where('id',$data->id)
+                                        ->update(['IfCompletedImport' => 1,
+                                                'ImportStatus' => 0,
+                                                'ImportMemo' => 'MacAddress重複，請確認資料']);
+                            }elseif($HotspotSN->count() > 0){
+                                // 如果S/N重複MAC不一樣
+                                LinxdotExcelWarehouseInventoryDetail::on('mysql2')
+                                        ->where('id',$data->id)
+                                        ->update(['IfCompletedImport' => 1,
+                                                'ImportStatus' => 0,
+                                                'ImportMemo' => 'DeviceSN重複，請確認資料']);
+                            }else{
+                                // 不重複的資料，檢查MacAddress格式是否正確
+                                $newdata = [
+                                    'SkuID' => $data->SkuID,
+                                    'PalletID' => $data->PalletID,
+                                    'CatronID' => $data->CartonId,
+                                    'DeviceSN' => $data->DeviceSN,
+                                    'MacAddress' => $data->MacAddress,
+                                    'IfShipped' => $data->IfShipped,
+                                    'ShippedDate' => $data->ShippedDate,
+                                    'CustomInfo' => $data->TrackingNo,
+                                    'IfValid' => 1,
+                                    'IfDelete' => 0,
+                                    'CreateBy' => WebLib::getCurrentUserID(),
+                                    'CreateDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
+                                ];
+                                LinxdotWarehouseInventory::on('mysql2')->create($newdata);
+                                $newlog = [
+                                'MacAddress' => $data->MacAddress,
+                                'DeviceSN' => $data->DeviceSN,
+                                
+                                'NewSkuID' => $data->SkuID,
+                                'NewIfShipped' => $data->IfShipped,
+                                'NewShippedDate' => $data->ShippedDate,
+                                'NewCustomInfo' => $data->TrackingNo,
+                                'CreateBy' => WebLib::getCurrentUserID(),
+                                'CreateDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
+                                ];
+                                LinxdotExcelWarehouseInventoryLog::on('mysql2')->create($newlog);
+
+                                LinxdotExcelWarehouseInventoryDetail::on('mysql2')
+                                        ->where('id',$data->id)
+                                        ->update(['IfCompletedImport' => 1,
+                                                'ImportStatus' => 1]);
+                            }
                         }
                     }
                 }
