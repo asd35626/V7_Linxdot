@@ -32,4 +32,8 @@ class LinxdotExcelHotspotImport extends Model
       'CreateBy',
       'CreateDate'
     ];
+    public function Creater()
+    {
+        return $this->belongsTo('App\Model\DimUser', 'CreateBy','Id');
+    }
 }

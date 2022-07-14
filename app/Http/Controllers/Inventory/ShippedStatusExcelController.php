@@ -3,10 +3,10 @@ namespace App\Http\Controllers\Inventory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use Uuid;
+use Response;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use App\V7Idea\WebLib;
@@ -43,9 +43,31 @@ class ShippedStatusExcelController extends Controller
     // 設定功能UEL
     public static $functionURL = "/Inventory/ShippedStatus";
 
-    public function create()
+    public function create(Request $request)
     {
-        return view(self::$viewPath.'.create')
+        $pageNumEachPage = 100;                             // 每頁的基本資料量
+        $pageNo = (int) $request->input('Page', '1');       // 目前的頁碼
+        $IsNewSearch = $request->input('IfNewSearch', '');  // 是否為新開始搜尋
+
+        // 當按下搜尋的時候，會傳回IfNewSearch = 1; 如果不是，表示空值或是其他數值;
+        // 當是其他數值的時候，會依照原來的頁碼去產生回應的頁面;
+        if($IsNewSearch != '1') {
+            Paginator::currentPageResolver(function () use ($pageNo) {
+                return $pageNo;
+            });
+        }else{
+            $pageNo = 1;
+        }
+
+        $data = LinxdotExcelWarehouseInventoryImport::where('IfDelete', '0')->orderby('ImportDate','Desc');
+
+        // 分頁
+        $data = $data->paginate($pageNumEachPage);
+
+        return view(self::$viewPath.'.create', compact('data'))
+            ->with('i', ($pageNo - 1) * $pageNumEachPage)
+            ->with('pageNo', $pageNo)
+            ->with('pageNumEachPage', $pageNumEachPage)
             ->with('routePath', self::$routePath)
             ->with('Action', "NEW")
             ->with('viewPath', self::$viewPath)
@@ -332,5 +354,25 @@ class ShippedStatusExcelController extends Controller
             'CreateBy' => WebLib::getCurrentUserID(),
             'CreateDate' => Carbon::now('Asia/Taipei')->toDateTimeString()
         ]);
+    }
+    // 把excel檔案資料存到資料表
+    protected function WarehouseInventoryDetail(Request $request)
+    {
+        $responseBody = array(
+          'status' => 0,
+          'errorCode' => '9999',
+          'message' => 'Unknown error.',
+          'data' => [],
+        );
+
+        $ID = $request->input('ID', '');
+        $data = LinxdotExcelWarehouseInventoryDetail::where('ImportID',$ID)->get();
+
+        $responseBody['status'] = 0;
+        $responseBody['message'] = 'change success!';
+        $responseBody['errorCode'] = '0000';
+        $responseBody['data'] = $data;
+
+        return Response::json($responseBody, 200);
     }
 }

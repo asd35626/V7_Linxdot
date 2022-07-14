@@ -41,8 +41,10 @@ Route::group(['prefix' => 'api/v1'],function () {
     Route::post('showUserList', 'Device\HotspotsController@showUserList');
     // 更改所屬會員
     Route::post('updateUID', 'Device\HotspotsController@updateUID');
-    // 更改所屬會員
+    // 測試用
     Route::post('test', 'testController@test');
+    // 顯示上船清單
+    Route::post('WarehouseInventoryDetail', 'Inventory\ShippedStatusExcelController@WarehouseInventoryDetail');
 });
 
 //帳號相關API
