@@ -127,12 +127,12 @@
                     <thead>
                         <tr>
                             {!! generateHTML('IssueDate','Date',$isAsc, $orderBy) !!}
-                            {!! generateHTML('SkuID','Sku No',$isAsc, $orderBy) !!}
-                            {!! generateHTML('PalletID','Pallet No',$isAsc, $orderBy) !!}
-                            {!! generateHTML('CartonID','Carton No',$isAsc, $orderBy) !!}
+                            {!! generateHTML('SkuID','Sku No.',$isAsc, $orderBy) !!}
+                            {!! generateHTML('PalletID','Pallet No.',$isAsc, $orderBy) !!}
+                            {!! generateHTML('CartonID','Carton No.',$isAsc, $orderBy) !!}
                             {!! generateHTML('DeviceSN','Device S/N',$isAsc, $orderBy) !!}
                             {!! generateHTML('MacAddress','Mac Addresss',$isAsc, $orderBy) !!}
-                            {!! generateHTML('HWModelNo','Mode No',$isAsc, $orderBy) !!}
+                            {!! generateHTML('HWModelNo','Model No.',$isAsc, $orderBy) !!}
                             {!! generateHTML('RegsionID','Region',$isAsc, $orderBy) !!}
                             {!! generateHTML('FactoryID','Factory',$isAsc, $orderBy) !!}
                             {{-- <th class="uk-width-1-10 uk-text-small">edit</th> --}}

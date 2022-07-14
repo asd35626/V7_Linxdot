@@ -38,7 +38,7 @@ class ShippedStatusExcelController extends Controller
     public static $TOPname = "Inventory";
 
     // 設定功能名稱
-    public static $functionname = "ShippedStatus";
+    public static $functionname = "Shipped Status";
 
     // 設定功能UEL
     public static $functionURL = "/Inventory/ShippedStatus";

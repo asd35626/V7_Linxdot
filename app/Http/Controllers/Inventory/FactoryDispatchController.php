@@ -33,7 +33,7 @@ class FactoryDispatchController extends Controller
     public static $TOPname = "Inventory";
 
     // 設定功能名稱
-    public static $functionname = "FactoryDispatch";
+    public static $functionname = "Factory Dispatch";
 
     // 設定功能名稱
     public static $functionURL = "/Inventory/FactoryDispatch";
@@ -44,7 +44,7 @@ class FactoryDispatchController extends Controller
            'Mac' =>  [
                 'name' => 'Mac',
                 'id' => 'Mac',
-                'label' => 'Mac',
+                'label' => 'Mac Address',
                 'type' => 'text',
                 'value' => '',
                 'class' => 'md-input label-fixed',
@@ -60,7 +60,7 @@ class FactoryDispatchController extends Controller
             'SkuNo' =>  [
                 'name' => 'SkuNo',
                 'id' => 'SkuNo',
-                'label' => 'Sku No',
+                'label' => 'Sku No.',
                 'type' => 'text',
                 'value' => '',
                 'class' => 'md-input label-fixed',
@@ -68,7 +68,7 @@ class FactoryDispatchController extends Controller
             'PalletNo' =>  [
                 'name' => 'PalletNo',
                 'id' => 'PalletNo',
-                'label' => 'Pallet No',
+                'label' => 'Pallet No.',
                 'type' => 'text',
                 'value' => '',
                 'class' => 'md-input label-fixed',
@@ -76,7 +76,7 @@ class FactoryDispatchController extends Controller
             'CartonNo' =>  [
                 'name' => 'CartonNo',
                 'id' => 'CartonNo',
-                'label' => 'Carton No',
+                'label' => 'Carton No.',
                 'type' => 'text',
                 'value' => '',
                 'class' => 'md-input label-fixed',

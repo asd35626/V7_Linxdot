@@ -31,7 +31,7 @@ class FactoryDispatchExcelController extends Controller
     public static $TOPname = "Inventory";
 
     // 設定功能名稱
-    public static $functionname = "FactoryDispatch";
+    public static $functionname = "Factory Dispatch";
 
     // 設定功能名稱
     public static $functionURL = "/Inventory/FactoryDispatch";
