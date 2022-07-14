@@ -324,7 +324,7 @@
 
                                 <td class="uk-text-small">{{ $object->BlockHeight }}</td>
                                 <td class="uk-text-small">
-                                    @if($object->DewiStatus == 'Onboarded')
+                                    @if(strtolower($object->DewiStatus) == 'onboarded')
                                         @if($object->LastUpdateOnLineTime)
                                             <?php 
                                                 $now = date_create( date('Y-m-d H:i:s',time() - (8 * 3600)));
