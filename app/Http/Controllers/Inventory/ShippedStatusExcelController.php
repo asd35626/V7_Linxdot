@@ -153,7 +153,7 @@ class ShippedStatusExcelController extends Controller
                     // 檢查工廠出貨清單有沒有存在
                     $FactoryDispatch = LinxdotFactoryDispatch::where('MacAddress',$data->MacAddress)
                             ->where('DeviceSN',$data->DeviceSN);
-                    if($FactoryDispatch->count != 1){
+                    if($FactoryDispatch->count() != 1){
                         LinxdotExcelWarehouseInventoryDetail::on('mysql2')
                                 ->where('id',$data->id)
                                 ->update(['IfCompletedImport' => 1,
