@@ -264,7 +264,7 @@
                 // a[0].textContent == "keyboard_arrow_up"
                 if($('#isAsc').val() == '1'){
                     $('#isAsc').val('0');
-                }else if($('#isAsc').val() == '0'){
+                }else{
                     $('#isAsc').val('1');
                 }
             }else{
