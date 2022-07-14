@@ -270,7 +270,7 @@
                     <button type="submit" onclick="window.location.href='{{ route( $routePath.'.create') }}';" class="md-btn md-btn-primary">Add</button>
                 </div>
             </div>
-            <div class="uk-overflow-container" >
+            <div class="uk-overflow-container" style="overflow:visible;">
                 <table id="grid-basic" class="uk-table uk-table-nowrap table_check">
                     <thead>
                         <tr>
@@ -283,7 +283,7 @@
                             <th class="uk-width-1-10 uk-text-small">Height</th>
                             {!! generateHTML('LastUpdateOnLineTime','Status',$isAsc, $orderBy) !!}
                             {{-- {!! generateHTML('Region','regions',$isAsc, $orderBy) !!} --}}
-                            <th class="uk-width-1-10 uk-text-small">More</th>
+                            <th class="uk-width-1-10 uk-text-small uk-text-center ">More</th>
                         </tr>
                     </thead>
                     @if($data->count() > 0)
@@ -349,7 +349,7 @@
                                 </td>
                                 {{-- <td class="uk-text-small">{{ $object->Region }}</td> --}}
 
-                                <td class="uk-text-small">
+                                <td class="uk-text-center uk-text-small">
                                     <div class="md-card-list-wrapper">
                                         <div class="md-card-list" style="margin-top:0px">
                                             <div class="md-card-list-item-menu" data-uk-dropdown="{mode:'click',pos:'bottom-right'}">
