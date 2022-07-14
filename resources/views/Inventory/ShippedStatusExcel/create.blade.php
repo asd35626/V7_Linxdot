@@ -94,7 +94,7 @@
                         </div>
                     </div>
                     <span class="md-icon material-icons uk-modal-close"></span>
-                    <h3 class="md-card-toolbar-heading-text">123</h3>
+                    <h3 class="md-card-toolbar-heading-text"></h3>
                 </div>
                 <div class="md-card-content">
                     <table class="uk-table uk-table-nowrap table_check" id='list'>
