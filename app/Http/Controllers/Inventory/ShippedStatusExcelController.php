@@ -23,7 +23,7 @@ class ShippedStatusExcelController extends Controller
     
     public function __construct()
     {
-        set_time_limit(1800);
+        set_time_limit(6000);
     }
     // 設定blade目錄的位置
     public static $viewPath = "Inventory.ShippedStatusExcel";
