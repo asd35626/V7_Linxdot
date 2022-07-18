@@ -33,7 +33,7 @@ class ShippedStatusController extends Controller
     public static $TOPname = "Inventory";
 
     // 設定功能名稱
-    public static $functionname = "Shipped Status";
+    public static $functionname = "Warehouse Delivery";
 
     // 設定功能名稱
     public static $functionURL = "/Inventory/ShippedStatus";
@@ -76,7 +76,7 @@ class ShippedStatusController extends Controller
             'CustomInfo' =>  [
                 'name' => 'CustomInfo',
                 'id' => 'CustomInfo',
-                'label' => 'Custom Info.',
+                'label' => 'Customer Info',
                 'type' => 'text',
                 'value' => '',
                 'class' => 'md-input label-fixed',
