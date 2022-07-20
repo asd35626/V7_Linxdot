@@ -280,7 +280,6 @@
                             {!! generateHTML('IssueDate','issue date',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small">register status</th>
                             {!! generateHTML('ShippedDate','customerInfo',$isAsc, $orderBy) !!}
-                            <th class="uk-width-1-10 uk-text-small">height</th>
                             {!! generateHTML('LastUpdateOnLineTime','status',$isAsc, $orderBy) !!}
                             {!! generateHTML('DewiStatus','dewi status',$isAsc, $orderBy) !!}
                             {{-- {!! generateHTML('Region','regions',$isAsc, $orderBy) !!} --}}
@@ -322,8 +321,6 @@
                                         in stock
                                     @endif
                                 </td>
-
-                                <td class="uk-text-small">{{ $object->BlockHeight }}</td>
                                 <td class="uk-text-small">
                                     @if($object->LastUpdateOnLineTime)
                                         <?php 
