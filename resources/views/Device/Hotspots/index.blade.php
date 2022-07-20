@@ -280,10 +280,11 @@
                             {!! generateHTML('IssueDate','issue date',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small">register status</th>
                             {!! generateHTML('ShippedDate','customerInfo',$isAsc, $orderBy) !!}
-                            <th class="uk-width-1-10 uk-text-small">Height</th>
-                            {!! generateHTML('LastUpdateOnLineTime','Status',$isAsc, $orderBy) !!}
+                            <th class="uk-width-1-10 uk-text-small">height</th>
+                            {!! generateHTML('LastUpdateOnLineTime','status',$isAsc, $orderBy) !!}
+                            {!! generateHTML('DewiStatus','dewi status',$isAsc, $orderBy) !!}
                             {{-- {!! generateHTML('Region','regions',$isAsc, $orderBy) !!} --}}
-                            <th class="uk-width-1-10 uk-text-small uk-text-center ">More</th>
+                            <th class="uk-width-1-10 uk-text-small uk-text-center ">more</th>
                         </tr>
                     </thead>
                     @if($data->count() > 0)
@@ -318,35 +319,33 @@
                                         <br>
                                         {{Carbon\Carbon::parse($object->ShippedDate)->format('Y-m-d')}}
                                     @else
-                                        N/A
+                                        in stock
                                     @endif
                                 </td>
 
                                 <td class="uk-text-small">{{ $object->BlockHeight }}</td>
                                 <td class="uk-text-small">
-                                    @if(strtolower($object->DewiStatus) == 'onboarded')
-                                        @if($object->LastUpdateOnLineTime)
-                                            <?php 
-                                                $now = date_create( date('Y-m-d H:i:s',time() - (8 * 3600)));
-                                                $LastUpdateOnLineTime = date_create( $object->LastUpdateOnLineTime);
-                                                $time = date_diff($now, $LastUpdateOnLineTime);
+                                    @if($object->LastUpdateOnLineTime)
+                                        <?php 
+                                            $now = date_create( date('Y-m-d H:i:s',time() - (8 * 3600)));
+                                            $LastUpdateOnLineTime = date_create( $object->LastUpdateOnLineTime);
+                                            $time = date_diff($now, $LastUpdateOnLineTime);
 
-                                                $minutes = $time->days * 24 * 60;
-                                                $minutes += $time->h * 60;
-                                                $minutes += $time->i;
-                                                if($minutes <= 10 && $object->P2P_Connected == 1){
-                                                    print('<span class="material-icons" style="color:#59BBBC"> circle </span> online');
-                                                }else{
-                                                    print('<span class="material-icons" style="color:#FF5959"> circle </span> offline');
-                                                }
-                                            ?>
-                                        @else
-                                            <span class="material-icons" style="color:#FF5959"> circle </span> offline
-                                        @endif
+                                            $minutes = $time->days * 24 * 60 * 60;
+                                            $minutes += $time->h * 60 * 60;
+                                            $minutes += $time->i * 60;
+                                            $minutes += $time->s ;
+                                            if($minutes <= 30 && $object->P2P_Connected == 1){
+                                                print('<span class="material-icons" style="color:#59BBBC"> circle </span> online');
+                                            }else{
+                                                print('<span class="material-icons" style="color:#FF5959"> circle </span> offline');
+                                            }
+                                        ?>
                                     @else
-                                        <span class="material-icons" style="color:#ABABAB"> circle </span>notonboarded
+                                        <span class="material-icons" style="color:#FF5959"> circle </span> offline
                                     @endif
                                 </td>
+                                <td class="uk-text-small">{{ $object->DewiStatus }}</td>
                                 {{-- <td class="uk-text-small">{{ $object->Region }}</td> --}}
 
                                 <td class="uk-text-center uk-text-small">
@@ -361,6 +360,8 @@
                                                         {{--地圖--}}
                                                         @if($object->map_lat != null || $object->map_lat != '' && $object->map_lng != null || $object->map_lng != '')
                                                             <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}')">Show on map</a></li>
+                                                        @else
+                                                            <li style="pointer-events: none;"><a style="color:#FAFAFA;">Show on map</a></li>
                                                         @endif
                                                         {{-- 重開機 --}}
                                                         <li><a onclick="rebootHotspot('{{ $object->MacAddress }}')">Reboot</a></li>

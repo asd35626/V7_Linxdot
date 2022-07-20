@@ -272,7 +272,7 @@
                 {!! generateHTML('MacAddress','MAC Address',$isAsc, $orderBy) !!}
                 {!! generateHTML('AnimalName','Animal name',$isAsc, $orderBy) !!}
                 {!! generateHTML('LastUpdateOnLineTime','Status',$isAsc, $orderBy) !!}
-                {!! generateHTML('BlockHeight','Miner height',$isAsc, $orderBy) !!}
+                {!! generateHTML('DewiStatus','dewi status',$isAsc, $orderBy) !!}
                 {!! generateHTML('LastUpdateOnLineTime','Latest online time',$isAsc, $orderBy) !!}
                 {!! generateHTML('Firmware','ROM version',$isAsc, $orderBy) !!}
                 {!! generateHTML('MinerVersion','Miner version',$isAsc, $orderBy) !!}
@@ -286,30 +286,27 @@
                     <td class="uk-text-small">{{ $object->MacAddress }}</td>
                     <td class="uk-text-small">{{ $object->AnimalName }}</td>
                     <td class="uk-text-small">
-                        @if(strtolower($object->DewiStatus) == 'onboarded')
-                            @if($object->LastUpdateOnLineTime)
-                                <?php 
-                                    $now = date_create( date('Y-m-d H:i:s',time() - (8 * 3600)));
-                                    $LastUpdateOnLineTime = date_create( $object->LastUpdateOnLineTime);
-                                    $time = date_diff($now, $LastUpdateOnLineTime);
+                        @if($object->LastUpdateOnLineTime)
+                            <?php 
+                                $now = date_create( date('Y-m-d H:i:s',time() - (8 * 3600)));
+                                $LastUpdateOnLineTime = date_create( $object->LastUpdateOnLineTime);
+                                $time = date_diff($now, $LastUpdateOnLineTime);
 
-                                    $minutes = $time->days * 24 * 60;
-                                    $minutes += $time->h * 60;
-                                    $minutes += $time->i;
-                                    if($minutes <= 10 && $object->P2P_Connected == 1){
-                                        print('<span class="material-icons" style="color:#59BBBC"> circle </span> online');
-                                    }else{
-                                        print('<span class="material-icons" style="color:#FF5959"> circle </span> offline');
-                                    }
-                                ?>
-                            @else
-                                <span class="material-icons" style="color:#FF5959"> circle </span> offline
-                            @endif
+                                $minutes = $time->days * 24 * 60 * 60;
+                                $minutes += $time->h * 60 * 60;
+                                $minutes += $time->i * 60;
+                                $minutes += $time->s ;
+                                if($minutes <= 30 && $object->P2P_Connected == 1){
+                                    print('<span class="material-icons" style="color:#59BBBC"> circle </span> online');
+                                }else{
+                                    print('<span class="material-icons" style="color:#FF5959"> circle </span> offline');
+                                }
+                            ?>
                         @else
-                            <span class="material-icons" style="color:#ABABAB"> circle </span>notonboarded
+                            <span class="material-icons" style="color:#FF5959"> circle </span> offline
                         @endif
                     </td>
-                    <td class="uk-text-small">{{ $object->BlockHeight }}</td>
+                    <td class="uk-text-small">{{ $object->DewiStatus }}</td>
                     <td class="uk-text-small">
                         @if($object->LastUpdateOnLineTime)
                             {{ Carbon\Carbon::parse($object->LastUpdateOnLineTime)->format('Y/m/d H:i:s') }}
@@ -335,6 +332,8 @@
                                             {{--地圖--}}
                                             @if($object->map_lat != null || $object->map_lat != '' && $object->map_lng != null || $object->map_lng != '')
                                                 <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}')">Show on map</a></li>
+                                            @else
+                                                <li style="pointer-events: none;"><a style="color:#FAFAFA;">Show on map</a></li>
                                             @endif
                                             {{-- 重開機 --}}
                                             <li><a onclick="rebootHotspot('{{ $object->MacAddress }}')">Reboot</a></li>
@@ -343,10 +342,8 @@
                                             {{-- <li><a href="#">Restart miner</a></li>
                                             <li><a href="#">Trigger fast sync</a></li>
                                             回報問題 --}}
-                                            {{-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> --}}
-                                            {{-- <li><a href="#">Device heartbeat</a></li> --}}
-                                            {{-- Reverse SSH --}}
-                                            <li><a onclick="ReverseSSH('{{ $object->MacAddress }}')">Reverse SSH</a></li>
+                                            {{-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li>
+                                            <li><a href="#">Device heartbeat</a></li> --}}
                                         </ul>
                                     </div>
                                 </div>
@@ -362,24 +359,47 @@
     @include('Pagination')
     <!-- table end -->
 
-
+    {{-- 回報問題 --}}
     <div class="uk-width-medium-1-3">
         <div class="uk-modal" id="modal_header_footer">
             <div class="uk-modal-dialog">
                 <div class="uk-modal-header" style="background:#45B7C4;margin-top:-25px;height:50px;display:flex;align-items:center;">
                     <h3 align="center" valign="center" style="color:#E8F6F8">Report issue</h3>
                 </div>
-                <table align="center">
+                {{-- <table align="center">
                     <tr><td>Animal name：</td><td></td></tr>
                     <tr><td>Subject：</td><td><input type="" name=""></td></tr>
                     <tr><td>Description：</td><td><input type="" name=""></td></tr>
-                </table>
-                <div class="uk-modal-footer uk-text-center">
-                    <button type="button" class="md-btn md-btn-flat md-btn-flat-primary" style="background:#45B7C4;color:#E8F6F8 ">Submit</button>
+                </table> --}}
+
+                <div class="md-card">
+                    <div class="md-card-content large-padding">
+                        <div class="uk-grid" data-uk-grid-margin>
+                            <div class="uk-width-medium-1-3">
+                                {!! $formFields['AnimalName']['completeField']  !!}
+                            </div>
+                            <div class="uk-width-medium-1-3">
+                                {!! $formFields['Subject']['completeField']  !!}
+                            </div>
+                            <div class="uk-width-medium-1-3">
+                                {!! $formFields['Description']['completeField']  !!}
+                            </div>
+                        </div>
+                        <div class="uk-grid">
+                            <div class="uk-width-1-1 uk-modal-footer">
+                                <button type="button" class="md-btn md-btn-primary" >Submit</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                {{-- <div class="uk-modal-footer uk-text-center">
+                    <button type="button" class="md-btn md-btn-flat md-btn-flat-primary" style="background:#45B7C4;color:#E8F6F8 ">Submit</button>
+                </div> --}}
             </div>
         </div>
     </div>
+    {{-- 回報問題 --}}
 
     <div class="uk-modal uk-modal-card-fullscreen" id="modal_full" aria-hidden="true" style="display: none; overflow-y: auto;">
         <div class="uk-modal-dialog uk-modal-dialog-blank">

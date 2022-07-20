@@ -52,6 +52,40 @@ class DashboardController extends Controller
         return $fields;
     }
 
+    // 定義新增欄位
+    public function defineFormFields() {
+        $fields = [
+            'AnimalName' => [
+                'name' => 'AnimalName',
+                'id' => 'AnimalName',
+                'label' => 'Animal name',
+                'type' => 'text',
+                'validation' => 'required',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'Subject' => [
+                'name' => 'Subject',
+                'id' => 'Subject',
+                'label' => 'Subject',
+                'type' => 'text',
+                'validation' => 'required',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'Description' => [
+                'name' => 'Description',
+                'id' => 'Description',
+                'label' => 'Description',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ]
+        ];
+        return $fields;
+    }
+
     public function index(Request $request)
     {
         $pageNumEachPage = 100;                             // 每頁的基本資料量
@@ -75,6 +109,12 @@ class DashboardController extends Controller
             }
         }
         // dd($search);
+
+        // 取得輸入欄位的定義
+        $formFieldDef = self::defineFormFields();
+        // 產生需要設定的欄位
+        $formFields = WebLib::generateInputs($formFieldDef, false)["data"];
+
 
         // 產生搜尋的欄位;
         $searchFields = WebLib::generateInputs(self::defineSearchFields(), true)["data"];
@@ -132,6 +172,7 @@ class DashboardController extends Controller
                     ->with('search', $search)
                     ->with('functionname', self::$functionname)
                     ->with('functionURL', self::$functionURL)
-                    ->with('TOPname', self::$TOPname);
+                    ->with('TOPname', self::$TOPname)
+                    ->with('formFields', $formFields);
     }
 }
