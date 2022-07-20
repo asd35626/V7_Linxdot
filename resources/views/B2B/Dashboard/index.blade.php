@@ -292,11 +292,10 @@
                                 $LastUpdateOnLineTime = date_create( $object->LastUpdateOnLineTime);
                                 $time = date_diff($now, $LastUpdateOnLineTime);
 
-                                $minutes = $time->days * 24 * 60 * 60;
-                                $minutes += $time->h * 60 * 60;
-                                $minutes += $time->i * 60;
-                                $minutes += $time->s ;
-                                if($minutes <= 30 && $object->P2P_Connected == 1){
+                                $minutes = $time->days * 24 * 60;
+                                $minutes += $time->h * 60;
+                                $minutes += $time->i;
+                                if($minutes <= 30){
                                     print('<span class="material-icons" style="color:#59BBBC"> circle </span> online');
                                 }else{
                                     print('<span class="material-icons" style="color:#FF5959"> circle </span> offline');
