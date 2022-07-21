@@ -219,30 +219,31 @@ class ShippedStatusExcelController extends Controller
                                 ->where('DeviceSN',$data->DeviceSN)->update($updata);
 
                             if($Hotspot->IfShipped == 0 && $data->IfShipped == 1){
-                                $curl = curl_init();
+                                // $curl = curl_init();
 
-                                curl_setopt_array($curl, array(
-                                  CURLOPT_URL => 'http://192.168.150.163:49880/registDewi',
-                                  CURLOPT_RETURNTRANSFER => true,
-                                  CURLOPT_ENCODING => '',
-                                  CURLOPT_MAXREDIRS => 10,
-                                  CURLOPT_TIMEOUT => 0,
-                                  CURLOPT_FOLLOWLOCATION => true,
-                                  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                                  CURLOPT_CUSTOMREQUEST => 'POST',
-                                  CURLOPT_POSTFIELDS => 'mac='.$Hotspot->MacAddress,
-                                  CURLOPT_HTTPHEADER => array(
-                                    'Content-Type: application/x-www-form-urlencoded'
-                                  ),
-                                ));
+                                // curl_setopt_array($curl, array(
+                                //   CURLOPT_URL => 'http://192.168.150.163:49880/registDewi',
+                                //   CURLOPT_RETURNTRANSFER => true,
+                                //   CURLOPT_ENCODING => '',
+                                //   CURLOPT_MAXREDIRS => 10,
+                                //   CURLOPT_TIMEOUT => 0,
+                                //   CURLOPT_FOLLOWLOCATION => true,
+                                //   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                //   CURLOPT_CUSTOMREQUEST => 'POST',
+                                //   CURLOPT_POSTFIELDS => 'mac='.$Hotspot->MacAddress,
+                                //   CURLOPT_HTTPHEADER => array(
+                                //     'Content-Type: application/x-www-form-urlencoded'
+                                //   ),
+                                // ));
 
-                                $response = curl_exec($curl);
+                                // $response = curl_exec($curl);
 
-                                curl_close($curl);
+                                // curl_close($curl);
 
-                                //將回傳值轉為array
-                                $Rdata = json_decode($response,true);
-                                $memo = '已更新Dewi,'.$Rdata['errorMessage'];
+                                // //將回傳值轉為array
+                                // $Rdata = json_decode($response,true);
+                                // $memo = '已更新Dewi,'.$Rdata['errorMessage'];
+                                $memo = '資料重複，需更新Dewi';
                             }else{
                                 $memo = '資料重複，已更新狀態';
                             }
