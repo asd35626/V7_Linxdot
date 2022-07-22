@@ -25,10 +25,10 @@
 
         /*mapicon設定*/
         .marker {
-            background-image: url('/favicon.ico');
+            background-image: url('/assets/img/pin-green.png');
             background-size: cover;
-            width: 50px;
-            height: 50px;
+            width: 33px;
+            height: 53.75px;
             border-radius: 50%;
             cursor: pointer;
         }
@@ -117,48 +117,6 @@
                     }
                 }
             });
-        }
-
-        function map(lng,lat){
-            mapboxgl.accessToken = 'pk.eyJ1IjoiYXNkMzU2MjYiLCJhIjoiY2w0cDdlNDk2MDd2ZTNlbWpycnNrdW0wcCJ9._Q--d12cdqSM5jAdabU08w';
-            const map = new mapboxgl.Map({
-                container: 'map', // container ID
-                style: 'mapbox://styles/mapbox/streets-v11', // style URL
-                // center: [-74.5, 40], // starting position [lng, lat]
-                center: [lng,lat],
-                zoom: 15, // starting zoom
-            });
-            map.on('idle',function(){
-                // alert(123);
-                map.resize()
-            });
-
-            const geojson = {
-                type: 'FeatureCollection',
-                features: [
-                    {
-                        type: 'Feature',
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [lng,lat]
-                        },
-                        properties: {
-                            title: 'Mapbox',
-                            description: 'Washington, D.C.'
-                        }
-                    }
-                ]
-            };
-
-            // add markers to map
-            for (const feature of geojson.features) {
-                // create a HTML element for each feature
-                const el = document.createElement('div');
-                el.className = 'marker';
-
-                // make a marker for each feature and add to the map
-                new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(map);
-            }
         }
 
     </script>
@@ -323,7 +281,7 @@
                                 </td>
                                 <td class="uk-text-small">
                                     @if($object->LastUpdateOnLineTime)
-                                        <?php 
+                                        <?php
                                             $now = date_create( date('Y-m-d H:i:s',time() - (8 * 3600)));
                                             $LastUpdateOnLineTime = date_create( $object->LastUpdateOnLineTime);
                                             $time = date_diff($now, $LastUpdateOnLineTime);
@@ -332,12 +290,17 @@
                                             $minutes += $time->h * 60;
                                             $minutes += $time->i;
                                             if($minutes <= 30){
+                                                $online = 1;
                                                 print('<span class="material-icons" style="color:#59BBBC"> circle </span> online');
                                             }else{
+                                                $online = 0;
                                                 print('<span class="material-icons" style="color:#FF5959"> circle </span> offline');
                                             }
                                         ?>
                                     @else
+                                        <?php
+                                            $online = 0;
+                                        ?>
                                         <span class="material-icons" style="color:#FF5959"> circle </span> offline
                                     @endif
                                 </td>
@@ -355,7 +318,7 @@
                                                     margin-inline-end:0px;padding-inline-start:0px;line-height: 25px;">
                                                         {{--地圖--}}
                                                         @if($object->map_lat != null || $object->map_lat != '' && $object->map_lng != null || $object->map_lng != '')
-                                                            <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}')">Show on map</a></li>
+                                                            <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}','{{ $online }}')">Show on map</a></li>
                                                         @else
                                                             <li style="pointer-events: none;"><a style="color:#FAFAFA;">Show on map</a></li>
                                                         @endif
@@ -610,6 +573,55 @@
                 });
             // }
 
+        }
+
+
+
+        function map(lng,lat,online){
+            mapboxgl.accessToken = 'pk.eyJ1IjoiYXNkMzU2MjYiLCJhIjoiY2w0cDdlNDk2MDd2ZTNlbWpycnNrdW0wcCJ9._Q--d12cdqSM5jAdabU08w';
+            const map = new mapboxgl.Map({
+                container: 'map', // container ID
+                style: 'mapbox://styles/mapbox/streets-v11', // style URL
+                // center: [-74.5, 40], // starting position [lng, lat]
+                center: [lng,lat],
+                zoom: 15, // starting zoom
+            });
+            map.on('idle',function(){
+                // alert(123);
+                map.resize()
+            });
+
+            const geojson = {
+                type: 'FeatureCollection',
+                features: [
+                    {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [lng,lat]
+                        },
+                        properties: {
+                            title: 'Mapbox',
+                            description: 'Washington, D.C.'
+                        }
+                    }
+                ]
+            };
+
+            // add markers to map
+            for (const feature of geojson.features) {
+                // create a HTML element for each feature
+                const el = document.createElement('div');
+                el.className = 'marker';
+
+                // make a marker for each feature and add to the map
+                new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(map);
+            }
+            
+            if(online == 0){
+                var marker = document.querySelector('.marker');
+                marker.style = "background-image: url('/assets/img/pin-red.png')";
+            }
         }
     </script>
 

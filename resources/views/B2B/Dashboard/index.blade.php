@@ -67,11 +67,6 @@
     /*mapicon設定*/
     .marker {
         background-image: url('/assets/img/pin-green.png');
-        /*border-top-left-radius: 100px;
-        border-top-right-radius: 100px;
-        border-bottom-right-radius: 100px;
-        border-bottom-left-radius: 100px;
-        background-color: #59BBBC;*/
         background-size: cover;
         width: 33px;
         height: 53.75px;
