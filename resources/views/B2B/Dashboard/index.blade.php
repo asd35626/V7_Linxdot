@@ -66,10 +66,15 @@
 
     /*mapicon設定*/
     .marker {
-        background-image: url('/favicon.ico');
+        background-image: url('/assets/img/pin-green.png');
+        /*border-top-left-radius: 100px;
+        border-top-right-radius: 100px;
+        border-bottom-right-radius: 100px;
+        border-bottom-left-radius: 100px;
+        background-color: #59BBBC;*/
         background-size: cover;
-        width: 50px;
-        height: 50px;
+        width: 33px;
+        height: 53.75px;
         border-radius: 50%;
         cursor: pointer;
     }
@@ -287,7 +292,7 @@
                     <td class="uk-text-small">{{ $object->AnimalName }}</td>
                     <td class="uk-text-small">
                         @if($object->LastUpdateOnLineTime)
-                            <?php 
+                            <?php
                                 $now = date_create( date('Y-m-d H:i:s',time() - (8 * 3600)));
                                 $LastUpdateOnLineTime = date_create( $object->LastUpdateOnLineTime);
                                 $time = date_diff($now, $LastUpdateOnLineTime);
@@ -296,12 +301,17 @@
                                 $minutes += $time->h * 60;
                                 $minutes += $time->i;
                                 if($minutes <= 30){
+                                    $online = 1;
                                     print('<span class="material-icons" style="color:#59BBBC"> circle </span> online');
                                 }else{
+                                    $online = 0;
                                     print('<span class="material-icons" style="color:#FF5959"> circle </span> offline');
                                 }
                             ?>
                         @else
+                            <?php
+                                $online = 0;
+                            ?>
                             <span class="material-icons" style="color:#FF5959"> circle </span> offline
                         @endif
                     </td>
@@ -330,7 +340,7 @@
                                         margin-inline-end:0px;padding-inline-start:0px;line-height: 25px;">
                                             {{--地圖--}}
                                             @if($object->map_lat != null || $object->map_lat != '' && $object->map_lng != null || $object->map_lng != '')
-                                                <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}')">Show on map</a></li>
+                                                <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}','{{ $online }}')">Show on map</a></li>
                                             @else
                                                 <li style="pointer-events: none;"><a style="color:#FAFAFA;">Show on map</a></li>
                                             @endif
@@ -489,8 +499,9 @@
               
             $('#searchForm').submit();
         }
-        function map(lng,lat){
+        function map(lng,lat,online){
             mapboxgl.accessToken = 'pk.eyJ1IjoiYXNkMzU2MjYiLCJhIjoiY2w0cDdlNDk2MDd2ZTNlbWpycnNrdW0wcCJ9._Q--d12cdqSM5jAdabU08w';
+
             const map = new mapboxgl.Map({
                 container: 'map', // container ID
                 style: 'mapbox://styles/mapbox/streets-v11', // style URL
@@ -529,8 +540,11 @@
                 // make a marker for each feature and add to the map
                 new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(map);
             }
+            if(online == 0){
+                var marker = document.querySelector('.marker');
+                marker.style = "background-image: url('/assets/img/pin-red.png')";
+            } 
         }
-            
     </script>
 
     <?php 
