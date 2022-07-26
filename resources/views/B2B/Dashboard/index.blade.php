@@ -105,6 +105,19 @@
                 $('#Page').val('1');
                 $('#searchForm').submit();
             });
+            $('#statuscheck').change(function(event) {
+                var status = $('#status').val();
+                if(status == 1){
+                    $('#status').val(0);
+                }else{
+                    $('#status').val(1);
+                }
+                $('#excel').val(0);
+                $('#IfSearch').val('1');
+                $('#IfNewSearch').val('1');
+                $('#Page').val('1');
+                $('#searchForm').submit();
+            });
         })
 
         function rebootHotspot(MAC){
@@ -244,6 +257,7 @@
         {{ Form::hidden('Page', '', array('id' => 'Page')) }}
         {{ Form::hidden('orderBy', '', array('id' => 'orderBy')) }}
         {{ Form::hidden('isAsc', '', array('id' => 'isAsc')) }}
+        {{ Form::hidden('status', '', array('id' => 'status')) }}
         <div class="uk-grid uk-margin-medium-bottom"  style="display:none">
             <div class="uk-width-medium-1-5 uk-row-first">
                 <div class="md-card">
@@ -255,8 +269,17 @@
                 </div>
             </div>
         </div>
+
         <div class="uk-grid  uk-margin-medium-bottom">
-            <div class="uk-width-7-10"></div>
+            <div class="uk-width-6-10"></div>
+            <div class="container-1 uk-width-1-10">
+                @if($status == 1)
+                    <input type="checkbox" data-switchery checked id="statuscheck" name="statuscheck"/>
+                @else
+                    <input type="checkbox" data-switchery id="statuscheck" name="statuscheck"/>
+                @endif
+                <label for="status" class="inline-label">Status</label>
+            </div>
             <div class="container-1 uk-width-3-10">
                 <span class="material-icons icon"> search </span>
                 <input type="search" id="search" name="search" placeholder="Search..." value="{!! $search !!}">
@@ -276,7 +299,7 @@
                 {!! generateHTML('LastUpdateOnLineTime','Latest online time',$isAsc, $orderBy) !!}
                 {!! generateHTML('Firmware','ROM version',$isAsc, $orderBy) !!}
                 {!! generateHTML('MinerVersion','Miner version',$isAsc, $orderBy) !!}
-                <th class="uk-width-1-10 uk-text-small" style="cursor: pointer;color:black;font-weight:bold;">More</th>
+                <th class="uk-width-1-10 uk-text-small" style="cursor: pointer;color:black;font-weight:bold;"></th>
             </tr>
         </thead>
         @if($data->count() > 0)
@@ -420,7 +443,7 @@
                             </div> --}}
                         </div>
                     </div>
-                     <span class="md-icon material-icons uk-modal-close"></span>
+                     <span class="md-icon material-icons uk-modal-close" onclick="mapclear()"></span>
                     <h3 class="md-card-toolbar-heading-text">
                         Map
                     </h3>
@@ -495,20 +518,27 @@
             $('#searchForm').submit();
         }
         function map(lng,lat,online){
+            // 地圖token
             mapboxgl.accessToken = 'pk.eyJ1IjoiYXNkMzU2MjYiLCJhIjoiY2w0cDdlNDk2MDd2ZTNlbWpycnNrdW0wcCJ9._Q--d12cdqSM5jAdabU08w';
 
+            // 新增一個地圖
             const map = new mapboxgl.Map({
-                container: 'map', // container ID
-                style: 'mapbox://styles/mapbox/streets-v11', // style URL
-                // center: [-74.5, 40], // starting position [lng, lat]
+                // container ID
+                container: 'map',
+                // style URL
+                style: 'mapbox://styles/mapbox/streets-v11',
+                // 經緯度
                 center: [lng,lat],
-                zoom: 15, // starting zoom
+                // 縮放大小
+                zoom: 15,
             });
+
+            // 調整地圖大小
             map.on('idle',function(){
-                // alert(123);
                 map.resize()
             });
 
+            // 圖標設定
             const geojson = {
                 type: 'FeatureCollection',
                 features: [
@@ -526,7 +556,7 @@
                 ]
             };
 
-            // add markers to map
+            // 把圖標放到地圖上
             for (const feature of geojson.features) {
                 // create a HTML element for each feature
                 const el = document.createElement('div');
@@ -538,7 +568,10 @@
             if(online == 0){
                 var marker = document.querySelector('.marker');
                 marker.style = "background-image: url('/assets/img/pin-red.png')";
-            } 
+            }
+        }
+        function mapclear(){
+            // mapboxgl.clear();
         }
     </script>
 

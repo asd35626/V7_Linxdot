@@ -94,6 +94,7 @@ class DashboardController extends Controller
         $IfSearch = $request->input('IfSearch', '');        // 是否為搜尋
         $orderBy = $request->input('orderBy', '');          // 排序欄位
         $isAsc = $request->input('isAsc', '');              // 是否順序排序
+        $status = $request->input('status', '');            // 是否順序排序
         $user = WebLib::getCurrentUserID();                 // 使用者ID
         $search = $request->input('search', '');            // 查詢
         $MacAddress = $search;
@@ -130,7 +131,15 @@ class DashboardController extends Controller
             $pageNo = 1;
         }
 
-        $data = DimHotspot::where('IfDelete','0')->where('OwnerID',$user);
+        $now = Carbon::now('Asia/Taipei')->subHours(8)->subMinutes(30)->toDateTimeString();
+        // dd($now);
+
+
+        if($status == 1){
+            $data = DimHotspot::where('IfDelete','0')->where('OwnerID',$user)->where('LastUpdateOnLineTime', '>=' ,$now);
+        }else{
+            $data = DimHotspot::where('IfDelete','0')->where('OwnerID',$user);
+        }
 
         if($IfSearch == 1) {
             // 表示會需要參考搜尋的變數
@@ -173,6 +182,7 @@ class DashboardController extends Controller
                     ->with('functionname', self::$functionname)
                     ->with('functionURL', self::$functionURL)
                     ->with('TOPname', self::$TOPname)
-                    ->with('formFields', $formFields);
+                    ->with('formFields', $formFields)
+                    ->with('status', $status);
     }
 }
