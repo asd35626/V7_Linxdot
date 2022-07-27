@@ -88,6 +88,8 @@ Route::group(['prefix' => 'Device'],function () {
     Route::resource('Excel', 'Device\ExcelController');
     //B2B會員設備管理
     Route::resource('B2BHotspots', 'Device\B2BHotspotsController');
+    //
+    Route::resource('GrayHotspot', 'Device\GrayHotspotController');
 });
 
 //人員管理
