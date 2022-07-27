@@ -278,7 +278,7 @@
                 @else
                     <input type="checkbox" data-switchery id="statuscheck" name="statuscheck"/>
                 @endif
-                <label for="status" class="inline-label">Status</label>
+                <label for="status" class="inline-label">online</label>
             </div>
             <div class="container-1 uk-width-3-10">
                 <span class="material-icons icon"> search </span>
@@ -518,6 +518,7 @@
             $('#searchForm').submit();
         }
         function map(lng,lat,online){
+            // mapboxgl.clear();
             // 地圖token
             mapboxgl.accessToken = 'pk.eyJ1IjoiYXNkMzU2MjYiLCJhIjoiY2w0cDdlNDk2MDd2ZTNlbWpycnNrdW0wcCJ9._Q--d12cdqSM5jAdabU08w';
 
@@ -566,12 +567,14 @@
                 new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(map);
             }
             if(online == 0){
+                // marker.remove();
                 var marker = document.querySelector('.marker');
                 marker.style = "background-image: url('/assets/img/pin-red.png')";
             }
+            
         }
         function mapclear(){
-            // mapboxgl.clear();
+            marker.remove();
         }
     </script>
 
