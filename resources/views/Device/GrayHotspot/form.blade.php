@@ -12,9 +12,11 @@
             </div>
         </div>
         <div class="uk-grid" data-uk-grid-margin>
-            <div class="uk-width-medium-1-3">
+            <div class="uk-width-medium-1-1">
                 {!! $formFields['OnBoardingKey']['completeField']  !!}
             </div>
+        </div>
+        <div class="uk-grid" data-uk-grid-margin>
             <div class="uk-width-medium-1-3">
                 {!! $formFields['WifiMac']['completeField']  !!}
             </div>

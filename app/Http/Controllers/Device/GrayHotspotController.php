@@ -70,103 +70,6 @@ class GrayHotspotController extends Controller
         return $fields;
     }
 
-    public function defineFormFields() {
-        $fields = [
-            'DeviceSN' => [
-                'name' => 'DeviceSN',
-                'id' => 'DeviceSN',
-                'label' => 's/n',
-                'type' => 'text',
-                'validation' => 'required',
-                'value' => '',
-                'class' => 'md-input label-fixed',
-            ],
-            'MacAddress' => [
-                'name' => 'MacAddress',
-                'id' => 'MacAddress',
-                'label' => 'lan mac',
-                'type' => 'text',
-                'validation' => 'required',
-                'value' => '',
-                'class' => 'md-input label-fixed',
-            ],
-            'PalletId' => [
-                'name' => 'PalletId',
-                'id' => 'PalletId',
-                'label' => 'PalletId',
-                'type' => 'text',
-                'validation' => '',
-                'value' => '',
-                'class' => 'md-input label-fixed',
-            ],
-            'CartonId' => [
-                'name' => 'CartonId',
-                'id' => 'CartonId',
-                'label' => 'CartonId',
-                'type' => 'text',
-                'validation' => '',
-                'value' => '',
-                'class' => 'md-input label-fixed',
-            ],
-            'AnimalName' => [
-                'name' => 'AnimalName',
-                'id' => 'AnimalName',
-                'label' => 'animal name',
-                'type' => 'text',
-                'validation' => '',
-                'value' => '',
-                'class' => 'md-input label-fixed',
-            ],
-            'IsVerify' => [
-                'name' => 'IsVerify',
-                'id' => 'IsVerify',
-                'label' => 'verify status',
-                'type' => 'radio',
-                'selectLists' => [
-                    '1' => 'Yes',
-                    '0' => 'No'
-                ],
-                'value' => '1',
-                'validation' => 'required',
-                'class' => 'md-input label-fixed',
-            ],
-            'IfValid' => [
-                'name' => 'IfValid',
-                'id' => 'IfValid',
-                'label' => 'Status',
-                'type' => 'radio',
-                'selectLists' => [
-                    '1' => 'Active',
-                    '0' => 'Inactive'
-                ],
-                'value' => '1',
-                'validation' => 'required',
-                'class' => 'md-input label-fixed',
-            ],
-            'CreateBy' => [
-                'name' => 'CreateBy',
-                'id' => 'CreateBy',
-                'label' => 'Created By',
-                'type' => 'text',
-                'value' => 'CreateBy',
-                'validation' => '',
-                'class' => 'md-input label-fixed',
-                'extras' => ['disabled' => 'disabled']
-            ],
-            'CreateDate' => [
-                'name' => 'CreateDate',
-                'id' => 'CreateDate',
-                'label' => 'Created Date',
-                'type' => 'text',
-                'validation' => '',
-                'value' => 'Created Date',
-                'class' => 'md-input label-fixed',
-                'extras' => ['disabled' => 'disabled']
-            ],
-        ];
-        return $fields;
-    }
-
     public function defineEditFormFields($data) {
         $fields = [
             'AnimalName' => [
@@ -287,10 +190,11 @@ class GrayHotspotController extends Controller
                 'label' => 'HotspoType',
                 'type' => 'radio',
                 'selectLists' => [
-                    '1' => 'Yes',
-                    '0' => 'No'
+                    'valid' => 'valid',
+                    'invalid' => 'invalid',
+                    'suspect' => 'suspect'
                 ],
-                'value' => '1',
+                'value' => 'valid',
                 'validation' => 'required',
                 'class' => 'md-input label-fixed',
             ],
