@@ -42,6 +42,21 @@
         }
     </style>
     <script>
+        $(document).ready(function() {
+            $('#statuscheck').change(function(event) {
+                var status = $('#status').val();
+                if(status == 1){
+                    $('#status').val(0);
+                }else{
+                    $('#status').val(1);
+                }
+                $('#excel').val(0);
+                $('#IfSearch').val('1');
+                $('#IfNewSearch').val('1');
+                $('#Page').val('1');
+                $('#searchForm').submit();
+            });
+        })
         function rebootHotspot(MAC){
             var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
             $.ajax({
@@ -55,6 +70,42 @@
                     // alert(response);
                     if(response.status == 0){
                         alert('Reboot Successfully');
+                    }else{
+                        alert(response.errorMessage);
+                    }
+                },
+                error : function(xhr, ajaxOptions, thrownError){
+                    modal.hide();
+                    canSendGift = true;
+                    switch (xhr.status) {
+                        case 422:
+                            if(check()){
+                            // grecaptcha.reset();
+                                alert("Error(422)");
+                            }
+                        break;
+                        default:
+                          // grecaptcha.reset();
+                          alert('server error');
+                    }
+                }
+            });
+        }
+
+        function Upgradefirmware(MAC){
+            var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
+            $.ajax({
+                type: "POST",
+                url:"https://linxdotapi.v7idea.com/ota",
+                data:{
+                    mac: MAC 
+                },
+                timeout: 0,
+                success: function(response){
+                    modal.hide();
+                    // alert(response);
+                    if(response.status == 0){
+                        alert('Upgrade Firmware Successfully');
                     }else{
                         alert(response.errorMessage);
                     }
@@ -148,6 +199,7 @@
         {{ Form::hidden('excel', '', array('id' => 'excel', 'value' => 0)) }}
         {{ Form::hidden('orderBy', '', array('id' => 'orderBy')) }}
         {{ Form::hidden('isAsc', '', array('id' => 'isAsc')) }}
+        {{ Form::hidden('status', '', array('id' => 'status')) }}
         <div class="uk-grid uk-margin-medium-bottom" >
             <div class="uk-width-medium-5-5 uk-row-first">
                 <div class="md-card">
@@ -216,7 +268,7 @@
     <!-- table start -->
     <h4 class="heading_a uk-margin-bottom">List</h4>
     <div class="md-card uk-margin-medium-bottom">
-        <div class="md-card-content">
+        <div class="md-card-content">                
             <div class="uk-overflow-container">
                 <div class="uk-width-1-10" style="float:right">
                     <button type="submit" onclick="exportExcel()" class="md-btn md-btn-primary">Export</button>
@@ -226,6 +278,14 @@
                 </div>
                 <div class="uk-width-1-10" style="float:right">
                     <button type="submit" onclick="window.location.href='{{ route( $routePath.'.create') }}';" class="md-btn md-btn-primary">Add</button>
+                </div>
+                <div class="" style="margin:0;padding:0;" align="right">
+                    @if($status == 1)
+                        <input type="checkbox" data-switchery checked id="statuscheck" name="statuscheck"/>
+                    @else
+                        <input type="checkbox" data-switchery id="statuscheck" name="statuscheck"/>
+                    @endif
+                    <label for="status" class="inline-label">online</label>
                 </div>
             </div>
             <div class="uk-overflow-container" style="overflow:visible;">
@@ -324,8 +384,9 @@
                                                         @endif
                                                         {{-- 重開機 --}}
                                                         <li><a onclick="rebootHotspot('{{ $object->MacAddress }}')">Reboot</a></li>
-                                                        {{-- <li><a href="#">Upgrade firmware</a></li>
-                                                        <li><a href="#">Restart miner</a></li>
+                                                        {{-- 更新分位 --}}
+                                                        <li><a onclick="Upgradefirmware('{{ $object->MacAddress }}')">Upgrade firmware</a></li>
+                                                        {{-- <li><a href="#">Restart miner</a></li>
                                                         <li><a href="#">Trigger fast sync</a></li>
                                                         回報問題 --}}
                                                         {{-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> --}}
@@ -617,10 +678,13 @@
                 // make a marker for each feature and add to the map
                 new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(map);
             }
-            
+
+            var marker = document.querySelector('.marker');
             if(online == 0){
-                var marker = document.querySelector('.marker');
+                alert(online);
                 marker.style = "background-image: url('/assets/img/pin-red.png')";
+            }else{
+                marker.style = "background-image: url('/assets/img/pin-green.png')";
             }
         }
     </script>

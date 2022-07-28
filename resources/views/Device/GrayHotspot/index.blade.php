@@ -125,7 +125,9 @@
                                 <td class="uk-text-small">{{ $object->WifiMac }}</td>
 
                                 {{-- <td class="uk-text-small">{{ $object->MgrVersion }}</td> --}}
-                                <td class="uk-text-small">{{ $object->MinerVersion }}</td>
+                                <td class="uk-text-small">
+                                    {{ substr($object->MinerVersion, 14 ) }}
+                                </td>
                                 <td class="uk-text-small">
                                     @if(isset($object->Version->VersionNo))
                                         {{ $object->Version->VersionNo }}
@@ -140,7 +142,15 @@
                                         N
                                     @endif
                                 </td>
-                                <td class="uk-text-small">{{ $object->HotspoType }}</td>
+                                <td class="uk-text-small">
+                                    @if($object->HotspoType == "")
+                                    @elseif($object->HotspoType != "valid")
+                                        <span class="uk-badge uk-badge-danger">{{ $object->HotspoType }}</span>
+                                    @else
+                                        <span class="uk-badge uk-badge-primary">{{ $object->HotspoType }}</span>
+                                    @endif
+                                    
+                                </td>
 
                                 <td class="uk-text-center uk-text-small">
                                     <div class="md-card-list-wrapper">

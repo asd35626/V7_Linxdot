@@ -189,48 +189,6 @@
                 }
             });
         }
-        function ReverseSSH(MAC){
-            var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
-            $.ajax({
-                type: "POST",
-                url:"https://linxdotapi.v7idea.com/reverseSSH",
-                data:{
-                    mac: MAC 
-                },
-                success: function(response){
-                    modal.hide();
-                    // alert(response.status);
-                    if(response.status == 0){
-                        // var modal2 =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>ip:'+response.data.ip+'<br>port:'+response.data.port+'<br>command:'+response.data.command+'<br/>');
-                        let datahtml = '';
-
-                        datahtml += `ip:`+response.data.ip;
-                        datahtml += `<br>port:`+response.data.port;
-                        datahtml += `<br>command:`+response.data.command;
-                        $('#ReverseSSH').html(datahtml);
-                        UIkit.modal("#reverseSSH").show();
-                        // alert('Reboot Successfully');
-                    }else{
-                        alert(response.errorMessage);
-                    }
-                },
-                error : function(xhr, ajaxOptions, thrownError){
-                    modal.hide();
-                    canSendGift = true;
-                    switch (xhr.status) {
-                        case 422:
-                            if(check()){
-                            // grecaptcha.reset();
-                                alert("Error(422)");
-                            }
-                        break;
-                        default:
-                          // grecaptcha.reset();
-                          alert('server error');
-                    }
-                }
-            });
-        }
     </script>
 @endsection
 
@@ -454,18 +412,6 @@
             </div>
         </div>
     </div>
-
-    {{-- ReverseSSH --}}
-    <div class="uk-modal" id="reverseSSH" aria-hidden="true" style="display: none; overflow-y: auto;">
-            <div class="uk-modal-dialog" style="top: 199px;">
-                <p><input type="hidden" id="HID"></p>
-                <div id="ReverseSSH"></div>
-                <div class="uk-modal-footer uk-text-right">
-                    <button type="button" class="md-btn md-btn-primary uk-modal-close">OK</button>
-                </div>
-            </div>
-        </div>
-    {{-- ReverseSSH --}}
 
     <script>
         function search() {
