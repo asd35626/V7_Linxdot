@@ -329,6 +329,8 @@
                                             回報問題 --}}
                                             {{-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li>
                                             <li><a href="#">Device heartbeat</a></li> --}}
+                                            {{-- helium explorer --}}
+                                            <li><a href="https://explorer.helium.com/hotspots/{{ $object->OnBoardingKey }}" target="_blank">Helium Explorer</a></li>
                                         </ul>
                                     </div>
                                 </div>

@@ -397,6 +397,8 @@
                                                         <li><a onclick="showUserList('{{ $object->$primaryKey }}')">User</a></li>
                                                         {{-- Reverse SSH --}}
                                                         <li><a onclick="ReverseSSH('{{ $object->MacAddress }}')">Reverse SSH</a></li>
+                                                        {{-- helium explorer --}}
+                                                        <li><a href="https://explorer.helium.com/hotspots/{{ $object->OnBoardingKey }}" target="_blank">Helium Explorer</a></li>
                                                     </ul>
                                                 </div>
                                             </div>
