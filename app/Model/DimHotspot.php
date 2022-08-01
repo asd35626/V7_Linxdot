@@ -72,4 +72,10 @@ class DimHotspot extends Model
     {
         return $this->belongsTo('App\Model\DimFirmware', 'Firmware','Version Code');
     }
+
+    // 出貨資訊
+    public function Warehouse()
+    {
+        return $this->belongsTo('App\Model\LinxdotWarehouseInventory', 'MacAddress','MacAddress');
+    }
 }

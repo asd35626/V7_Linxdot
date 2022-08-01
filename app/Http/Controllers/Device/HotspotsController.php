@@ -204,9 +204,9 @@ class HotspotsController extends Controller
                 'value' => '',
                 'class' => 'md-input label-fixed',
             ],
-            'WifiMac' => [
-                'name' => 'WifiMac',
-                'id' => 'WifiMac',
+            'WifiMacAddress' => [
+                'name' => 'WifiMacAddress',
+                'id' => 'WifiMacAddress',
                 'label' => 'wifi mac',
                 'type' => 'text',
                 'validation' => '',
@@ -319,9 +319,9 @@ class HotspotsController extends Controller
                 'value' => '',
                 'class' => 'md-input label-fixed',
             ],
-            'WifiMac' => [
-                'name' => 'WifiMac',
-                'id' => 'WifiMac',
+            'WifiMacAddress' => [
+                'name' => 'WifiMacAddress',
+                'id' => 'WifiMacAddress',
                 'label' => 'wifi mac',
                 'type' => 'text',
                 'validation' => '',
@@ -653,6 +653,7 @@ class HotspotsController extends Controller
                 'MacAddress' => $newMacAddress,
                 'AnimalName' => $formFields['AnimalName']['value'],
                 'IsVerify' => $formFields['IsVerify']['value'],
+                'WifiMacAddress' => $formFields['WifiMacAddress']['value'],
 
                 'IfValid' => $formFields['IfValid']['value'],
                 'IfDelete' => 0,
@@ -811,6 +812,7 @@ class HotspotsController extends Controller
                 'AnimalName' => $formFields['AnimalName']['value'],
                 'IsVerify' => $formFields['IsVerify']['value'],
 
+                'WifiMacAddress' => $formFields['WifiMacAddress']['value'],
                 'IfValid' => $formFields['IfValid']['value'],
             ];
 

@@ -294,51 +294,17 @@
                         <tr>
                             {!! generateHTML('DeviceSN','s/n',$isAsc, $orderBy) !!}
                             {!! generateHTML('MacAddress','lan mac',$isAsc, $orderBy) !!}
-                            {!! generateHTML('AnimalName','animal name',$isAsc, $orderBy) !!}
-                            {!! generateHTML('IssueDate','issue date',$isAsc, $orderBy) !!}
-                            <th class="uk-width-1-10 uk-text-small">register status</th>
-                            {!! generateHTML('ShippedDate','customerInfo',$isAsc, $orderBy) !!}
-                            {!! generateHTML('LastUpdateOnLineTime','status',$isAsc, $orderBy) !!}
+                            {!! generateHTML('AnimalName','animal name',$isAsc, $orderBy) !!}                            
+                            {!! generateHTML('Firmware','Version',$isAsc, $orderBy) !!}
+                            {!! generateHTML('IssueDate','provision date',$isAsc, $orderBy) !!}
+                            {!! generateHTML('ShippedDate','delivery',$isAsc, $orderBy) !!}
                             {!! generateHTML('DewiStatus','dewi status',$isAsc, $orderBy) !!}
-                            {{-- {!! generateHTML('Region','regions',$isAsc, $orderBy) !!} --}}
                             <th class="uk-width-1-10 uk-text-small uk-text-center ">more</th>
                         </tr>
                     </thead>
                     @if($data->count() > 0)
                         @foreach ($data as $object)
                             <tr>
-                                <td class="uk-text-small">{{ $object->DeviceSN }}</td>
-                                <td class="uk-text-small">{{ $object->MacAddress }}</td>
-                                <td class="uk-text-small">{{ $object->AnimalName }}</td>
-                                <td class="uk-text-small">
-                                    {{Carbon\Carbon::parse($object->IssueDate)->format('Y-m-d')}}
-                                </td>
-                                <td class="uk-text-small">
-                                    @if($object->IfRegister == 1) 
-                                        Y
-                                    @else
-                                        @if($object->IfKey == 0) 
-                                            @if($object->IfAnimal == 1) 
-                                                No Key
-                                            @else
-                                                N/A
-                                            @endif
-                                        @else
-                                            No Animal
-                                        @endif
-                                    @endif
-                                </td>
-                                <td class="uk-text-small">
-                                    @if($object->IsShipped == 1)
-                                        {{ $object->TrackNo }}
-                                        <br>
-                                        {{ $object->Manufacturer->RealName }}
-                                        <br>
-                                        {{Carbon\Carbon::parse($object->ShippedDate)->format('Y-m-d')}}
-                                    @else
-                                        in stock
-                                    @endif
-                                </td>
                                 <td class="uk-text-small">
                                     @if($object->LastUpdateOnLineTime)
                                         <?php
@@ -351,21 +317,76 @@
                                             $minutes += $time->i;
                                             if($minutes <= 30){
                                                 $online = 1;
-                                                print('<span class="material-icons" style="color:#59BBBC"> circle </span> online');
+                                                print('<span class="material-icons" style="color:#59BBBC;font-size:14px;"> circle </span>');
                                             }else{
                                                 $online = 0;
-                                                print('<span class="material-icons" style="color:#FF5959"> circle </span> offline');
+                                                print('<span class="material-icons" style="color:#FF5959;font-size:14px;"> circle </span>');
                                             }
                                         ?>
                                     @else
                                         <?php
                                             $online = 0;
                                         ?>
-                                        <span class="material-icons" style="color:#FF5959"> circle </span> offline
+                                        <span class="material-icons" style="color:#FF5959;font-size:14px;"> circle </span>
+                                    @endif
+                                    {{ $object->DeviceSN }}
+                                </td>
+                                <td class="uk-text-small">
+                                    @if(isset($object->currentMacAddress))
+                                        @if($object->currentMacAddress != $object->MacAddress)
+                                            {{ $object->MacAddress }}<br>                                            
+                                            <font color="#FF0000">({{ $object->currentMacAddress }})</font>
+                                        @else
+                                            {{ $object->MacAddress }}
+                                        @endif
+                                    @else
+                                        {{ $object->MacAddress }}
                                     @endif
                                 </td>
-                                <td class="uk-text-small">{{ $object->DewiStatus }}</td>
-                                {{-- <td class="uk-text-small">{{ $object->Region }}</td> --}}
+                                <td class="uk-text-small">{{ $object->AnimalName }}</td>
+                                <td class="uk-text-small">
+                                    @if(isset($object->Version->VersionNo))
+                                        {{ $object->Version->VersionNo }}
+                                    @else
+                                        {{ $object->Firmware }}
+                                    @endif<br>
+                                    {{ substr($object->MinerVersion, -15) }}
+                                </td>
+                                <td class="uk-text-small">
+                                    {{Carbon\Carbon::parse($object->IssueDate)->format('Y-m-d')}}
+                                </td>
+                                <td class="uk-text-small">
+                                    {{-- MAC號如果不一致 --}}
+                                    @if(isset($object->Warehouse))
+                                        @if($object->Warehouse->IfShipped == 1)
+                                            {{ $object->TrackNo }}
+                                            <br>
+                                            @if(isset($object->Manufacturer))
+                                                {{ $object->Manufacturer->RealName }}
+                                            @else
+                                                User not found
+                                            @endif
+                                            <br>
+                                            {{Carbon\Carbon::parse($object->Warehouse->ShippedDate)->format('Y-m-d')}}
+                                        @else
+                                            in stock
+                                        @endif
+                                    @else
+                                        in stock
+                                    @endif
+                                </td>
+                                <td class="uk-text-small">
+                                    @if(isset($object->IsRegisteredDewi))
+                                        @if($object->IsRegisteredDewi == 1)
+                                            onboarded
+                                        @elst
+                                            notonboarded
+                                        @endif
+                                    @else
+                                        notonboarded
+                                    @endif
+                                </td>
+                                {{-- <td class="uk-text-small">{{ $object->DewiStatus }}</td> --}}
 
                                 <td class="uk-text-center uk-text-small">
                                     <div class="md-card-list-wrapper">
