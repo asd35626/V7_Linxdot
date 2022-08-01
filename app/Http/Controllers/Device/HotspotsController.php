@@ -195,6 +195,24 @@ class HotspotsController extends Controller
                 'value' => '',
                 'class' => 'md-input label-fixed',
             ],
+            'OnBoardingKey' => [
+                'name' => 'OnBoardingKey',
+                'id' => 'OnBoardingKey',
+                'label' => 'on boarding key',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'WifiMac' => [
+                'name' => 'WifiMac',
+                'id' => 'WifiMac',
+                'label' => 'wifi mac',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
             'IsVerify' => [
                 'name' => 'IsVerify',
                 'id' => 'IsVerify',
@@ -287,6 +305,24 @@ class HotspotsController extends Controller
                 'name' => 'AnimalName',
                 'id' => 'AnimalName',
                 'label' => 'animal name',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'OnBoardingKey' => [
+                'name' => 'OnBoardingKey',
+                'id' => 'OnBoardingKey',
+                'label' => 'on boarding key',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'WifiMac' => [
+                'name' => 'WifiMac',
+                'id' => 'WifiMac',
+                'label' => 'wifi mac',
                 'type' => 'text',
                 'validation' => '',
                 'value' => '',
@@ -602,23 +638,7 @@ class HotspotsController extends Controller
                 $formFields['MacAddress']['isCorrect'] = false;
                 $formFields['MacAddress']['error'] = "This MacAddress has been taken";
                 $formFields['MacAddress']['completeField'] = GenerateData::generateCustomErrorMessage('MacAddress','MacAddress', $formFields['MacAddress']['value'], $formFields['MacAddress']['error'], 'text');
-            }
-
-            // for AnimalName
-            if( $formFields['AnimalName']['value'] != ''){
-                $exist = DimHotspot::where('AnimalName', '=',  $formFields['AnimalName']['value'])
-                                            ->where('IfDelete',0)
-                                            ->get();
-                
-                if($exist->count() > 0 ){
-                    $requestResult['isError'] = true;
-                    $formFields['AnimalName']['isCorrect'] = false;
-                    $formFields['AnimalName']['error'] = "This animalname has been taken";
-                    $formFields['AnimalName']['completeField'] = GenerateData::generateCustomErrorMessage('animalname','AnimalName', $formFields['AnimalName']['value'], $formFields['AnimalName']['error'], 'text');
-                }
-            }
-
-                
+            }                
         }
 
         // 步驟三：檢查回傳的狀態
@@ -780,21 +800,6 @@ class HotspotsController extends Controller
                 $formFields['MacAddress']['error'] = "This MacAddress has been taken";
                 $formFields['MacAddress']['completeField'] = GenerateData::generateCustomErrorMessage('MacAddress','MacAddress', $formFields['MacAddress']['value'], $formFields['MacAddress']['error'], 'text');
             }
-
-            // for AnimalName
-            if( $formFields['AnimalName']['value'] != ''){
-                $exist = DimHotspot::where('AnimalName', '=',  $formFields['AnimalName']['value'])
-                                            ->where('IfDelete',0)
-                                            ->where('id','!=',$id)
-                                            ->get();
-                
-                if($exist->count() > 0 ){
-                    $requestResult['isError'] = true;
-                    $formFields['AnimalName']['isCorrect'] = false;
-                    $formFields['AnimalName']['error'] = "This animalname has been taken";
-                    $formFields['AnimalName']['completeField'] = GenerateData::generateCustomErrorMessage('animalname','AnimalName', $formFields['AnimalName']['value'], $formFields['AnimalName']['error'], 'text');
-                }
-            }                
         }
 
         if($requestResult['isError'] == false) {
