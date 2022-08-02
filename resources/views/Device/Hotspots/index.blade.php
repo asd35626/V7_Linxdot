@@ -359,13 +359,7 @@
                                     {{-- MAC號如果不一致 --}}
                                     @if(isset($object->Warehouse))
                                         @if($object->Warehouse->IfShipped == 1)
-                                            {{ $object->TrackNo }}
-                                            <br>
-                                            @if(isset($object->Manufacturer))
-                                                {{ $object->Manufacturer->RealName }}
-                                            @else
-                                                User not found
-                                            @endif
+                                            {{ $object->Warehouse->CustomInfo }}
                                             <br>
                                             {{Carbon\Carbon::parse($object->Warehouse->ShippedDate)->format('Y-m-d')}}
                                         @else
