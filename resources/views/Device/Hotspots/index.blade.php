@@ -332,10 +332,10 @@
                                     {{ $object->DeviceSN }}
                                 </td>
                                 <td class="uk-text-small">
-                                    @if(isset($object->currentMacAddress))
-                                        @if($object->currentMacAddress != $object->MacAddress)
+                                    @if(isset($object->CurrentMacAddress))
+                                        @if($object->CurrentMacAddress != $object->MacAddress)
                                             {{ $object->MacAddress }}<br>                                            
-                                            <font color="#FF0000">({{ $object->currentMacAddress }})</font>
+                                            <font color="#FF0000">({{ $object->CurrentMacAddress }})</font>
                                         @else
                                             {{ $object->MacAddress }}
                                         @endif
