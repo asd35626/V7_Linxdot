@@ -379,7 +379,7 @@
                                     @if(isset($object->IsRegisteredDewi))
                                         @if($object->IsRegisteredDewi == 1)
                                             onboarded
-                                        @elst
+                                        @else
                                             notonboarded
                                         @endif
                                     @else

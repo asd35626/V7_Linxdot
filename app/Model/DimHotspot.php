@@ -78,4 +78,10 @@ class DimHotspot extends Model
     {
         return $this->belongsTo('App\Model\LinxdotWarehouseInventory', 'MacAddress','MacAddress');
     }
+
+    // 擁有者
+    public function Owner()
+    {
+        return $this->belongsTo('App\Model\DimUser', 'OwnerID','Id');
+    }
 }
