@@ -18,6 +18,7 @@ class DimHotspot extends Model
       'CartonId',
       'DeviceSN',
       'MacAddress',
+      'currentMacAddress',
       'Firmware',
       'AnimalName',
       'OnBoardingKey',
