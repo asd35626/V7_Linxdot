@@ -411,7 +411,15 @@
                                                         {{-- 會員 --}}
                                                         <li><a onclick="showUserList('{{ $object->$primaryKey }}')">User</a></li>
                                                         {{-- Reverse SSH --}}
-                                                        <li><a onclick="ReverseSSH('{{ $object->MacAddress }}')">Reverse SSH</a></li>
+                                                        @if(isset($object->CurrentMacAddress))
+                                                            @if($object->CurrentMacAddress != null)
+                                                                <li><a onclick="ReverseSSH('{{ $object->CurrentMacAddress }}')">Reverse SSH</a></li>
+                                                            @else
+                                                                <li><a onclick="ReverseSSH('{{ $object->MacAddress }}')">Reverse SSH</a></li>
+                                                            @endif
+                                                        @else
+                                                            <li><a onclick="ReverseSSH('{{ $object->MacAddress }}')">Reverse SSH</a></li>
+                                                        @endif
                                                         {{-- helium explorer --}}
                                                         <li><a href="https://explorer.helium.com/hotspots/{{ $object->OnBoardingKey }}" target="_blank">Helium Explorer</a></li>
                                                     </ul>
