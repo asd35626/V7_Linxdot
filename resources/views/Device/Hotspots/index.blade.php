@@ -142,9 +142,9 @@
                         // var modal2 =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>ip:'+response.data.ip+'<br>port:'+response.data.port+'<br>command:'+response.data.command+'<br/>');
                         let datahtml = '';
 
-                        datahtml += `ip:`+response.data.ip;
-                        datahtml += `<br>port:`+response.data.port;
-                        datahtml += `<br>command:`+response.data.command;
+                        datahtml += `<font size=5>ip:`+response.data.ip+'</font>';
+                        datahtml += `<br><font size=5>port:`+response.data.port+'</font>';
+                        datahtml += `<br><font size=5>`+response.data.command+'</font>';
                         $('#ReverseSSH').html(datahtml);
                         UIkit.modal("#reverseSSH").show();
                         // alert('Reboot Successfully');
