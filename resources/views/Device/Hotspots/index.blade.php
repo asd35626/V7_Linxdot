@@ -335,8 +335,7 @@
                             {!! generateHTML('Firmware','Version',$isAsc, $orderBy) !!}
                             {!! generateHTML('IssueDate','provision date',$isAsc, $orderBy) !!}
                             {!! generateHTML('ShippedDate','delivery',$isAsc, $orderBy) !!}
-                            {!! generateHTML('DewiStatus','dewi status',$isAsc, $orderBy) !!}
-                            <th class="uk-width-1-10 uk-text-small uk-text-center ">more</th>
+                            {!! generateHTML('DewiStatus','dewi onboarded',$isAsc, $orderBy) !!}
                         </tr>
                     </thead>
                     @if($data->count() > 0)
@@ -409,70 +408,71 @@
                                     @endif
                                 </td>
                                 <td class="uk-text-small">
-                                    @if(isset($object->IsRegisteredDewi))
-                                        @if($object->IsRegisteredDewi == 1)
-                                            onboarded
+                                    <div style="position:relative;float:left;top:7px;text-align: center;width: 50px;">
+                                        @if(isset($object->IsRegisteredDewi))
+                                            @if($object->IsRegisteredDewi == 1)
+                                                Y
+                                            @else
+                                                N
+                                            @endif
                                         @else
-                                            notonboarded
+                                            N
                                         @endif
-                                    @else
-                                        notonboarded
-                                    @endif
-                                </td>
-                                {{-- <td class="uk-text-small">{{ $object->DewiStatus }}</td> --}}
-
-                                <td class="uk-text-center uk-text-small">
-                                    <div class="md-card-list-wrapper">
-                                        <div class="md-card-list" style="margin-top:0px">
-                                            <div class="md-card-list-item-menu" data-uk-dropdown="{mode:'click',pos:'bottom-right'}">
-                                                <a class="md-icon material-icons">&#xE5D4;</a>
-                                                <div class="uk-dropdown" style="background:#C4C4C4">
-                                                    <ul style="text-align:left;list-style:none;display: block;
-                                                    margin-block-start:0px;margin-block-end:0px;margin-inline-start:0px;
-                                                    margin-inline-end:0px;padding-inline-start:0px;line-height: 25px;">
-                                                        {{--地圖--}}
-                                                        @if($object->map_lat != null || $object->map_lat != '' && $object->map_lng != null || $object->map_lng != '')
-                                                            <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}','{{ $online }}')">Show on map</a></li>
-                                                        @else
-                                                            <li style="pointer-events: none;"><a style="color:#FAFAFA;">Show on map</a></li>
-                                                        @endif
-                                                        {{-- 重開機 --}}
-                                                        <li><a onclick="rebootHotspot('{{ $object->MacAddress }}')">Reboot</a></li>
-                                                        {{-- 更新分位 --}}
-                                                        <li><a onclick="Upgradefirmware('{{ $object->MacAddress }}')">Upgrade firmware</a></li>
-                                                        {{-- <li><a href="#">Restart miner</a></li>
-                                                        <li><a href="#">Trigger fast sync</a></li>
-                                                        回報問題 --}}
-                                                        {{-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> --}}
-                                                        {{-- <li><a href="#">Device heartbeat</a></li> --}}
-                                                        {{-- 編輯 --}}
-                                                        <li><a href="{{ route($routePath.'.edit',$object->$primaryKey) }}">Edit</a></li>
-                                                        {{-- 會員 --}}
-                                                        <li><a onclick="showUserList('{{ $object->$primaryKey }}')">User</a></li>
-                                                        {{-- Reverse SSH --}}
-                                                        @if(isset($object->CurrentMacAddress))
-                                                            @if($object->CurrentMacAddress != null)
-                                                                <li><a onclick="ReverseSSH('{{ $object->CurrentMacAddress }}')">Reverse SSH</a></li>
+                                    </div>
+                                        <div class="md-card-list-wrapper" style="float:right;width:10px;">
+                                            <div class="md-card-list" style="margin-top:0px">
+                                                <div class="md-card-list-item-menu" data-uk-dropdown="{mode:'click',pos:'bottom-right'}">
+                                                    <a class="md-icon material-icons">&#xE5D4;</a>
+                                                    <div class="uk-dropdown" style="background:#C4C4C4">
+                                                        <ul style="text-align:left;list-style:none;display: block;
+                                                        margin-block-start:0px;margin-block-end:0px;margin-inline-start:0px;
+                                                        margin-inline-end:0px;padding-inline-start:0px;line-height: 25px;">
+                                                            {{--地圖--}}
+                                                            @if($object->map_lat != null || $object->map_lat != '' && $object->map_lng != null || $object->map_lng != '')
+                                                                <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}','{{ $online }}')">Show on map</a></li>
+                                                            @else
+                                                                <li style="pointer-events: none;"><a style="color:#FAFAFA;">Show on map</a></li>
+                                                            @endif
+                                                            {{-- 重開機 --}}
+                                                            <li><a onclick="rebootHotspot('{{ $object->MacAddress }}')">Reboot</a></li>
+                                                            {{-- 更新分位 --}}
+                                                            <li><a onclick="Upgradefirmware('{{ $object->MacAddress }}')">Upgrade firmware</a></li>
+                                                            {{-- <li><a href="#">Restart miner</a></li>
+                                                            <li><a href="#">Trigger fast sync</a></li>
+                                                            回報問題 --}}
+                                                            {{-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> --}}
+                                                            {{-- <li><a href="#">Device heartbeat</a></li> --}}
+                                                            {{-- 編輯 --}}
+                                                            <li><a href="{{ route($routePath.'.edit',$object->$primaryKey) }}">Edit</a></li>
+                                                            {{-- 會員 --}}
+                                                            <li><a onclick="showUserList('{{ $object->$primaryKey }}')">User</a></li>
+                                                            {{-- Reverse SSH --}}
+                                                            @if(isset($object->CurrentMacAddress))
+                                                                @if($object->CurrentMacAddress != null)
+                                                                    <li><a onclick="ReverseSSH('{{ $object->CurrentMacAddress }}')">Reverse SSH</a></li>
+                                                                @else
+                                                                    <li><a onclick="ReverseSSH('{{ $object->MacAddress }}')">Reverse SSH</a></li>
+                                                                @endif
                                                             @else
                                                                 <li><a onclick="ReverseSSH('{{ $object->MacAddress }}')">Reverse SSH</a></li>
                                                             @endif
-                                                        @else
-                                                            <li><a onclick="ReverseSSH('{{ $object->MacAddress }}')">Reverse SSH</a></li>
-                                                        @endif
-                                                        {{-- helium explorer --}}
-                                                        <li><a href="https://explorer.helium.com/hotspots/{{ $object->OnBoardingKey }}" target="_blank">Helium Explorer</a></li>
-                                                        {{-- resetMAC --}}
-                                                        @if(isset($object->CurrentMacAddress))
-                                                            @if($object->CurrentMacAddress != $object->MacAddress)
-                                                                <li><a onclick="resetMAC('{{ $object->CurrentMacAddress }}')">mac reset</a></li>
+                                                            {{-- helium explorer --}}
+                                                            <li><a href="https://explorer.helium.com/hotspots/{{ $object->OnBoardingKey }}" target="_blank">Helium Explorer</a></li>
+                                                            {{-- resetMAC --}}
+                                                            @if(isset($object->CurrentMacAddress))
+                                                                @if($object->CurrentMacAddress != $object->MacAddress)
+                                                                    <li><a onclick="resetMAC('{{ $object->CurrentMacAddress }}')">mac reset</a></li>
+                                                                @endif
                                                             @endif
-                                                        @endif
-                                                    </ul>
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
                                 </td>
+                                {{-- <td class="uk-text-small">{{ $object->DewiStatus }}</td> --}}
+
+                                
                             </tr>
                         @endforeach
                     @else

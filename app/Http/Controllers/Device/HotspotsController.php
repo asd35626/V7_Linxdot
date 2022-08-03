@@ -1049,7 +1049,7 @@ class HotspotsController extends Controller
                             'Dim_Hotspot.AnimalName',
                             'Dim_Hotspot.OnBoardingKey',
                             'Dim_Hotspot.DewiStatus',
-                            // 'Dim_Hotspot.IsRegisteredDewi',
+                            'Dim_Hotspot.IsRegisteredDewi',
 
                             'Dim_Hotspot.MinerVersion',
                             'Dim_Hotspot.map_lat',
