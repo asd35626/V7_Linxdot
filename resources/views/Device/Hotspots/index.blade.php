@@ -365,13 +365,16 @@
                                         ?>
                                         <span class="material-icons" style="color:#FF5959;font-size:14px;"> circle </span>
                                     @endif
-                                    {{ $object->DeviceSN }}
+                                    <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}" style="color:#444444;">{{ $object->DeviceSN }}</a>
                                 </td>
                                 <td class="uk-text-small">
                                     @if(isset($object->CurrentMacAddress))
                                         @if($object->CurrentMacAddress != $object->MacAddress)
-                                            {{ $object->MacAddress }}<br>                                            
-                                            <font color="#FF0000">({{ $object->CurrentMacAddress }})</font>
+                                            {{ $object->MacAddress }}<br>
+                                            <font color="#AA3333">({{ $object->MacAddress }})    </font>
+                                            <a  onclick="javascript:if(confirm('Do you confirm to recover its MAC?'))resetMAC('{{ $object->CurrentMacAddress }}')">
+                                                <span class="material-icons" style="color:#AA3333;font-size:14px;"> build </span>
+                                            </a>
                                         @else
                                             {{ $object->MacAddress }}
                                         @endif
@@ -442,8 +445,6 @@
                                                             回報問題 --}}
                                                             {{-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> --}}
                                                             {{-- <li><a href="#">Device heartbeat</a></li> --}}
-                                                            {{-- 編輯 --}}
-                                                            <li><a href="{{ route($routePath.'.edit',$object->$primaryKey) }}">Edit</a></li>
                                                             {{-- 會員 --}}
                                                             <li><a onclick="showUserList('{{ $object->$primaryKey }}')">User</a></li>
                                                             {{-- Reverse SSH --}}
@@ -458,12 +459,6 @@
                                                             @endif
                                                             {{-- helium explorer --}}
                                                             <li><a href="https://explorer.helium.com/hotspots/{{ $object->OnBoardingKey }}" target="_blank">Helium Explorer</a></li>
-                                                            {{-- resetMAC --}}
-                                                            @if(isset($object->CurrentMacAddress))
-                                                                @if($object->CurrentMacAddress != $object->MacAddress)
-                                                                    <li><a onclick="resetMAC('{{ $object->CurrentMacAddress }}')">mac reset</a></li>
-                                                                @endif
-                                                            @endif
                                                         </ul>
                                                     </div>
                                                 </div>
