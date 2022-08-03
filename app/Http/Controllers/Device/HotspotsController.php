@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Device;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Controller;
 use App\Model\DimHotspot;
@@ -150,6 +151,8 @@ class HotspotsController extends Controller
 
     public function defineFormFields() {
         $fields = [
+            // Device Information
+            // Online Status
             'DeviceSN' => [
                 'name' => 'DeviceSN',
                 'id' => 'DeviceSN',
@@ -168,24 +171,54 @@ class HotspotsController extends Controller
                 'value' => '',
                 'class' => 'md-input label-fixed',
             ],
-            'PalletId' => [
-                'name' => 'PalletId',
-                'id' => 'PalletId',
-                'label' => 'PalletId',
+            'WifiMacAddress' => [
+                'name' => 'WifiMacAddress',
+                'id' => 'WifiMacAddress',
+                'label' => 'wifi mac',
                 'type' => 'text',
                 'validation' => '',
                 'value' => '',
                 'class' => 'md-input label-fixed',
             ],
-            'CartonId' => [
-                'name' => 'CartonId',
-                'id' => 'CartonId',
-                'label' => 'CartonId',
+            'ModelName' => [
+                'name' => 'ModelName',
+                'id' => 'ModelName',
+                'label' => 'Model Name',
                 'type' => 'text',
                 'validation' => '',
                 'value' => '',
                 'class' => 'md-input label-fixed',
             ],
+            'DeviceID' => [
+                'name' => 'DeviceID',
+                'id' => 'DeviceID',
+                'label' => 'DeviceID',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'Firmware' => [
+                'name' => 'Firmware',
+                'id' => 'Firmware',
+                'label' => 'Firmware',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'OwnerID' => [
+                'name' => 'OwnerID',
+                'id' => 'OwnerID',
+                'label' => 'Owner ID',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+
+            // Helium Information
+
             'AnimalName' => [
                 'name' => 'AnimalName',
                 'id' => 'AnimalName',
@@ -204,10 +237,91 @@ class HotspotsController extends Controller
                 'value' => '',
                 'class' => 'md-input label-fixed',
             ],
-            'WifiMacAddress' => [
-                'name' => 'WifiMacAddress',
-                'id' => 'WifiMacAddress',
-                'label' => 'wifi mac',
+            'DewiStatus' => [
+                'name' => 'DewiStatus',
+                'id' => 'DewiStatus',
+                'label' => 'Dewi Status',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'IsRegisteredDewi' => [
+                'name' => 'IsRegisteredDewi',
+                'id' => 'IsRegisteredDewi',
+                'label' => 'Register Status',
+                'type' => 'radio',
+                'selectLists' => [
+                    '1' => 'Y',
+                    '0' => 'N',
+                    '-1' => 'Error'
+                ],
+                'value' => '1',
+                'validation' => 'required',
+                'class' => 'md-input label-fixed',
+                'extras' => []
+            ], 
+            'MinerVersion' => [
+                'name' => 'MinerVersion',
+                'id' => 'MinerVersion',
+                'label' => 'Miner Version',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'map_lat' => [
+                'name' => 'map_lat',
+                'id' => 'map_lat',
+                'label' => 'LAT',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'map_lng' => [
+                'name' => 'map_lng',
+                'id' => 'map_lng',
+                'label' => 'LNG',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+
+            // Process Info
+
+            'PalletId' => [
+                'name' => 'PalletId',
+                'id' => 'PalletId',
+                'label' => 'PalletId',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'CartonId' => [
+                'name' => 'CartonId',
+                'id' => 'CartonId',
+                'label' => 'CartonId',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'IssueDate' => [
+                'name' => 'IssueDate',
+                'id' => 'IssueDate',
+                'label' => 'Provision Date ',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'FactoryDispatchDate' => [
+                'name' => 'FactoryDispatchDate',
+                'id' => 'FactoryDispatchDate',
+                'label' => 'Factory Dispatch Date',
                 'type' => 'text',
                 'validation' => '',
                 'value' => '',
@@ -216,7 +330,7 @@ class HotspotsController extends Controller
             'IsVerify' => [
                 'name' => 'IsVerify',
                 'id' => 'IsVerify',
-                'label' => 'verify status',
+                'label' => 'Verify Status',
                 'type' => 'radio',
                 'selectLists' => [
                     '1' => 'Yes',
@@ -224,6 +338,33 @@ class HotspotsController extends Controller
                 ],
                 'value' => '1',
                 'validation' => 'required',
+                'class' => 'md-input label-fixed',
+            ], 
+            'ShippedDate' => [
+                'name' => 'ShippedDate',
+                'id' => 'ShippedDate',
+                'label' => 'Shipped Date ',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'CustomInfo' => [
+                'name' => 'CustomInfo',
+                'id' => 'CustomInfo',
+                'label' => 'Customer Info.',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+            'TrackingNo' => [
+                'name' => 'TrackingNo',
+                'id' => 'TrackingNo',
+                'label' => 'Tracking No.',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
                 'class' => 'md-input label-fixed',
             ],
             'IfValid' => [
@@ -265,6 +406,9 @@ class HotspotsController extends Controller
 
     public function defineEditFormFields($data) {
         $fields = [
+            
+            // Device Information
+            // Online Status
             'DeviceSN' => [
                 'name' => 'DeviceSN',
                 'id' => 'DeviceSN',
@@ -283,24 +427,60 @@ class HotspotsController extends Controller
                 'value' => '',
                 'class' => 'md-input label-fixed',
             ],
-            'PalletId' => [
-                'name' => 'PalletId',
-                'id' => 'PalletId',
-                'label' => 'PalletId',
+            'WifiMacAddress' => [
+                'name' => 'WifiMacAddress',
+                'id' => 'WifiMacAddress',
+                'label' => 'wifi mac',
                 'type' => 'text',
                 'validation' => '',
                 'value' => '',
                 'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
             ],
-            'CartonId' => [
-                'name' => 'CartonId',
-                'id' => 'CartonId',
-                'label' => 'CartonId',
+            'ModelName' => [
+                'name' => 'ModelName',
+                'id' => 'ModelName',
+                'label' => 'Model Name',
                 'type' => 'text',
                 'validation' => '',
                 'value' => '',
                 'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
             ],
+            'DeviceID' => [
+                'name' => 'DeviceID',
+                'id' => 'DeviceID',
+                'label' => 'DeviceID',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+            'Firmware' => [
+                'name' => 'Firmware',
+                'id' => 'Firmware',
+                'label' => 'Firmware',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+            'OwnerID' => [
+                'name' => 'OwnerID',
+                'id' => 'OwnerID',
+                'label' => 'Owner ID',
+                'type' => 'select',
+                'selectLists' => $this->getOwnerList(),
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+
+            // Helium Information
+
             'AnimalName' => [
                 'name' => 'AnimalName',
                 'id' => 'AnimalName',
@@ -309,6 +489,7 @@ class HotspotsController extends Controller
                 'validation' => '',
                 'value' => '',
                 'class' => 'md-input label-fixed',
+                'extras' => []
             ],
             'OnBoardingKey' => [
                 'name' => 'OnBoardingKey',
@@ -318,28 +499,159 @@ class HotspotsController extends Controller
                 'validation' => '',
                 'value' => '',
                 'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
             ],
-            'WifiMacAddress' => [
-                'name' => 'WifiMacAddress',
-                'id' => 'WifiMacAddress',
-                'label' => 'wifi mac',
+            'DewiStatus' => [
+                'name' => 'DewiStatus',
+                'id' => 'DewiStatus',
+                'label' => 'Dewi Status',
                 'type' => 'text',
                 'validation' => '',
                 'value' => '',
                 'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+            'DewiStatus' => [
+                'name' => 'DewiStatus',
+                'id' => 'DewiStatus',
+                'label' => 'Dewi Status',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+            'IsRegisteredDewi' => [
+                'name' => 'IsRegisteredDewi',
+                'id' => 'IsRegisteredDewi',
+                'label' => 'Register Status',
+                'type' => 'radio',
+                'selectLists' => [
+                    '1' => 'Y',
+                    '0' => 'N',
+                    '-1' => 'Error'
+                ],
+                'value' => '1',
+                'validation' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled'],
+            ], 
+            'MinerVersion' => [
+                'name' => 'MinerVersion',
+                'id' => 'MinerVersion',
+                'label' => 'Miner Version',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+            'map_lat' => [
+                'name' => 'map_lat',
+                'id' => 'map_lat',
+                'label' => 'LAT',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+            'map_lng' => [
+                'name' => 'map_lng',
+                'id' => 'map_lng',
+                'label' => 'LNG',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+
+            // Process Info
+
+            'PalletId' => [
+                'name' => 'PalletId',
+                'id' => 'PalletId',
+                'label' => 'PalletId',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => []
+            ],
+            'CartonId' => [
+                'name' => 'CartonId',
+                'id' => 'CartonId',
+                'label' => 'CartonId',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => []
+            ],
+            'IssueDate' => [
+                'name' => 'IssueDate',
+                'id' => 'IssueDate',
+                'label' => 'Provision Date ',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+            'FactoryDispatchDate' => [
+                'name' => 'FactoryDispatchDate',
+                'id' => 'FactoryDispatchDate',
+                'label' => 'Factory Dispatch Date',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
             ],
             'IsVerify' => [
                 'name' => 'IsVerify',
                 'id' => 'IsVerify',
-                'label' => 'verify status',
+                'label' => 'Verify Status',
                 'type' => 'radio',
                 'selectLists' => [
                     '1' => 'Yes',
                     '0' => 'No'
                 ],
                 'value' => '1',
-                'validation' => 'required',
+                'validation' => '',
                 'class' => 'md-input label-fixed',
+                'extras' => []
+            ], 
+            'ShippedDate' => [
+                'name' => 'ShippedDate',
+                'id' => 'ShippedDate',
+                'label' => 'Shipped Date ',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+            'CustomInfo' => [
+                'name' => 'CustomInfo',
+                'id' => 'CustomInfo',
+                'label' => 'Customer Info.',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+            'TrackingNo' => [
+                'name' => 'TrackingNo',
+                'id' => 'TrackingNo',
+                'label' => 'Tracking No.',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
             ],
             'IfValid' => [
                 'name' => 'IfValid',
@@ -704,8 +1016,60 @@ class HotspotsController extends Controller
     public function edit($id)
     {
         $id = (string) $id;
-        $data= DimHotspot::where('id', $id)
-                        ->where('IfDelete', 0)
+        $data= DimHotspot::where('Dim_Hotspot.id', $id)
+                        ->where('Dim_Hotspot.IfDelete', 0)
+                        ->leftJoin('Linxdot_Warehouse_Inventory', function($join){
+                            $join->on('Dim_Hotspot.MacAddress','=','Linxdot_Warehouse_Inventory.MacAddress')
+                                ->where('Linxdot_Warehouse_Inventory.IfValid' , 1)
+                                ->where('Linxdot_Warehouse_Inventory.IfDelete' , 0);
+                        })
+                        ->leftJoin('Linxdot_Factory_Dispatch', function($join){
+                            $join->on('Dim_Hotspot.MacAddress','=','Linxdot_Factory_Dispatch.MacAddress')
+                                ->where('Linxdot_Factory_Dispatch.IfValid' , 1)
+                                ->where('Linxdot_Factory_Dispatch.IfDelete' , 0);
+                        })
+                        ->leftJoin('Dim_ProductModel', function($join){
+                            $join->on('Linxdot_Factory_Dispatch.HWModelNo','=','Dim_ProductModel.ModelID')
+                                ->where('Dim_ProductModel.IfValid' , 1)
+                                ->where('Dim_ProductModel.IfDelete' , 0);
+                        })
+                        ->leftJoin('Dim_Firmware', function($join){
+                            $join->on('Dim_Hotspot.Firmware','=','Dim_Firmware.Version Code')
+                                ->where('Dim_Firmware.IfValid' , 1)
+                                ->where('Dim_Firmware.IfDelete' , 0);
+                        })
+                        ->select('Dim_Hotspot.DeviceSN',
+                            'Dim_Hotspot.MacAddress',
+                            'Dim_Hotspot.WifiMacAddress',
+                            'Dim_Hotspot.DeviceID',
+                            'Dim_Hotspot.Firmware',
+                            'Dim_Firmware.VersionNo',
+
+                            'Dim_Hotspot.OwnerID',
+                            'Dim_Hotspot.AnimalName',
+                            'Dim_Hotspot.OnBoardingKey',
+                            'Dim_Hotspot.DewiStatus',
+                            'Dim_Hotspot.IsRegisteredDewi',
+
+                            'Dim_Hotspot.MinerVersion',
+                            'Dim_Hotspot.map_lat',
+                            'Dim_Hotspot.map_lng',
+                            'Dim_Hotspot.PalletId',
+                            'Dim_Hotspot.CartonId',
+
+                            'Dim_Hotspot.IssueDate',
+                            'Dim_Hotspot.IsVerify',
+                            DB::raw('Linxdot_Factory_Dispatch.IssueDate as FactoryDispatchDate'),
+                            'Linxdot_Warehouse_Inventory.ShippedDate',
+                            'Linxdot_Warehouse_Inventory.CustomInfo',
+                            'Linxdot_Warehouse_Inventory.TrackingNo',
+
+                            'Linxdot_Factory_Dispatch.HWModelNo',
+                            'Dim_ProductModel.ModelName',
+
+                            'Dim_Hotspot.IfValid',
+                            'Dim_Hotspot.CreateBy',
+                            'Dim_Hotspot.CreateDate',)
                         ->get();
 
         // 取得輸入欄位的定義
@@ -714,14 +1078,38 @@ class HotspotsController extends Controller
 
         // 把資料放進對應欄位
         $requestResult =  WebLib::generateInputsWhthData($formFieldDef, $data);
+
         // 修正資料建立者
         $requestResult['CreateBy']['value'] = GenerateData::getCreater($data->first()->CreateBy);
         // 修正資料建立者
         $CreateDate = 'CreateDate';
         if($data->first()->CreateDate != ''){
-            $CreateDate = $data->first()->CreateDate;
+            $CreateDate = Carbon::parse($data->first()->CreateDate)->format('Y-m-d');
         }
         $requestResult['CreateDate']['value'] = $CreateDate;
+        // 修正時間格式
+        if($data->first()->IssueDate != null){
+            $requestResult['IssueDate']['value'] = Carbon::parse($data->first()->IssueDate)->format('Y-m-d');
+        }else{
+            $requestResult['IssueDate']['value'] = '';
+        }
+        if($data->first()->FactoryDispatchDate != null){
+            $requestResult['FactoryDispatchDate']['value'] = Carbon::parse($data->first()->FactoryDispatchDate)->format('Y-m-d');
+        }else{
+            $requestResult['FactoryDispatchDate']['value'] = '';
+        }
+        if($data->first()->ShippedDate != null){
+            $requestResult['ShippedDate']['value'] = Carbon::parse($data->first()->ShippedDate)->format('Y-m-d');
+        }else{
+            $requestResult['ShippedDate']['value'] = '';
+        }
+        // 修正分位
+        if($data->first()->VersionNo != null){
+            $requestResult['Firmware']['value'] = $data->first()->VersionNo;
+        }else{
+            $requestResult['Firmware']['value'] = $data->first()->Firmware;
+        }
+
         // 產生需要設定的欄位  
         $requestResult = WebLib::generateInputs($requestResult, false);
         // 把產生好的欄位取出來
@@ -955,4 +1343,24 @@ class HotspotsController extends Controller
         }
         return Response::json($responseBody, 200);
     }
+    // 回傳 UserType array
+    private function getOwnerList(){
+        $list = array('' => 'select...');
+        $Users = DimUser::where('UserType', 20)
+                    ->where('DegreeId', 50)
+                    ->where('IfValid', 1)
+                    ->where('IfDelete', 0)
+                    ->select(
+                        'Id',
+                        'RealName',
+                        'MemberNo'
+                    );
+
+        if($Users->count() > 0){
+            foreach($Users->get() as $user){
+                $list[$user->Id] = $user->RealName.'('.$user->MemberNo.')';
+            }
+        }
+        return $list;
+    }  
 }

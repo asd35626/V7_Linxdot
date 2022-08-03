@@ -18,6 +18,7 @@
         .uk-modal #hotspotOwner .selectize-dropdown {
             top: 85px !important;
         }
+
         /*map標記設定*/
         .mapboxgl-ctrl{
             display: none;
@@ -127,6 +128,7 @@
                 }
             });
         }
+
         function ReverseSSH(MAC){
             var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
             $.ajax({
@@ -645,62 +647,51 @@
             //會員ID
             let newUID = $('#update_hotspotOwner #UID').val();
             console.log(`HID: ${HID}`, `newUID: ${newUID}`);
-
-            // if(newUID == '') {
-            //     UIkit.modal.alert('請選擇商品').on('hide.uk.modal', function() {
-            //         // custome js code
-            //         console.log('close');
-            //     });
-            // } else {
-                $.ajax({
-                    url: '/api/v1/updateUID',
-                    type: 'POST',
-                    async: false,
-                    headers: {
-                        'Authorization': Cookies.get('authToken')
-                    },
-                    data : { 
-                        'ID' : HID,
-                        'newUID' : newUID,
-                    },
-                    success: function(response) {
-                        if(response.status == 0){
-                            // hideen the button
-                            UIkit.modal.alert('更新成功！').on('hide.uk.modal', function() {
-                                // custome js code
-                                console.log('close');
-                                let topic = `{{env('mqtt_prefix', '')}}/LiveShow/${HID}`;
-                                // console.log(`topic: ${topic}`);
-                                let sendData = {
-                                                type          : "PrimaryProductUpdate",
-                                            };
-                                client.publish(topic, JSON.stringify(sendData), 1);
-                            });
-                        }else{
-                            UIkit.modal.alert('更新失敗！').on('hide.uk.modal', function() {
-                                // custome js code
-                                console.log('close');
-                            });
-                            // console.log(response.message);
-                        }
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        console.log('error');
-                        UIkit.modal.alert('更新失敗！(error)').on('hide.uk.modal', function() {
+            $.ajax({
+                url: '/api/v1/updateUID',
+                type: 'POST',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : { 
+                    'ID' : HID,
+                    'newUID' : newUID,
+                },
+                success: function(response) {
+                    if(response.status == 0){
+                        // hideen the button
+                        UIkit.modal.alert('更新成功！').on('hide.uk.modal', function() {
+                            // custome js code
+                            console.log('close');
+                            let topic = `{{env('mqtt_prefix', '')}}/LiveShow/${HID}`;
+                            // console.log(`topic: ${topic}`);
+                            let sendData = {
+                                            type          : "PrimaryProductUpdate",
+                                        };
+                            client.publish(topic, JSON.stringify(sendData), 1);
+                        });
+                    }else{
+                        UIkit.modal.alert('更新失敗！').on('hide.uk.modal', function() {
                             // custome js code
                             console.log('close');
                         });
-                    },
-                    complete: function () {
-                        UIkit.modal("#update_hotspotOwner").hide();
-                    },
-                    cache: false
-                });
-            // }
-
+                        // console.log(response.message);
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log('error');
+                    UIkit.modal.alert('更新失敗！(error)').on('hide.uk.modal', function() {
+                        // custome js code
+                        console.log('close');
+                    });
+                },
+                complete: function () {
+                    UIkit.modal("#update_hotspotOwner").hide();
+                },
+                cache: false
+            });
         }
-
-
 
         function map(lng,lat,online){
             mapboxgl.accessToken = 'pk.eyJ1IjoiYXNkMzU2MjYiLCJhIjoiY2w0cDdlNDk2MDd2ZTNlbWpycnNrdW0wcCJ9._Q--d12cdqSM5jAdabU08w';

@@ -8,7 +8,6 @@
 
 {{-- 增加所需要的Script; 將會放置在主板型的後面 --}}
 @section('scriptArea')
-
 @endsection
 
 
