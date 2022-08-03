@@ -462,7 +462,11 @@
                                                         {{-- helium explorer --}}
                                                         <li><a href="https://explorer.helium.com/hotspots/{{ $object->OnBoardingKey }}" target="_blank">Helium Explorer</a></li>
                                                         {{-- resetMAC --}}
-                                                        <li><a onclick="resetMAC('{{ $object->MacAddress }}')">mac reset</a></li>
+                                                        @if(isset($object->CurrentMacAddress))
+                                                            @if($object->CurrentMacAddress != $object->MacAddress)
+                                                                <li><a onclick="resetMAC('{{ $object->CurrentMacAddress }}')">mac reset</a></li>
+                                                            @endif
+                                                        @endif
                                                     </ul>
                                                 </div>
                                             </div>

@@ -412,7 +412,7 @@ class HotspotsController extends Controller
             'DeviceSN' => [
                 'name' => 'DeviceSN',
                 'id' => 'DeviceSN',
-                'label' => 's/n',
+                'label' => '<font color="red">*</font>s/n',
                 'type' => 'text',
                 'validation' => 'required',
                 'value' => '',
@@ -421,7 +421,7 @@ class HotspotsController extends Controller
             'MacAddress' => [
                 'name' => 'MacAddress',
                 'id' => 'MacAddress',
-                'label' => 'lan mac',
+                'label' => '<font color="red">*</font>lan mac',
                 'type' => 'text',
                 'validation' => 'required',
                 'value' => '',
@@ -484,7 +484,7 @@ class HotspotsController extends Controller
             'AnimalName' => [
                 'name' => 'AnimalName',
                 'id' => 'AnimalName',
-                'label' => 'animal name',
+                'label' => '<font color="red">*</font>animal name',
                 'type' => 'text',
                 'validation' => '',
                 'value' => '',
@@ -572,7 +572,7 @@ class HotspotsController extends Controller
             'PalletId' => [
                 'name' => 'PalletId',
                 'id' => 'PalletId',
-                'label' => 'PalletId',
+                'label' => '<font color="red">*</font>PalletId',
                 'type' => 'text',
                 'validation' => '',
                 'value' => '',
@@ -582,7 +582,7 @@ class HotspotsController extends Controller
             'CartonId' => [
                 'name' => 'CartonId',
                 'id' => 'CartonId',
-                'label' => 'CartonId',
+                'label' => '<font color="red">*</font>CartonId',
                 'type' => 'text',
                 'validation' => '',
                 'value' => '',
@@ -612,7 +612,7 @@ class HotspotsController extends Controller
             'IsVerify' => [
                 'name' => 'IsVerify',
                 'id' => 'IsVerify',
-                'label' => 'Verify Status',
+                'label' => '<font color="red">*</font>Verify Status',
                 'type' => 'radio',
                 'selectLists' => [
                     '1' => 'Yes',
@@ -1049,7 +1049,7 @@ class HotspotsController extends Controller
                             'Dim_Hotspot.AnimalName',
                             'Dim_Hotspot.OnBoardingKey',
                             'Dim_Hotspot.DewiStatus',
-                            'Dim_Hotspot.IsRegisteredDewi',
+                            // 'Dim_Hotspot.IsRegisteredDewi',
 
                             'Dim_Hotspot.MinerVersion',
                             'Dim_Hotspot.map_lat',
