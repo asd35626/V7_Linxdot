@@ -170,6 +170,41 @@
             });
         }
 
+        function resetMAC(MAC){
+            var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
+            $.ajax({
+                type: "POST",
+                url:"https://linxdotapi.v7idea.com/resetMAC",
+                data:{
+                    mac: MAC 
+                },
+                timeout: 0,
+                success: function(response){
+                    modal.hide();
+                    // alert(response);
+                    if(response.status == 0){
+                        alert('MAC Reset Successfully');
+                    }else{
+                        alert(response.errorMessage);
+                    }
+                },
+                error : function(xhr, ajaxOptions, thrownError){
+                    modal.hide();
+                    canSendGift = true;
+                    switch (xhr.status) {
+                        case 422:
+                            if(check()){
+                            // grecaptcha.reset();
+                                alert("Error(422)");
+                            }
+                        break;
+                        default:
+                          // grecaptcha.reset();
+                          alert('server error');
+                    }
+                }
+            });
+        }
     </script>
 @endsection
 
@@ -345,10 +380,12 @@
                                 </td>
                                 <td class="uk-text-small">{{ $object->AnimalName }}</td>
                                 <td class="uk-text-small">
-                                    @if(isset($object->Version->VersionNo))
+                                    @if(isset($object->Version))
                                         {{ $object->Version->VersionNo }}
                                     @else
-                                        {{ $object->Firmware }}
+                                        @if($object->Firmware != '' && $object->Firmware != null)
+                                            {{ $object->Firmware }}
+                                        @endif
                                     @endif<br>
                                     {{ substr($object->MinerVersion, -15) }}
                                 </td>
@@ -422,6 +459,8 @@
                                                         @endif
                                                         {{-- helium explorer --}}
                                                         <li><a href="https://explorer.helium.com/hotspots/{{ $object->OnBoardingKey }}" target="_blank">Helium Explorer</a></li>
+                                                        {{-- resetMAC --}}
+                                                        <li><a onclick="resetMAC('{{ $object->MacAddress }}')">mac reset</a></li>
                                                     </ul>
                                                 </div>
                                             </div>
