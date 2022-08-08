@@ -175,7 +175,7 @@
 			// });
 
 			
-			$.get("https://linxdotapi.v7idea.com/getFirmwareStatus", function(data) {
+			$.get("http://192.168.150.163:50880/getFirmwareStatus", function(data) {
 				var dataPoint = [];
 				var result = [];
 
@@ -218,7 +218,7 @@
 				chart.render();
 			});
 
-			$.get("https://linxdotapi.v7idea.com/getMinerStatus", function(data) {
+			$.get("http://192.168.150.163:50880/getMinerStatus", function(data) {
 				var dataPoint = [];
 				var result = [];
 
@@ -413,7 +413,7 @@
             </div>
         </div>
     </div>
-    <embed src="https://linxdotapi.v7idea.com/worldmap/" width="100%" height="500">
+    <embed src="http://192.168.150.163:50880/worldmap/" width="100%" height="500">
 
     <script src="js/canvasjs/canvasjs.min.js"></script>
 @endsection
