@@ -67,7 +67,10 @@
                         <li style="padding-top: 10%;color: white" id="account"></li>
                         <li data-uk-dropdown="{mode:'click',pos:'bottom-right'}">
                             <a href="#" class="user_action_image">
-                                <img class="md-user-image" src="/assets/img/avatars/avatar_11_tn.png" alt=""></a>
+                                <!-- <img class="md-user-image" src="/assets/img/avatars/avatar_11_tn.png" alt=""> -->
+                                <!-- <img class="md-user-image" src="/assets/img/avatars/user.png" alt=""> -->
+                                <span class="material-icons md-user-image" style="font-size:34px;padding-top:25%">account_circle</span>
+                            </a>
                             <div class="uk-dropdown uk-dropdown-small">
                                 <ul class="uk-nav js-uk-prevent">
                                     <li><a href="/Profile/PasswordSetting">change password</a></li>
