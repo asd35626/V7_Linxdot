@@ -65,7 +65,13 @@ class DimHotspot extends Model
       'CreateBy',
       'CreateDate',
       'create_time',
-      'update_time'
+      'update_time',
+      'IsBlack',
+      'IsBackMemo',
+      'IsBlackBy',
+      'IsBlackDate',
+      'NickName',
+      'OfficalNickName'
     ];
 
     // 生產者

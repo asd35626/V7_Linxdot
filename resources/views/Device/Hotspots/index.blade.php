@@ -247,6 +247,9 @@
                                     <!-- uk-grid start -->
                                     <div class="uk-grid">
                                         <div class="uk-width-1-3">
+                                            {!! $searchFields['keywords']['completeField'] !!}
+                                        </div>
+                                        <!-- <div class="uk-width-1-3">
                                             {!! $searchFields['S/N']['completeField'] !!}
                                         </div>
                                         <div class="uk-width-1-3">
@@ -254,7 +257,7 @@
                                         </div>
                                         <div class="uk-width-1-3">
                                             {!! $searchFields['AnimalName']['completeField'] !!}
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <div class="uk-grid">
                                         <div class="uk-width-1-3">
@@ -340,7 +343,11 @@
                     </thead>
                     @if($data->count() > 0)
                         @foreach ($data as $object)
-                            <tr>
+                            @if($object->IsBlack == 1)
+                                <tr style="color:#FF5959;">
+                            @else
+                                <tr>
+                            @endif
                                 <td class="uk-text-small">
                                     @if($object->LastUpdateOnLineTime)
                                         <?php
@@ -365,7 +372,16 @@
                                         ?>
                                         <span class="material-icons" style="color:#FF5959;font-size:14px;"> circle </span>
                                     @endif
-                                    <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}" style="color:#444444;">{{ $object->DeviceSN }}</a>
+                                    @if($object->IsBlack == 1)
+                                        <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}" style="color:#FF5959;">{{ $object->DeviceSN }}</a>
+                                        <br>{{ $object->IsBackMemo }}
+                                        <a onclick="showBlack('{{ $object->IsBlack }}','{{ $object->IsBackMemo }}','{{ $object->id }}')">
+                                            <span class="material-icons" style="color:#AA3333;font-size:14px;"> build </span>
+                                        </a>
+                                    @else
+                                        <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}" style="color:#444444;">{{ $object->DeviceSN }}</a>
+                                    @endif
+                                    
                                 </td>
                                 <td class="uk-text-small">
                                     @if(isset($object->CurrentMacAddress))
@@ -444,6 +460,8 @@
                                                             <li><a href="#">Trigger fast sync</a></li>
                                                             回報問題 --}}
                                                             {{-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> --}}
+                                                            {{-- 黑名單 --}}
+                                                            <li><a onclick="showBlack('{{ $object->IsBlack }}','{{ $object->IsBackMemo }}','{{ $object->id }}')">Black</a></li>
                                                             {{-- <li><a href="#">Device heartbeat</a></li> --}}
                                                             {{-- 會員 --}}
                                                             <li><a onclick="showUserList('{{ $object->$primaryKey }}')">User</a></li>
@@ -529,6 +547,19 @@
             </div>
         </div>
     {{-- ReverseSSH --}}
+
+    {{-- 黑名單 --}}
+    <div class="uk-modal" id="black" aria-hidden="true" style="display: none; overflow-y: auto;">
+            <div class="uk-modal-dialog" style="top: 199px;">
+                <p><input type="hidden" id="HID"></p>
+                <div id="blackmodal"></div>
+                <div class="uk-modal-footer uk-text-right">
+                    <button type="button" class="md-btn md-btn-flat uk-modal-close">BACK</button>
+                    <button onclick="javascript:updateBlack()" type="button" class="md-btn md-btn-flat md-btn-flat-primary">OK</button>
+                </div>
+            </div>
+        </div>
+    {{-- 黑名單 --}}
 
     <script>
         function search() {
@@ -639,6 +670,44 @@
 
         }
 
+        // 顯示黑名單
+        function showBlack(black,memo,hid) {
+            let blackmodal = '';
+            var blackmemo = '';
+            if(memo != null && memo != ""){
+                blackmemo = memo;
+            }
+
+            blackmodal += '<div class="parsley-row">';
+            blackmodal += '<div class="md-input-wrapper  md-input-filled">';
+            blackmodal += '<label for="Black">Black<span class="req">*</span></label><br>';
+            blackmodal += '<span class="icheck-inline">';
+            if(black == 1){
+                blackmodal += '<input data-md-icheck="" id="Black_1" checked="checked" name="Black" type="radio" value="1">';
+            }else{
+                blackmodal += '<input data-md-icheck="" id="Black_1" name="Black" type="radio" value="1">';
+            }
+            blackmodal += '<label for="Black_1" class="inline-label">Yes</label></span>';
+            blackmodal += '<span class="icheck-inline">';
+            if(black == 1){
+                blackmodal += '<input data-md-icheck="" id="Black_0" name="Black" type="radio" value="0">';
+            }else{
+                blackmodal += '<input data-md-icheck="" id="Black_0" checked="checked" name="Black" type="radio" value="0">';
+            }
+            blackmodal += '<label for="Black_0" class="inline-label">No</label></span>';
+            blackmodal += '<span class="parsley-required"></span></div></div>';
+
+            blackmodal += '<div class="parsley-row">';
+            blackmodal += '<div class="md-input-wrapper  md-input-filled">';
+            blackmodal += '<label for="blackmemo">Memo</label>';
+            blackmodal += '<input id="blackmemo" class="md-input label-fixed" name="blackmemo" type="text" value="'+blackmemo+'">';
+            blackmodal += '</div></div>';
+
+            $('#blackmodal').html(blackmodal);
+            $('#black #HID').val(hid);
+            UIkit.modal("#black").show();
+        }
+
         // 更新所屬會員
         function updateUID() {
             //機器ID
@@ -692,6 +761,57 @@
             });
         }
 
+        // 更新黑名單狀態
+        function updateBlack() {
+        // 狀態
+            let IsBlack = 0;
+            var checked = document.getElementById("Black_1").checked;
+            if(checked){
+                IsBlack = 1;
+            }else{
+                IsBlack = 0;
+            }
+            // memo
+            let IsBackMemo = $('#black #blackmemo').val();
+            // 機器ID
+            let HID = $('#black #HID').val();
+
+            $.ajax({
+                url: '/api/v1/updateIsBlack',
+                type: 'POST',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : { 
+                    'IsBackMemo' : IsBackMemo,
+                    'IsBlack' : IsBlack,
+                    'ID' : HID
+                },
+                success: function(response) {
+                    if(response.status == 0){
+                        // hideen the button
+                        UIkit.modal.alert('更新成功！');
+                        window.location.reload();
+                    }else{
+                        UIkit.modal.alert('更新失敗！')
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log('error');
+                    UIkit.modal.alert('更新失敗！(error)').on('hide.uk.modal', function() {
+                        // custome js code
+                        console.log('close');
+                    });
+                },
+                complete: function () {
+                    UIkit.modal("#black").hide();
+                },
+                cache: false
+            });
+        }
+
+
         function map(lng,lat,online){
             mapboxgl.accessToken = 'pk.eyJ1IjoiYXNkMzU2MjYiLCJhIjoiY2w0cDdlNDk2MDd2ZTNlbWpycnNrdW0wcCJ9._Q--d12cdqSM5jAdabU08w';
             const map = new mapboxgl.Map({
@@ -735,7 +855,7 @@
 
             var marker = document.querySelector('.marker');
             if(online == 0){
-                alert(online);
+                // alert(online);
                 marker.style = "background-image: url('/assets/img/pin-red.png')";
             }else{
                 marker.style = "background-image: url('/assets/img/pin-green.png')";

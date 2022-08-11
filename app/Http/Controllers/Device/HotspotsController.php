@@ -43,6 +43,14 @@ class HotspotsController extends Controller
     // 定義搜尋的欄位設定;
     public function defineSearchFields() {
         $fields = [ 
+            'keywords' =>  [
+                'name' => 'keywords',
+                'id' => 'keywords',
+                'label' => 'keywords',
+                'type' => 'text',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
             'S/N' =>  [
                 'name' => 'S/N',
                 'id' => 'S/N',
@@ -656,7 +664,7 @@ class HotspotsController extends Controller
             'IfValid' => [
                 'name' => 'IfValid',
                 'id' => 'IfValid',
-                'label' => 'Status',
+                'label' => '<font color="red">*</font>Status',
                 'type' => 'radio',
                 'selectLists' => [
                     '1' => 'Active',
@@ -727,9 +735,8 @@ class HotspotsController extends Controller
         if ($IfSearch == '1') {
             // 表示會需要參考搜尋的變數
             $searchArray = array(
-                'S/N' => $searchFields['S/N']['value'],
-                'Mac' => strtolower(str_replace("-",":",$searchFields['Mac']['value'])),
-                'AnimalName' => $searchFields['AnimalName']['value'],
+                'keywords' => $searchFields['keywords']['value'],
+                'Mac' => strtolower(str_replace("-",":",$searchFields['keywords']['value'])),
                 'IsVerify' => $searchFields['IsVerify']['value'],
                 'IfRegister' => $searchFields['IfRegister']['value'],
                 'IssueDateFrom' => $searchFields['IssueDateFrom']['value'],
@@ -739,14 +746,12 @@ class HotspotsController extends Controller
             );
 
             $data= $data->where(function($query) use ($searchArray) {
-                if($searchArray['S/N'] != '') {
-                    $query->where('DeviceSN', 'like', '%'.$searchArray['S/N'].'%' );
+                if($searchArray['keywords'] != '') {
+                    $query->orwhere('DeviceSN', 'like', '%'.$searchArray['keywords'].'%' )
+                        ->orwhere('AnimalName', 'like', '%'.$searchArray['keywords'].'%' );
                 }
                 if($searchArray['Mac'] != '') {
-                    $query->where('MacAddress', 'like', '%'.$searchArray['Mac'].'%' );
-                }
-                if($searchArray['AnimalName'] != '') {
-                    $query->where('AnimalName', 'like', '%'.$searchArray['AnimalName'].'%' );
+                    $query->orwhere('MacAddress', 'like', '%'.$searchArray['Mac'].'%' );
                 }
                 if($searchArray['IsVerify'] != '') {
                     $query->where('IsVerify', $searchArray['IsVerify']);
@@ -1362,5 +1367,34 @@ class HotspotsController extends Controller
             }
         }
         return $list;
-    }  
+    }
+    public function updateIsBlack(Request $request){
+        // init status
+        $responseBody = array(
+          'status' => 0,
+          'errorCode' => '9999',
+          'message' => 'Unknown error.',
+          
+        );
+        // get param
+        $IsBackMemo = $request->input('IsBackMemo', '');
+        $IsBlack = $request->input('IsBlack', '');
+        $ID = $request->input('ID', '');
+        // dd($IsBackMemo, $IsBlack,$ID);
+
+        if($responseBody['status'] == 0) {
+            // 更新
+            DimHotspot::on('mysql2')
+                    ->where('id',$ID)
+                    ->update(['IsBackMemo' => $IsBackMemo,
+                        'IsBlack' => $IsBlack,
+                        'IsBlackBy' => WebLib::getCurrentUserID(),
+                        'IsBlackDate' => Carbon::now('Asia/Taipei')->toDateTimeString()]);
+            
+            $responseBody['status'] = 0;
+            $responseBody['message'] = 'change success!';
+            $responseBody['errorCode'] = '0000';
+        }
+        return Response::json($responseBody, 200);
+    }
 }

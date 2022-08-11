@@ -41,9 +41,9 @@ Route::group(['prefix' => 'api/v1'],function () {
     Route::post('showUserList', 'Device\HotspotsController@showUserList');
     // 更改所屬會員
     Route::post('updateUID', 'Device\HotspotsController@updateUID');
-    // 測試用
-    Route::post('test', 'testController@test');
-    // 顯示上船清單
+    // 更改黑名單狀態
+    Route::post('updateIsBlack', 'Device\HotspotsController@updateIsBlack');
+    // 顯示上傳清單
     Route::post('WarehouseInventoryDetail', 'Inventory\ShippedStatusExcelController@WarehouseInventoryDetail');
 });
 
