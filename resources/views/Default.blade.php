@@ -201,7 +201,7 @@
 					animationEnabled: true,
 					// 標題
 					title:{
-						text: "MQTT_Action"
+						text: "Firmware Version"
 					},
 					legend:{
 						cursor: "pointer",
@@ -239,7 +239,7 @@
 					animationEnabled: true,
 					// 標題
 					title:{
-						text: "MinerVersion"
+						text: "Miner Version"
 					},
 					legend:{
 						cursor: "pointer",
