@@ -175,7 +175,7 @@
 			// });
 
 			
-			$.get("https://linxdotapi.v7idea.com/getFirmwareStatus", function(data) {
+			$.get("https://linxdot-map.v7idea.com/getFirmwareStatus", function(data) {
 				var dataPoint = [];
 				var result = [];
 
@@ -218,7 +218,7 @@
 				chart.render();
 			});
 
-			$.get("https://linxdotapi.v7idea.com/getMinerStatus", function(data) {
+			$.get("https://linxdot-map.v7idea.com/getMinerStatus", function(data) {
 				var dataPoint = [];
 				var result = [];
 
@@ -395,7 +395,7 @@
             </div>
         </div>
     </div> -->
-    <!-- <div class="uk-grid row" data-uk-grid-margin>
+    <div class="uk-grid row" data-uk-grid-margin>
         <div class="uk-width-medium-1-2">
             <div class="md-card">
                 <div class="md-card-content">
@@ -412,8 +412,8 @@
                 </div>
             </div>
         </div>
-    </div> -->
-    <embed src="https://linxdot-api.v7idea.com/worldmap/" width="100%" height="500">
+    </div>
+    <embed src="https://linxdot-map.v7idea.com/worldmap/" width="100%" height="500">
 
     <script src="js/canvasjs/canvasjs.min.js"></script>
 @endsection
