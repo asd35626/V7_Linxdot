@@ -375,6 +375,26 @@ class HotspotsController extends Controller
                 'value' => '',
                 'class' => 'md-input label-fixed',
             ],
+            'NickName' => [
+                'name' => 'NickName',
+                'id' => 'NickName',
+                'label' => 'NickName',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+            'OfficalNickName' => [
+                'name' => 'OfficalNickName',
+                'id' => 'OfficalNickName',
+                'label' => 'Offical Name',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+
             'IfValid' => [
                 'name' => 'IfValid',
                 'id' => 'IfValid',
@@ -661,6 +681,27 @@ class HotspotsController extends Controller
                 'class' => 'md-input label-fixed',
                 'extras' => ['disabled' => 'disabled']
             ],
+
+            'NickName' => [
+                'name' => 'NickName',
+                'id' => 'NickName',
+                'label' => 'Nick Name',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+            'OfficalNickName' => [
+                'name' => 'OfficalNickName',
+                'id' => 'OfficalNickName',
+                'label' => '<font color="red">*</font>Offical Name',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+            ],
+
             'IfValid' => [
                 'name' => 'IfValid',
                 'id' => 'IfValid',
@@ -1204,6 +1245,7 @@ class HotspotsController extends Controller
                 'MacAddress' => $newMacAddress,
                 'AnimalName' => $formFields['AnimalName']['value'],
                 'IsVerify' => $formFields['IsVerify']['value'],
+                'OfficalNickName' => $formFields['OfficalNickName']['value'],
 
                 'WifiMacAddress' => $formFields['WifiMacAddress']['value'],
                 'IfValid' => $formFields['IfValid']['value'],

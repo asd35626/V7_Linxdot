@@ -334,7 +334,9 @@
                         <tr>
                             {!! generateHTML('DeviceSN','s/n',$isAsc, $orderBy) !!}
                             {!! generateHTML('MacAddress','lan mac',$isAsc, $orderBy) !!}
-                            {!! generateHTML('AnimalName','animal name',$isAsc, $orderBy) !!}                            
+                            {!! generateHTML('AnimalName','animal name',$isAsc, $orderBy) !!}
+                            {!! generateHTML('OfficalNickName','offical name',$isAsc, $orderBy) !!}
+                            {!! generateHTML('NickName','nick name',$isAsc, $orderBy) !!}
                             {!! generateHTML('Firmware','Version',$isAsc, $orderBy) !!}
                             {!! generateHTML('IssueDate','provision date',$isAsc, $orderBy) !!}
                             {!! generateHTML('ShippedDate','delivery',$isAsc, $orderBy) !!}
@@ -399,6 +401,8 @@
                                     @endif
                                 </td>
                                 <td class="uk-text-small">{{ $object->AnimalName }}</td>
+                                <td class="uk-text-small">{{ $object->OfficalNickName }}</td>
+                                <td class="uk-text-small">{{ $object->NickName }}</td>
                                 <td class="uk-text-small">
                                     @if(isset($object->Version))
                                         {{ $object->Version->VersionNo }}
