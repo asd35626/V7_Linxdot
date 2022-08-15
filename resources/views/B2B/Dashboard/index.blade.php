@@ -252,6 +252,7 @@
                 {!! generateHTML('DeviceSN','S/N',$isAsc, $orderBy) !!}
                 {!! generateHTML('MacAddress','MAC Address',$isAsc, $orderBy) !!}
                 {!! generateHTML('AnimalName','Animal name',$isAsc, $orderBy) !!}
+                {!! generateHTML('NickName','Nick name',$isAsc, $orderBy) !!}
                 {!! generateHTML('LastUpdateOnLineTime','Status',$isAsc, $orderBy) !!}
                 {!! generateHTML('DewiStatus','dewi status',$isAsc, $orderBy) !!}
                 {!! generateHTML('LastUpdateOnLineTime','Latest online time',$isAsc, $orderBy) !!}
@@ -266,6 +267,10 @@
                     <td class="uk-text-small">{{ $object->DeviceSN }}</td>
                     <td class="uk-text-small">{{ $object->MacAddress }}</td>
                     <td class="uk-text-small">{{ $object->AnimalName }}</td>
+                    <td class="uk-text-small">
+                        {{ $object->NickName }}
+                        <span class="material-icons userMOUSE" onclick="showNickName('{{ $object->id }}','{{ $object->NickName }}')">create</span>
+                    </td>
                     <td class="uk-text-small">
                         @if($object->LastUpdateOnLineTime)
                             <?php
@@ -388,6 +393,20 @@
     </div>
     {{-- 回報問題 --}}
 
+    {{-- 暱稱 --}}
+    <div class="uk-modal" id="nickname" aria-hidden="true" style="display: none; overflow-y: auto;">
+            <div class="uk-modal-dialog" style="top: 199px;">
+                <p><input type="hidden" id="HID"></p>
+                <div id="nicknamemodal"></div>
+                <div class="uk-modal-footer uk-text-right">
+                    <button type="button" class="md-btn md-btn-flat uk-modal-close">BACK</button>
+                    <button onclick="javascript:updateNickName()" type="button" class="md-btn md-btn-flat md-btn-flat-primary">OK</button>
+                </div>
+            </div>
+        </div>
+    {{-- 暱稱 --}}
+
+    {{-- MAP --}}
     <div class="uk-modal uk-modal-card-fullscreen" id="modal_full" aria-hidden="true" style="display: none; overflow-y: auto;">
         <div class="uk-modal-dialog uk-modal-dialog-blank">
             <div class="md-card uk-height-viewport">
@@ -414,6 +433,7 @@
             </div>
         </div>
     </div>
+    {{-- MAP --}}
 
     <script>
         function search() {
@@ -523,6 +543,25 @@
         }
         function mapclear(){
             marker.remove();
+        }
+
+        // 顯示暱稱編輯畫面
+        function showNickName(id,nickname) {
+            let nicknamemodal = '';
+            var name = '';
+            if(nickname != null && nickname != ""){
+                name = nickname;
+            }
+
+            nicknamemodal += '<div class="parsley-row">';
+            nicknamemodal += '<div class="md-input-wrapper  md-input-filled">';
+            nicknamemodal += '<label for="name">Nick Name</label>';
+            nicknamemodal += '<input id="name" class="md-input label-fixed" name="name" type="text" value="'+name+'">';
+            nicknamemodal += '</div></div>';
+
+            $('#nicknamemodal').html(nicknamemodal);
+            $('#nickname #HID').val(id);
+            UIkit.modal("#nickname").show();
         }
     </script>
 
