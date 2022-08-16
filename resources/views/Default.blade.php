@@ -24,7 +24,7 @@
 					e.chart.render();
 				}
 			};
-			var last1MinMQTTS = [], last10MinMQTTS=[], last20MinMQTTS = [], last30MinMQTTS = [], TotalHotspots = [], TotalOnlines=[], TotalGrays=[];
+			var last1MinMQTTS = [], last10MinMQTTS=[], last20MinMQTTS = [], last30MinMQTTS = [], totalHotspots = [], totalOnlines=[];
 
 			var cpuChartOptions = {
 				animationEnabled: true,
@@ -32,11 +32,11 @@
 			    theme: "light2",
 			    // 標題
 			    title:{
-			      	text: "Hostpot"
+			      	text: "MQTT Status"
 			    },
-			    // Y軸單位
+			    // Y軸設定
 			    axisY: {
-			      	valueFormatString: "#0.#%",
+			      	valueFormatString: "#,###",
 			    },
 			    toolTip: toolTip,
 			    legend: legend,
@@ -44,19 +44,19 @@
 				    // 第一段的設定
 				    {
 				    	// 類型
-						type: "splineArea",
+						type: "line",
 						// 要顯示icon嗎(下面那個標記)
 						showInLegend: "true",
 						// 這個區塊的名稱
-						name: "User",
+						name: "1min",
 						// Y軸小框框顯示的格式
-						yValueFormatString: "#0.#%",
+						yValueFormatString: "",
 						// 顏色
 						color: "#64b5f6",
 						// X軸類型
 						xValueType: "dateTime",
 						// X軸格式
-						xValueFormatString: "DD MMM YY HH:mm",
+						xValueFormatString: "YY-MM-DD HH:mm",
 						// 圖標類型
 						legendMarkerType: "square",
 						// 數據點名稱
@@ -64,37 +64,37 @@
 					},
 				    // 第二段的設定
 				    {
-						type: "splineArea", 
+						type: "line", 
 						showInLegend: "true",
-						name: "System",
-						yValueFormatString: "#0.#%",
+						name: "10min",
+						yValueFormatString: "",
 						color: "#2196f3",
 						xValueType: "dateTime",
-						xValueFormatString: "DD MMM YY HH:mm",
+						xValueFormatString: "YY-MM-DD HH:mm",
 						legendMarkerType: "square",
 						dataPoints: last10MinMQTTS
 				    },
 				    // 第三段的設定
 				    {
-						type: "splineArea", 
+						type: "line", 
 						showInLegend: "true",
-						name: "Wait",
-						yValueFormatString: "#0.#%",
-						color: "#1976d2",
+						name: "20min",
+						yValueFormatString: "",
+						color: "#C678FF",
 						xValueType: "dateTime",
-						xValueFormatString: "DD MMM YY HH:mm",
+						xValueFormatString: "YY-MM-DD HH:mm",
 						legendMarkerType: "square",
 						dataPoints: last20MinMQTTS
 				    },
 				    // 第四段的設定
 				    {
-						type: "splineArea", 
+						type: "line", 
 						showInLegend: "true",
-						name: "Wait",
-						yValueFormatString: "#0.#%",
-						color: "#1976d2",
+						name: "30min",
+						yValueFormatString: "",
+						color: "#FF6EFF",
 						xValueType: "dateTime",
-						xValueFormatString: "DD MMM YY HH:mm",
+						xValueFormatString: "YY-MM-DD HH:mm",
 						legendMarkerType: "square",
 						dataPoints: last30MinMQTTS
 				    }
@@ -104,49 +104,37 @@
 				animationEnabled: true,
 			    theme: "light2",
 			    title:{
-			    	text: "Fimware"
+			    	text: "Hotspot"
 			    },
 			    axisY: {
-			    	suffix: " GB"
+			    	suffix: ""
 			    },
 			    toolTip: toolTip,
 			    legend: legend,
 			    data: [
 				    // 第一段的設定(最高)
 				    {
-				      	type: "splineArea", 
+				      	type: "line", 
 				      	showInLegend: "true",
-				      	name: "Cache",
+				      	name: "Total",
 				      	color: "#e57373",
 				     	xValueType: "dateTime",
-				     	xValueFormatString: "DD MMM YY HH:mm",
-				     	yValueFormatString: "#.## GB",
+				     	xValueFormatString: "YY-MM-DD HH:mm",
+				     	yValueFormatString: "",
 				     	legendMarkerType: "square",
-				      	dataPoints: TotalHotspots
+				      	dataPoints: totalHotspots
 				    },
 				    // 第二段的設定(中間)
 				    {
-						type: "splineArea", 
+						type: "line", 
 						showInLegend: "true",
-						name: "Buffers",
+						name: "Onlines",
 						color: "#f44336",
 						xValueType: "dateTime",
-						xValueFormatString: "DD MMM YY HH:mm",
-						yValueFormatString: "#.## GB",
+						xValueFormatString: "YY-MM-DD HH:mm",
+						yValueFormatString: "",
 						legendMarkerType: "square",
-						dataPoints: TotalOnlines
-				    },
-				    // 第三段的設定(最低)
-				    {
-						type: "splineArea", 
-						showInLegend: "true",
-						name: "Used",
-						color: "#d32f2f",
-						xValueType: "dateTime",
-						xValueFormatString: "DD MMM YY HH:mm",
-						yValueFormatString: "#.## GB",
-						legendMarkerType: "square",
-						dataPoints: TotalGrays
+						dataPoints: totalOnlines
 				    }
 				]
 			};
@@ -155,48 +143,52 @@
 			charts.push(new CanvasJS.Chart("chartContainer1", cpuChartOptions));
 			charts.push(new CanvasJS.Chart("chartContainer2", memoryChartOptions));
 
+			var time = '';
+			var date = '';
 			$.get("https://linxdot-map.v7idea.com/hotspotStatus", function(data) {
 				// 設定資料
-				for (var i = 1; i < data.total; i++) {
+				for (var i = 0; i < data.data.total; i++) {
 					result = data.data.result[i];
+					date = new Date(result.Time);
+					time = date.getTime();
 					// 把資料塞進數據點(?
-					last1MinMQTTS.push({x: parseInt(data[i].Time), y: parseFloat(data[i].Last1MinMQTTS)});
-					last10MinMQTTS.push({x: parseInt(data[i].Time), y: parseFloat(data[i].Last10MinMQTTS)});
-					last20MinMQTTS.push({x: parseInt(data[i].Time), y: parseFloat(data[i].Last20MinMQTTS)});
-					last30MinMQTTS.push({x: parseInt(data[i].Time), y: parseFloat(data[i].Last30MinMQTTS)});
+					totalHotspots.push({x: parseInt(time), y: parseFloat(result.TotalHotspots)});
+					totalOnlines.push({x: parseInt(time), y: parseFloat(result.TotalOnlines)});
 				}
-			
 			});
+
 			$.get("https://linxdot-map.v7idea.com/mqttStatus", function(data) {
 				// 設定資料
-				for (var i = 1; i < data.total; i++) {
+				for (var i = 0; i < data.data.total; i++) {
 					result = data.data.result[i];
-					// 把資料塞進數據點(?
-					last1MinMQTTS.push({x: parseInt(data[i].Time), y: parseFloat(data[i].TotalHotspots)});
-					last10MinMQTTS.push({x: parseInt(data[i].Time), y: parseFloat(data[i].TotalOnlines)});
-					last20MinMQTTS.push({x: parseInt(data[i].Time), y: parseFloat(data[i].TotalGrays)});
-				}
-			
-			});
 
-			for( var i = 0; i < charts.length; i++){
-				charts[i].options.axisX = {
-					labelAngle: 0,
-					crosshair: {
-						enabled: true,
-						snapToDataPoint: true,
-						valueFormatString: "HH:mm"
+					date = new Date(result.Time);
+					time = date.getTime();
+					// 把資料塞進數據點(?
+					last1MinMQTTS.push({x: parseInt(time), y: parseFloat(result.Last1MinMQTTS)});
+					last10MinMQTTS.push({x: parseInt(time), y: parseFloat(result.Last10MinMQTTS)});
+					last20MinMQTTS.push({x: parseInt(time), y: parseFloat(result.Last20MinMQTTS)});
+					last30MinMQTTS.push({x: parseInt(time), y: parseFloat(result.Last30MinMQTTS)});
+				}
+				for( var i = 1; i < charts.length; i++){
+					charts[i].options.axisX = {
+						labelAngle: 0,
+						crosshair: {
+							enabled: true,
+							snapToDataPoint: true,
+							valueFormatString: "HH:mm"
+						}
 					}
 				}
-			}
 
-			// 圖表同步設定(圖表資料, 同步提示框, 同步十字準線, 同步X軸線)
-		    syncCharts(charts, true, true, true);
+				// 圖表同步設定(圖表資料, 同步提示框, 同步十字準線, 同步X軸線)
+			    syncCharts(charts, true, true, true);
 
-		    for( var i = 0; i < charts.length; i++){
-		      	charts[i].render();
-		    }
-
+			    for( var i = 0; i < charts.length; i++){
+			      	charts[i].render();
+			    }
+			});
+				
 			
 			$.get("https://linxdot-map.v7idea.com/getFirmwareStatus", function(data) {
 				var dataPoint = [];
@@ -400,7 +392,7 @@
 		 }
 	</style>
 
-	<div class="uk-grid row" data-uk-grid-margin>
+	<!-- <div class="uk-grid row" data-uk-grid-margin>
         <div class="uk-width-medium-1-2">
             <div class="md-card">
                 <div class="md-card-content">
@@ -417,7 +409,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="uk-grid row" data-uk-grid-margin>
         <div class="uk-width-medium-1-2">
             <div class="md-card">

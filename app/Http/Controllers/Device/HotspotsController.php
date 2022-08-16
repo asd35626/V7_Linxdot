@@ -1439,4 +1439,29 @@ class HotspotsController extends Controller
         }
         return Response::json($responseBody, 200);
     }
+
+    public function updateNickName(Request $request){
+        // init status
+        $responseBody = array(
+          'status' => 0,
+          'errorCode' => '9999',
+          'message' => 'Unknown error.',
+          
+        );
+        // get param
+        $name = $request->input('name', '');
+        $ID = $request->input('ID', '');
+
+        if($responseBody['status'] == 0) {
+            // 更新
+            DimHotspot::on('mysql2')
+                    ->where('id',$ID)
+                    ->update(['OfficalNickName' => $name]);
+            
+            $responseBody['status'] = 0;
+            $responseBody['message'] = 'change success!';
+            $responseBody['errorCode'] = '0000';
+        }
+        return Response::json($responseBody, 200);
+    }
 }

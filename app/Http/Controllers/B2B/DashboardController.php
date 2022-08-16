@@ -5,6 +5,7 @@ use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Controller;
 use App\Model\DimHotspot;
 use Uuid;
+use Response;
 use Carbon\Carbon;
 use App\V7Idea\WebLib;
 use App\V7Idea\GenerateData;
@@ -184,5 +185,30 @@ class DashboardController extends Controller
                     ->with('TOPname', self::$TOPname)
                     ->with('formFields', $formFields)
                     ->with('status', $status);
+    }
+    
+    public function updateNickName(Request $request){
+        // init status
+        $responseBody = array(
+          'status' => 0,
+          'errorCode' => '9999',
+          'message' => 'Unknown error.',
+          
+        );
+        // get param
+        $name = $request->input('name', '');
+        $ID = $request->input('ID', '');
+
+        if($responseBody['status'] == 0) {
+            // 更新
+            DimHotspot::on('mysql2')
+                    ->where('id',$ID)
+                    ->update(['NickName' => $name]);
+            
+            $responseBody['status'] = 0;
+            $responseBody['message'] = 'change success!';
+            $responseBody['errorCode'] = '0000';
+        }
+        return Response::json($responseBody, 200);
     }
 }

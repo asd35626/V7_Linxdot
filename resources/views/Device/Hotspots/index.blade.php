@@ -335,8 +335,8 @@
                             {!! generateHTML('DeviceSN','s/n',$isAsc, $orderBy) !!}
                             {!! generateHTML('MacAddress','lan mac',$isAsc, $orderBy) !!}
                             {!! generateHTML('AnimalName','animal name',$isAsc, $orderBy) !!}
-                            {!! generateHTML('OfficalNickName','offical name',$isAsc, $orderBy) !!}
                             {!! generateHTML('NickName','nick name',$isAsc, $orderBy) !!}
+                            <th class="uk-width-1-10 uk-text-small"></th>
                             {!! generateHTML('Firmware','Version',$isAsc, $orderBy) !!}
                             {!! generateHTML('IssueDate','provision date',$isAsc, $orderBy) !!}
                             {!! generateHTML('ShippedDate','delivery',$isAsc, $orderBy) !!}
@@ -401,8 +401,16 @@
                                     @endif
                                 </td>
                                 <td class="uk-text-small">{{ $object->AnimalName }}</td>
-                                <td class="uk-text-small">{{ $object->OfficalNickName }}</td>
-                                <td class="uk-text-small">{{ $object->NickName }}</td>
+                                <td class="uk-text-small" align="center">
+                                    {{ $object->OfficalNickName }}
+                                    <br>
+                                    @if($object->NickName != null)
+                                        ( {{ $object->NickName }} )
+                                    @endif
+                                </td>
+                                <td class="uk-text-small">
+                                    <span class="material-icons userMOUSE" onclick="showNickName('{{ $object->id }}','{{ $object->NickName }}')">create</span>
+                                </td>
                                 <td class="uk-text-small">
                                     @if(isset($object->Version))
                                         {{ $object->Version->VersionNo }}
@@ -564,6 +572,19 @@
             </div>
         </div>
     {{-- 黑名單 --}}
+
+    {{-- 暱稱 --}}
+    <div class="uk-modal" id="nickname" aria-hidden="true" style="display: none; overflow-y: auto;">
+            <div class="uk-modal-dialog" style="top: 199px;">
+                <p><input type="hidden" id="HID"></p>
+                <div id="nicknamemodal"></div>
+                <div class="uk-modal-footer uk-text-right">
+                    <button type="button" class="md-btn md-btn-flat uk-modal-close">BACK</button>
+                    <button onclick="javascript:updateNickName()" type="button" class="md-btn md-btn-flat md-btn-flat-primary">OK</button>
+                </div>
+            </div>
+        </div>
+    {{-- 暱稱 --}}
 
     <script>
         function search() {
@@ -864,6 +885,68 @@
             }else{
                 marker.style = "background-image: url('/assets/img/pin-green.png')";
             }
+        }
+        // 顯示暱稱編輯畫面
+        function showNickName(id,nickname) {
+            let nicknamemodal = '';
+            var name = '';
+            if(nickname != null && nickname != ""){
+                name = nickname;
+            }
+
+            nicknamemodal += '<div class="parsley-row">';
+            nicknamemodal += '<div class="md-input-wrapper  md-input-filled">';
+            nicknamemodal += '<label for="name">Nick Name</label>';
+            nicknamemodal += '<input id="name" class="md-input label-fixed" name="name" type="text" value="'+name+'">';
+            nicknamemodal += '</div></div>';
+
+            $('#nicknamemodal').html(nicknamemodal);
+            $('#nickname #HID').val(id);
+            UIkit.modal("#nickname").show();
+        }
+
+        // 更新暱稱
+        function updateNickName() {
+            //機器ID
+            let HID = $('#nickname #HID').val();
+            //會員ID
+            let name = $('#nickname #name').val();
+            $.ajax({
+                url: '/api/v1/UpdateNickName',
+                type: 'POST',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : { 
+                    'ID' : HID,
+                    'name' : name,
+                },
+                success: function(response) {
+                    if(response.status == 0){
+                        // hideen the button
+                        UIkit.modal.alert('更新成功！')
+                        window.location.reload();
+                    }else{
+                        UIkit.modal.alert('更新失敗！').on('hide.uk.modal', function() {
+                            // custome js code
+                            console.log('close');
+                        });
+                        // console.log(response.message);
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log('error');
+                    UIkit.modal.alert('更新失敗！(error)').on('hide.uk.modal', function() {
+                        // custome js code
+                        console.log('close');
+                    });
+                },
+                complete: function () {
+                    UIkit.modal("#nickname").hide();
+                },
+                cache: false
+            });
         }
     </script>
 

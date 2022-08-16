@@ -563,6 +563,50 @@
             $('#nickname #HID').val(id);
             UIkit.modal("#nickname").show();
         }
+
+        // 更新暱稱
+        function updateNickName() {
+            //機器ID
+            let HID = $('#nickname #HID').val();
+            //會員ID
+            let name = $('#nickname #name').val();
+            $.ajax({
+                url: '/api/v1/B2BUpdateNickName',
+                type: 'POST',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : { 
+                    'ID' : HID,
+                    'name' : name,
+                },
+                success: function(response) {
+                    if(response.status == 0){
+                        // hideen the button
+                        UIkit.modal.alert('更新成功！')
+                        window.location.reload();
+                    }else{
+                        UIkit.modal.alert('更新失敗！').on('hide.uk.modal', function() {
+                            // custome js code
+                            console.log('close');
+                        });
+                        // console.log(response.message);
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log('error');
+                    UIkit.modal.alert('更新失敗！(error)').on('hide.uk.modal', function() {
+                        // custome js code
+                        console.log('close');
+                    });
+                },
+                complete: function () {
+                    UIkit.modal("#nickname").hide();
+                },
+                cache: false
+            });
+        }
     </script>
 
     <?php 

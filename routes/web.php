@@ -43,6 +43,10 @@ Route::group(['prefix' => 'api/v1'],function () {
     Route::post('updateUID', 'Device\HotspotsController@updateUID');
     // 更改黑名單狀態
     Route::post('updateIsBlack', 'Device\HotspotsController@updateIsBlack');
+    // 更改暱稱
+    Route::post('B2BUpdateNickName', 'B2B\DashboardController@updateNickName');
+    // 更改暱稱
+    Route::post('UpdateNickName', 'Device\HotspotsController@updateNickName');
     // 顯示上傳清單
     Route::post('WarehouseInventoryDetail', 'Inventory\ShippedStatusExcelController@WarehouseInventoryDetail');
 });
