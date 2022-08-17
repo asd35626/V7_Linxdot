@@ -335,7 +335,7 @@
                             {!! generateHTML('DeviceSN','s/n',$isAsc, $orderBy) !!}
                             {!! generateHTML('MacAddress','lan mac',$isAsc, $orderBy) !!}
                             {!! generateHTML('AnimalName','animal name',$isAsc, $orderBy) !!}
-                            {!! generateHTML('NickName','nick name',$isAsc, $orderBy) !!}
+                            {!! generateHTML('OfficalNickName','nick name',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small"></th>
                             {!! generateHTML('Firmware','Version',$isAsc, $orderBy) !!}
                             {!! generateHTML('IssueDate','provision date',$isAsc, $orderBy) !!}

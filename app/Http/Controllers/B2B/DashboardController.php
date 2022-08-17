@@ -146,9 +146,10 @@ class DashboardController extends Controller
             // 表示會需要參考搜尋的變數
             if($search != '') {
                 $data= $data->where(function($query) use ($search,$newMacAddress) {
-                    $query->where('DeviceSN', 'like', '%'.$search.'%' )
+                    $query->orwhere('DeviceSN', 'like', '%'.$search.'%' )
                         ->orwhere('AnimalName', 'like', '%'.$search.'%' )
-                        ->orwhere('MacAddress', 'like', '%'.$newMacAddress.'%' );
+                        ->orwhere('MacAddress', 'like', '%'.$newMacAddress.'%' )
+                        ->orwhere('OfficalNickName', 'like', '%'.$searchArray['keywords'].'%' );
                 });
                 $pageNo = 1;
                 $IfSearch = 0;
@@ -186,7 +187,7 @@ class DashboardController extends Controller
                     ->with('formFields', $formFields)
                     ->with('status', $status);
     }
-    
+
     public function updateNickName(Request $request){
         // init status
         $responseBody = array(

@@ -789,7 +789,8 @@ class HotspotsController extends Controller
             $data= $data->where(function($query) use ($searchArray) {
                 if($searchArray['keywords'] != '') {
                     $query->orwhere('DeviceSN', 'like', '%'.$searchArray['keywords'].'%' )
-                        ->orwhere('AnimalName', 'like', '%'.$searchArray['keywords'].'%' );
+                        ->orwhere('AnimalName', 'like', '%'.$searchArray['keywords'].'%' )
+                        ->orwhere('OfficalNickName', 'like', '%'.$searchArray['keywords'].'%' );
                 }
                 if($searchArray['Mac'] != '') {
                     $query->orwhere('MacAddress', 'like', '%'.$searchArray['Mac'].'%' );
