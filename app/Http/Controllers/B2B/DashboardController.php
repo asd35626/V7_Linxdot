@@ -149,7 +149,7 @@ class DashboardController extends Controller
                     $query->orwhere('DeviceSN', 'like', '%'.$search.'%' )
                         ->orwhere('AnimalName', 'like', '%'.$search.'%' )
                         ->orwhere('MacAddress', 'like', '%'.$newMacAddress.'%' )
-                        ->orwhere('OfficalNickName', 'like', '%'.$search.'%' );
+                        ->orwhere('NickName', 'like', '%'.$search.'%' );
                 });
                 $pageNo = 1;
                 $IfSearch = 0;
