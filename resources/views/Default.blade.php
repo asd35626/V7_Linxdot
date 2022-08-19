@@ -392,7 +392,7 @@
 		 }
 	</style>
 
-	<!-- <div class="uk-grid row" data-uk-grid-margin>
+	<div class="uk-grid row" data-uk-grid-margin>
         <div class="uk-width-medium-1-2">
             <div class="md-card">
                 <div class="md-card-content">
@@ -409,7 +409,7 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
     <div class="uk-grid row" data-uk-grid-margin>
         <div class="uk-width-medium-1-2">
             <div class="md-card">
