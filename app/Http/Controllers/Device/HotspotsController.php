@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Controller;
 use App\Model\DimHotspot;
+use App\Model\HotspotBlackLog;
 use App\Model\DimUser;
 use Uuid;
 use Response;
@@ -1430,6 +1431,11 @@ class HotspotsController extends Controller
             DimHotspot::on('mysql2')
                     ->where('id',$ID)
                     ->update(['IsBackMemo' => $IsBackMemo,
+                        'IsBlack' => $IsBlack,
+                        'IsBlackBy' => WebLib::getCurrentUserID(),
+                        'IsBlackDate' => Carbon::now('Asia/Taipei')->toDateTimeString()]);
+            HotspotBlackLog::on('mysql2')
+                    ->create(['IsBackMemo' => $IsBackMemo,
                         'IsBlack' => $IsBlack,
                         'IsBlackBy' => WebLib::getCurrentUserID(),
                         'IsBlackDate' => Carbon::now('Asia/Taipei')->toDateTimeString()]);
