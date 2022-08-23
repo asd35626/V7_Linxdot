@@ -473,7 +473,7 @@
                                                             回報問題 --}}
                                                             {{-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> --}}
                                                             {{-- 黑名單 --}}
-                                                            <li><a onclick="showBlack('{{ $object->IsBlack }}','{{ $object->IsBackMemo }}','{{ $object->id }}')">Black</a></li>
+                                                            <li><a onclick="showBlack('{{ $object->IsBlack }}','{{ $object->IsBackMemo }}','{{ $object->MacAddress }}')">Black</a></li>
                                                             {{-- <li><a href="#">Device heartbeat</a></li> --}}
                                                             {{-- 會員 --}}
                                                             <li><a onclick="showUserList('{{ $object->$primaryKey }}')">User</a></li>
@@ -696,7 +696,7 @@
         }
 
         // 顯示黑名單
-        function showBlack(black,memo,hid) {
+        function showBlack(black,memo,MacAddress) {
             let blackmodal = '';
             var blackmemo = '';
             if(memo != null && memo != ""){
@@ -729,7 +729,7 @@
             blackmodal += '</div></div>';
 
             $('#blackmodal').html(blackmodal);
-            $('#black #HID').val(hid);
+            $('#black #HID').val(MacAddress);
             UIkit.modal("#black").show();
         }
 
@@ -799,7 +799,7 @@
             // memo
             let IsBackMemo = $('#black #blackmemo').val();
             // 機器ID
-            let HID = $('#black #HID').val();
+            let MacAddress = $('#black #HID').val();
 
             $.ajax({
                 url: '/api/v1/updateIsBlack',
@@ -811,7 +811,7 @@
                 data : { 
                     'IsBackMemo' : IsBackMemo,
                     'IsBlack' : IsBlack,
-                    'ID' : HID
+                    'MacAddress' : MacAddress
                 },
                 success: function(response) {
                     if(response.status == 0){

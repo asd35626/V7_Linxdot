@@ -13,6 +13,7 @@ class HotspotBlackLog extends Model
     public $timestamps = false;
     protected $fillable = [
       'id',
+      'MacAddress',
       'IsBlack',
       'IsBackMemo',
       'IsBlackBy',

@@ -1423,19 +1423,20 @@ class HotspotsController extends Controller
         // get param
         $IsBackMemo = $request->input('IsBackMemo', '');
         $IsBlack = $request->input('IsBlack', '');
-        $ID = $request->input('ID', '');
+        $MacAddress = $request->input('MacAddress', '');
         // dd($IsBackMemo, $IsBlack,$ID);
 
         if($responseBody['status'] == 0) {
             // 更新
             DimHotspot::on('mysql2')
-                    ->where('id',$ID)
+                    ->where('MacAddress',$MacAddress)
                     ->update(['IsBackMemo' => $IsBackMemo,
                         'IsBlack' => $IsBlack,
                         'IsBlackBy' => WebLib::getCurrentUserID(),
                         'IsBlackDate' => Carbon::now('Asia/Taipei')->toDateTimeString()]);
             HotspotBlackLog::on('mysql2')
-                    ->create(['IsBackMemo' => $IsBackMemo,
+                    ->create(['MacAddress' => $MacAddress,
+                        'IsBackMemo' => $IsBackMemo,
                         'IsBlack' => $IsBlack,
                         'IsBlackBy' => WebLib::getCurrentUserID(),
                         'IsBlackDate' => Carbon::now('Asia/Taipei')->toDateTimeString()]);
