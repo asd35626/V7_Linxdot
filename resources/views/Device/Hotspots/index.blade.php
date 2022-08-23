@@ -377,7 +377,7 @@
                                     @if($object->IsBlack == 1)
                                         <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}" style="color:#FF5959;">{{ $object->DeviceSN }}</a>
                                         <br>{{ $object->IsBackMemo }}
-                                        <a onclick="showBlack('{{ $object->IsBlack }}','{{ $object->IsBackMemo }}','{{ $object->id }}')">
+                                        <a onclick="showBlack('{{ $object->IsBlack }}','{{ $object->IsBackMemo }}','{{ $object->MacAddress }}')">
                                             <span class="material-icons" style="color:#AA3333;font-size:14px;"> build </span>
                                         </a>
                                     @else
