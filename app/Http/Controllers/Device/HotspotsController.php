@@ -764,6 +764,7 @@ class HotspotsController extends Controller
         }else{
             $pageNo = 1;
         }
+        // dd($pageNo);
 
         // $data = DimHotspot::where('IfDelete','0');
         $now = Carbon::now('Asia/Taipei')->subHours(8)->subMinutes(30)->toDateTimeString();
@@ -1412,6 +1413,7 @@ class HotspotsController extends Controller
         }
         return $list;
     }
+
     public function updateIsBlack(Request $request){
         // init status
         $responseBody = array(
@@ -1469,6 +1471,117 @@ class HotspotsController extends Controller
             $responseBody['status'] = 0;
             $responseBody['message'] = 'change success!';
             $responseBody['errorCode'] = '0000';
+        }
+        return Response::json($responseBody, 200);
+    }
+
+    public function getOnlineTime(Request $request){
+        // init status
+        $responseBody = array(
+          'status' => 0,
+          'errorCode' => '9999',
+          'message' => 'Unknown error.',
+        );
+
+        $pageNumEachPage = 100;                             // 每頁的基本資料量
+        $pageNo = (int) $request->input('Page', '1');       // 目前的頁碼
+        $IsNewSearch = $request->input('IfNewSearch', '');  // 是否為新開始搜尋
+        $IfSearch = $request->input('IfSearch', '');        // 是否為搜尋
+        $orderBy = $request->input('orderBy', '');          // 排序欄位
+        $status = $request->input('status', '');            // 是否檢查onlin
+        $isAsc = $request->input('isAsc', '');              // 是否順序排序
+
+        // 查詢條件
+        $keywords = $request->input('keywords', '');
+        $IsVerify = $request->input('IsVerify', '');
+        $IfRegister = $request->input('IfRegister', '');
+        $IssueDateFrom = $request->input('IssueDateFrom', '');
+        $IssueDateTo = $request->input('IssueDateTo', '');
+        $VerifyDateFrom = $request->input('VerifyDateFrom', '');
+        $VerifyDateTo = $request->input('VerifyDateTo', '');
+        if($IsNewSearch != '1') {
+            Paginator::currentPageResolver(function () use ($pageNo) {
+                return $pageNo;
+            });
+            if($pageNo == 0){
+                $pageNo = 1;
+            }
+        }else{
+            $pageNo = 1;
+        }
+        // dd($pageNo);
+        $now = Carbon::now('Asia/Taipei')->subHours(8)->subMinutes(30)->toDateTimeString();
+
+        if($status == 1){
+            $data = DimHotspot::where('IfDelete','0')->where('LastUpdateOnLineTime', '>=' ,$now);
+        }else{
+            $data = DimHotspot::where('IfDelete','0');
+        }
+
+
+        if ($IfSearch == '1') {
+            // 表示會需要參考搜尋的變數
+            $searchArray = array(
+                'keywords' => $keywords,
+                'Mac' => strtolower(str_replace("-",":",$keywords)),
+                'IsVerify' => $IsVerify,
+                'IfRegister' => $IfRegister,
+                'IssueDateFrom' => $IssueDateFrom,
+                'IssueDateTo' => $IssueDateTo,
+                'VerifyDateFrom' => $VerifyDateFrom,
+                'VerifyDateTo' => $VerifyDateTo,
+            );
+
+            $data= $data->where(function($query) use ($searchArray) {
+                if($searchArray['keywords'] != null) {
+                    $query->orwhere('DeviceSN', 'like', '%'.$searchArray['keywords'].'%' )
+                        ->orwhere('AnimalName', 'like', '%'.$searchArray['keywords'].'%' )
+                        ->orwhere('OfficalNickName', 'like', '%'.$searchArray['keywords'].'%' );
+                }
+                if($searchArray['Mac'] != null) {
+                    $query->orwhere('MacAddress', 'like', '%'.$searchArray['Mac'].'%' );
+                }
+                if($searchArray['IsVerify'] != null) {
+                    $query->where('IsVerify', $searchArray['IsVerify']);
+                }
+                if($searchArray['IfRegister'] != null) {
+                    $query->where('IfRegister', $searchArray['IfRegister']);
+                }
+                if ($searchArray['IssueDateFrom'] != null) {
+                    $query->where('IssueDate', '>=', ($searchArray['IssueDateFrom'] . ' 00:00:00'));
+                }
+                if ($searchArray['IssueDateTo'] != null) {
+                    $query->where('IssueDate', '<=', ( $searchArray['IssueDateTo'] . ' 23:59:59'));
+                }
+                if ($searchArray['VerifyDateFrom'] != null) {
+                    $query->where('IfVerifyDate', '>=', ($searchArray['VerifyDateFrom'] . ' 00:00:00'));
+                }
+                if ($searchArray['VerifyDateTo'] != null) {
+                    $query->where('IfVerifyDate', '<=', ( $searchArray['VerifyDateTo'] . ' 23:59:59'));
+                }
+            });
+        }
+        //排序
+        if(isset($orderBy) && $orderBy != null && $orderBy != ''){
+            if($isAsc == '1'){
+                $data = $data->orderBy($orderBy, 'ASC');
+            }else{
+                $data = $data->orderBy($orderBy, 'DESC');
+            }
+        }else{
+            $data = $data->orderBy('CreateDate');
+        }
+
+        // 分頁
+        $data = $data->paginate($pageNumEachPage);
+
+        // dd($pageNumEachPage,$pageNo,$IsNewSearch,$IfSearch,$orderBy,$status,$isAsc);
+
+        if($responseBody['status'] == 0) {
+            $responseBody['status'] = 0;
+            $responseBody['message'] = 'change success!';
+            $responseBody['errorCode'] = '0000';
+            $responseBody['data'] = $data;
         }
         return Response::json($responseBody, 200);
     }

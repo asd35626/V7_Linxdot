@@ -319,6 +319,9 @@
                 <div class="uk-width-1-10" style="float:right">
                     <button type="submit" onclick="window.location.href='{{ route( $routePath.'.create') }}';" class="md-btn md-btn-primary">Add</button>
                 </div>
+                <!-- <div class="uk-width-1-10" style="float:right">
+                    <button type="submit" onclick="updateonline()" class="md-btn md-btn-primary">Refresh</button>
+                </div> -->
                 <div class="" style="margin:0;padding:0;" align="right">
                     @if($status == 1)
                         <input type="checkbox" data-switchery checked id="statuscheck" name="statuscheck"/>
@@ -362,17 +365,17 @@
                                             $minutes += $time->i;
                                             if($minutes <= 30){
                                                 $online = 1;
-                                                print('<span class="material-icons" style="color:#59BBBC;font-size:14px;"> circle </span>');
+                                                print('<span class="material-icons" style="color:#59BBBC;font-size:14px;" id="online_'.$object->MacAddress.'"> circle </span>');
                                             }else{
                                                 $online = 0;
-                                                print('<span class="material-icons" style="color:#FF5959;font-size:14px;"> circle </span>');
+                                                print('<span class="material-icons" style="color:#FF5959;font-size:14px;" id="online_'.$object->MacAddress.'"> circle </span>');
                                             }
                                         ?>
                                     @else
                                         <?php
                                             $online = 0;
                                         ?>
-                                        <span class="material-icons" style="color:#FF5959;font-size:14px;"> circle </span>
+                                        <span class="material-icons" style="color:#FF5959;font-size:14px;" id="online_{{$object->MacAddress}}" > circle </span>
                                     @endif
                                     @if($object->IsBlack == 1)
                                         <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}" style="color:#FF5959;">{{ $object->DeviceSN }}</a>
@@ -385,7 +388,7 @@
                                     @endif
                                     
                                 </td>
-                                <td class="uk-text-small">
+                                <td class="uk-text-small" id="MAC_{{ $object->MacAddress }}">
                                     @if(isset($object->CurrentMacAddress))
                                         @if($object->CurrentMacAddress != $object->MacAddress)
                                             {{ $object->MacAddress }}<br>
@@ -788,7 +791,7 @@
 
         // 更新黑名單狀態
         function updateBlack() {
-        // 狀態
+            // 狀態
             let IsBlack = 0;
             var checked = document.getElementById("Black_1").checked;
             if(checked){
@@ -835,7 +838,6 @@
                 cache: false
             });
         }
-
 
         function map(lng,lat,online){
             mapboxgl.accessToken = 'pk.eyJ1IjoiYXNkMzU2MjYiLCJhIjoiY2w0cDdlNDk2MDd2ZTNlbWpycnNrdW0wcCJ9._Q--d12cdqSM5jAdabU08w';
@@ -886,6 +888,7 @@
                 marker.style = "background-image: url('/assets/img/pin-green.png')";
             }
         }
+
         // 顯示暱稱編輯畫面
         function showNickName(id,nickname) {
             let nicknamemodal = '';
@@ -947,6 +950,99 @@
                 },
                 cache: false
             });
+        }
+
+        setInterval(function(){
+            let page = $('#Page').val();
+            let IfNewSearch = $('#IfNewSearch').val();
+            let IfSearch = $('#IfSearch').val();
+            let orderBy = $('#orderBy').val();
+            let isAsc = $('#isAsc').val();
+            let status = $('#status').val();
+            var keywords = $('#keywords').val();
+            var IsVerify = $('#IsVerify').val();
+            var IfRegister = $('#IfRegister').val();
+            var IssueDateFrom = $('#IssueDateFrom').val();
+            var IssueDateTo = $('#IssueDateTo').val();
+            var VerifyDateFrom = $('#VerifyDateFrom').val();
+            var VerifyDateTo = $('#VerifyDateTo').val();
+            // alert(123);
+
+            // var mactext = document.getElementById('MAC_'+mac)
+            // mactext.innerText = "123";
+            // var onlincolor = document.getElementById('online_'+mac)
+            // onlincolor.style.color = "#000000";
+            $.ajax({
+                url: '/api/v1/GetOnlineTime',
+                type: 'POST',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : { 
+                    'page' : page,
+                    'IfNewSearch' : IfNewSearch,
+                    'IfSearch' : IfSearch,
+                    'orderBy' : orderBy,
+                    'isAsc' : isAsc,
+                    'status' : status,
+                    'keywords' : keywords,
+                    'IsVerify' : IsVerify,
+                    'IfRegister' : IfRegister,
+                    'IssueDateFrom' : IssueDateFrom,
+                    'IssueDateTo' : IssueDateTo,
+                    'VerifyDateFrom' : VerifyDateFrom,
+                    'VerifyDateTo' : VerifyDateTo,
+                },
+                success: function(response) {
+                    if(response.status == 0){
+                        var onlincolor = '';
+                        var mac = '';
+                        let lastOnLineTime = "";
+                        let currentDate = "";
+                        let limit = 30 * 60 * 1000;
+                        let getTime = "";
+                        let offset = "";
+                        response.data.data.forEach(element => {
+                            // alert(element.MacAddress);
+                            mac = element.MacAddress;
+                            onlincolor = document.getElementById('online_'+mac);
+                            if(onlincolor != null){
+                                // onlincolor.style.color = "#59BBBC";
+                                console.log(mac);
+                                if(element.LastUpdateOnLineTime != null){
+                                    // 現在時間
+                                    currentDate = new Date();
+                                    // 處理取出的lastOnLineTime
+                                    lastOnLineTime = element.LastUpdateOnLineTime;
+                                    lastOnLineTime = new Date(lastOnLineTime.replace(/-/g,"/"));
+                                    getTime = lastOnLineTime.getTime();
+                                    // 計算時間差
+                                    offset = currentDate.getTime() - getTime
+                                    if(offset <= limit){
+                                        onlincolor.style.color = "#59BBBC"
+                                    }else{
+                                        onlincolor.style.color = "#FF5959"
+                                    }
+                                }else{
+                                    onlincolor.style.color = "#FF5959";
+                                }
+                            }
+                                
+                        });
+                        // UIkit.modal.alert('更新成功！')
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log('error');
+                },
+                cache: false
+            });
+        },300000)
+
+        // 更新online狀態
+        function updateonline() {
+            
         }
     </script>
 
