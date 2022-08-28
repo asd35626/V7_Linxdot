@@ -49,6 +49,10 @@ Route::group(['prefix' => 'api/v1'],function () {
     Route::post('UpdateNickName', 'Device\HotspotsController@updateNickName');
     // 取得onlinetime
     Route::post('GetOnlineTime', 'Device\HotspotsController@getOnlineTime');
+    // Block
+    Route::post('Block', 'Device\HotspotsController@block');
+    // 回報問題
+    Route::post('UpdateIssue', 'Device\HotspotsController@updateIssue');
     // 顯示上傳清單
     Route::post('WarehouseInventoryDetail', 'Inventory\ShippedStatusExcelController@WarehouseInventoryDetail');
 });

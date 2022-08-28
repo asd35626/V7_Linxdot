@@ -207,6 +207,63 @@
                 }
             });
         }
+
+        function block(MAC){
+            $.ajax({
+                url: '/api/v1/Block',
+                type: 'POST',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : { 
+                    'MAC' : MAC
+                },
+                success: function(response) {
+                    if(response.status == 0){
+                        alert('Successfully');
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log('error');
+                },
+                cache: false
+            });
+
+            // var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
+            // $.ajax({
+            //     type: "POST",
+            //     url:"https://linxdotapi.v7idea.com/resetMAC",
+            //     data:{
+            //         mac: MAC 
+            //     },
+            //     timeout: 0,
+            //     success: function(response){
+            //         modal.hide();
+            //         // alert(response);
+            //         if(response.status == 0){
+            //             alert('MAC Reset Successfully');
+            //         }else{
+            //             alert(response.errorMessage);
+            //         }
+            //     },
+            //     error : function(xhr, ajaxOptions, thrownError){
+            //         modal.hide();
+            //         canSendGift = true;
+            //         switch (xhr.status) {
+            //             case 422:
+            //                 if(check()){
+            //                 // grecaptcha.reset();
+            //                     alert("Error(422)");
+            //                 }
+            //             break;
+            //             default:
+            //               // grecaptcha.reset();
+            //               alert('server error');
+            //         }
+            //     }
+            // });
+        }
     </script>
 @endsection
 
@@ -249,15 +306,6 @@
                                         <div class="uk-width-1-3">
                                             {!! $searchFields['keywords']['completeField'] !!}
                                         </div>
-                                        <!-- <div class="uk-width-1-3">
-                                            {!! $searchFields['S/N']['completeField'] !!}
-                                        </div>
-                                        <div class="uk-width-1-3">
-                                            {!! $searchFields['Mac']['completeField'] !!}
-                                        </div>
-                                        <div class="uk-width-1-3">
-                                            {!! $searchFields['AnimalName']['completeField'] !!}
-                                        </div> -->
                                     </div>
                                     <div class="uk-grid">
                                         <div class="uk-width-1-3">
@@ -265,6 +313,9 @@
                                         </div>
                                         <div class="uk-width-1-3">
                                             {!! $searchFields['IfRegister']['completeField'] !!}
+                                        </div>
+                                        <div class="uk-width-1-3">
+                                            {!! $searchFields['ModelID']['completeField'] !!}
                                         </div>
                                     </div>
                                     <div class="uk-grid">
@@ -336,6 +387,7 @@
                     <thead>
                         <tr>
                             {!! generateHTML('DeviceSN','s/n',$isAsc, $orderBy) !!}
+                            {!! generateHTML('ModelName','model',$isAsc, $orderBy) !!}
                             {!! generateHTML('MacAddress','lan mac',$isAsc, $orderBy) !!}
                             {!! generateHTML('AnimalName','animal name',$isAsc, $orderBy) !!}
                             {!! generateHTML('OfficalNickName','nick name',$isAsc, $orderBy) !!}
@@ -348,7 +400,9 @@
                     </thead>
                     @if($data->count() > 0)
                         @foreach ($data as $object)
-                            @if($object->IsBlack == 1)
+                            @if($object->IsBlocked == 1)
+                                <tr style="color:#CC9999;background: #333366">
+                            @elseif($object->IsBlack == 1)
                                 <tr style="color:#FF5959;">
                             @else
                                 <tr>
@@ -377,7 +431,17 @@
                                         ?>
                                         <span class="material-icons" style="color:#FF5959;font-size:14px;" id="online_{{$object->MacAddress}}" > circle </span>
                                     @endif
-                                    @if($object->IsBlack == 1)
+                                    @if($object->IsBlocked == 1)
+                                        @if($object->IsBlack == 1)
+                                            <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}" style="color:#CC9999;">{{ $object->DeviceSN }}</a>
+                                            <br>{{ $object->IsBackMemo }}
+                                            <a onclick="showBlack('{{ $object->IsBlack }}','{{ $object->IsBackMemo }}','{{ $object->MacAddress }}')">
+                                                <span class="material-icons" style="color:#AA3333;font-size:14px;"> build </span>
+                                            </a>
+                                        @else
+                                            <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}" style="color:#CC9999;">{{ $object->DeviceSN }}</a>
+                                        @endif
+                                    @elseif($object->IsBlack == 1)
                                         <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}" style="color:#FF5959;">{{ $object->DeviceSN }}</a>
                                         <br>{{ $object->IsBackMemo }}
                                         <a onclick="showBlack('{{ $object->IsBlack }}','{{ $object->IsBackMemo }}','{{ $object->MacAddress }}')">
@@ -387,6 +451,9 @@
                                         <a href="{{ route($routePath.'.edit',$object->$primaryKey) }}" style="color:#444444;">{{ $object->DeviceSN }}</a>
                                     @endif
                                     
+                                </td>
+                                <td class="uk-text-small" id="MAC_{{ $object->MacAddress }}">
+                                    {{ $object->ModelName }}
                                 </td>
                                 <td class="uk-text-small" id="MAC_{{ $object->MacAddress }}">
                                     @if(isset($object->CurrentMacAddress))
@@ -472,9 +539,10 @@
                                                             {{-- 更新分位 --}}
                                                             <li><a onclick="Upgradefirmware('{{ $object->MacAddress }}')">Upgrade firmware</a></li>
                                                             {{-- <li><a href="#">Restart miner</a></li>
-                                                            <li><a href="#">Trigger fast sync</a></li>
-                                                            回報問題 --}}
-                                                            {{-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> --}}
+                                                            <li><a href="#">Trigger fast sync</a></li> --}}
+                                                            {{-- 回報問題 --}}
+                                                            <!-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> -->
+                                                            {{-- <li><a onclick="showIssue('{{ $object->AnimalName }}','{{ $object->DeviceSN }}','{{ $object->MacAddress }}')">Report issue</a></li> --}}
                                                             {{-- 黑名單 --}}
                                                             <li><a onclick="showBlack('{{ $object->IsBlack }}','{{ $object->IsBackMemo }}','{{ $object->MacAddress }}')">Black</a></li>
                                                             {{-- <li><a href="#">Device heartbeat</a></li> --}}
@@ -492,6 +560,8 @@
                                                             @endif
                                                             {{-- helium explorer --}}
                                                             <li><a href="https://explorer.helium.com/hotspots/{{ $object->OnBoardingKey }}" target="_blank">Helium Explorer</a></li>
+                                                            {{-- block --}}
+                                                            <li><a  onclick="block('{{ $object->MacAddress }}')">block</a></li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -553,40 +623,90 @@
 
     {{-- ReverseSSH --}}
     <div class="uk-modal" id="reverseSSH" aria-hidden="true" style="display: none; overflow-y: auto;">
-            <div class="uk-modal-dialog" style="top: 199px;">
-                <p><input type="hidden" id="HID"></p>
-                <div id="ReverseSSH"></div>
-                <div class="uk-modal-footer uk-text-right">
-                    <button type="button" class="md-btn md-btn-primary uk-modal-close">OK</button>
-                </div>
+        <div class="uk-modal-dialog" style="top: 199px;">
+            <p><input type="hidden" id="HID"></p>
+            <div id="ReverseSSH"></div>
+            <div class="uk-modal-footer uk-text-right">
+                <button type="button" class="md-btn md-btn-primary uk-modal-close">OK</button>
             </div>
         </div>
+    </div>
     {{-- ReverseSSH --}}
+
+    {{-- 回報問題 --}}
+    <div class="uk-modal" id="issue">
+        <div class="uk-modal-dialog">
+            <div class="uk-modal-header" style="background:#45B7C4;margin-top:-25px;height:50px;display:flex;align-items:center;">
+                <h3 align="center" valign="center" style="color:#E8F6F8">Report issue</h3>
+            </div>
+            <div>
+                <p><input type="hidden" id="MAC"></p>
+                <p><input type="hidden" id="SN"></p>
+                <div class="large-padding">
+                    <h3 class="heading_a" style="padding-left: 0px;">Device Information</h3>
+                    <div class="uk-grid" data-uk-grid-margin>
+                        <div class="uk-width-medium-1-2">
+                            {!! $formFields['DeviceSN']['completeField']  !!}
+                        </div>
+                        <div class="uk-width-medium-1-2">
+                            {!! $formFields['MacAddress']['completeField']  !!}
+                        </div>
+                    </div>
+                    <div class="uk-grid" data-uk-grid-margin>
+                        <div class="uk-width-medium-1-1">
+                            {!! $formFields['AnimalName']['completeField']  !!}
+                        </div>
+                    </div>
+                    <h3 class="heading_a" style="padding-left: 0px;">Issue</h3>
+                    <div class="uk-grid" data-uk-grid-margin>
+                        <div class="uk-width-medium-1-1">
+                            {!! $formFields['Subject']['completeField']  !!}
+                        </div>
+                    </div>
+                    <div class="uk-grid" data-uk-grid-margin>
+                        <div class="uk-width-medium-1-1" style="width: 100%">
+                            {!! $formFields['Description']['completeField']  !!}
+                        </div>
+                    </div>
+                    <div>
+                        <div class="uk-width-1-1 uk-modal-footer">
+                            <button type="button" class="md-btn md-btn-primary" onclick="updateIssue()">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- <div class="uk-modal-footer uk-text-center">
+                <button type="button" class="md-btn md-btn-flat md-btn-flat-primary" style="background:#45B7C4;color:#E8F6F8 ">Submit</button>
+            </div> --}}
+        </div>
+    </div>
+    {{-- 回報問題 --}}
 
     {{-- 黑名單 --}}
     <div class="uk-modal" id="black" aria-hidden="true" style="display: none; overflow-y: auto;">
-            <div class="uk-modal-dialog" style="top: 199px;">
-                <p><input type="hidden" id="HID"></p>
-                <div id="blackmodal"></div>
-                <div class="uk-modal-footer uk-text-right">
-                    <button type="button" class="md-btn md-btn-flat uk-modal-close">BACK</button>
-                    <button onclick="javascript:updateBlack()" type="button" class="md-btn md-btn-flat md-btn-flat-primary">OK</button>
-                </div>
+        <div class="uk-modal-dialog" style="top: 199px;">
+            <p><input type="hidden" id="HID"></p>
+            <div id="blackmodal"></div>
+            <div class="uk-modal-footer uk-text-right">
+                <button type="button" class="md-btn md-btn-flat uk-modal-close">BACK</button>
+                <button onclick="javascript:updateBlack()" type="button" class="md-btn md-btn-flat md-btn-flat-primary">OK</button>
             </div>
         </div>
+    </div>
     {{-- 黑名單 --}}
 
     {{-- 暱稱 --}}
     <div class="uk-modal" id="nickname" aria-hidden="true" style="display: none; overflow-y: auto;">
-            <div class="uk-modal-dialog" style="top: 199px;">
-                <p><input type="hidden" id="HID"></p>
-                <div id="nicknamemodal"></div>
-                <div class="uk-modal-footer uk-text-right">
-                    <button type="button" class="md-btn md-btn-flat uk-modal-close">BACK</button>
-                    <button onclick="javascript:updateNickName()" type="button" class="md-btn md-btn-flat md-btn-flat-primary">OK</button>
-                </div>
+        <div class="uk-modal-dialog" style="top: 199px;">
+            <p><input type="hidden" id="HID"></p>
+            <div id="nicknamemodal"></div>
+            <div class="uk-modal-footer uk-text-right">
+                <button type="button" class="md-btn md-btn-flat uk-modal-close">BACK</button>
+                <button onclick="javascript:updateNickName()" type="button" class="md-btn md-btn-flat md-btn-flat-primary">OK</button>
             </div>
         </div>
+    </div>
     {{-- 暱稱 --}}
 
     <script>
@@ -695,7 +815,6 @@
                 },
                 cache: false
             });
-
         }
 
         // 顯示黑名單
@@ -734,6 +853,58 @@
             $('#blackmodal').html(blackmodal);
             $('#black #HID').val(MacAddress);
             UIkit.modal("#black").show();
+        }
+
+        // 顯示回報問題
+        function showIssue(name,sn,mac) {
+            $('#issue #AnimalName').val(name);
+            $('#issue #DeviceSN').val(sn);
+            $('#issue #MacAddress').val(mac);
+            $('#issue #MAC').val(mac);
+            $('#issue #SN').val(sn);
+            UIkit.modal("#issue").show();
+        }
+        // 顯示回報問題
+        function updateIssue() {
+            var mac = $('#issue #MAC').val();
+            var sn = $('#issue #SN').val();
+            var Subject = $('#issue #Subject').val();
+            var Description = $('#issue #Description').val();
+
+            $.ajax({
+                url: '/api/v1/updateIssue',
+                type: 'POST',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : { 
+                    'MAC' : mac,
+                    'SN' : sn,
+                    'Subject' : Subject,
+                    'Description' : Description,
+                },
+                success: function(response) {
+                    if(response.status == 0){
+                        // hideen the button
+                        UIkit.modal.alert('success!');
+                        window.location.reload();
+                    }else{
+                        UIkit.modal.alert(response.message)
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log('error');
+                    UIkit.modal.alert('更新失敗！(error)').on('hide.uk.modal', function() {
+                        // custome js code
+                        console.log('close');
+                    });
+                },
+                complete: function () {
+                    UIkit.modal("#black").hide();
+                },
+                cache: false
+            });
         }
 
         // 更新所屬會員
@@ -966,12 +1137,8 @@
             var IssueDateTo = $('#IssueDateTo').val();
             var VerifyDateFrom = $('#VerifyDateFrom').val();
             var VerifyDateTo = $('#VerifyDateTo').val();
-            // alert(123);
+            var ModelID = $('#ModelID').val();
 
-            // var mactext = document.getElementById('MAC_'+mac)
-            // mactext.innerText = "123";
-            // var onlincolor = document.getElementById('online_'+mac)
-            // onlincolor.style.color = "#000000";
             $.ajax({
                 url: '/api/v1/GetOnlineTime',
                 type: 'POST',
@@ -993,6 +1160,7 @@
                     'IssueDateTo' : IssueDateTo,
                     'VerifyDateFrom' : VerifyDateFrom,
                     'VerifyDateTo' : VerifyDateTo,
+                    'ModelID' : ModelID,
                 },
                 success: function(response) {
                     if(response.status == 0){
@@ -1009,7 +1177,7 @@
                             onlincolor = document.getElementById('online_'+mac);
                             if(onlincolor != null){
                                 // onlincolor.style.color = "#59BBBC";
-                                console.log(mac);
+                                // console.log(mac);
                                 if(element.LastUpdateOnLineTime != null){
                                     // 現在時間
                                     currentDate = new Date();
@@ -1017,6 +1185,8 @@
                                     lastOnLineTime = element.LastUpdateOnLineTime;
                                     lastOnLineTime = new Date(lastOnLineTime.replace(/-/g,"/"));
                                     getTime = lastOnLineTime.getTime();
+                                    getTime = getTime+(8*60*60*1000);
+                                    // console.log(getTime);
                                     // 計算時間差
                                     offset = currentDate.getTime() - getTime
                                     if(offset <= limit){
@@ -1039,11 +1209,6 @@
                 cache: false
             });
         },300000)
-
-        // 更新online狀態
-        function updateonline() {
-            
-        }
     </script>
 
     <?php 

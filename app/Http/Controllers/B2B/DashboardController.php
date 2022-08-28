@@ -78,10 +78,11 @@ class DashboardController extends Controller
                 'name' => 'Description',
                 'id' => 'Description',
                 'label' => 'Description',
-                'type' => 'text',
+                'type' => 'simple_textarea',
                 'validation' => '',
                 'value' => '',
-                'class' => 'md-input label-fixed',
+                'extras' => [],
+                'class' => 'tinymce abel-fixed',
             ]
         ];
         return $fields;

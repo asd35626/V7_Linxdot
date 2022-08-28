@@ -71,7 +71,10 @@ class DimHotspot extends Model
       'IsBlackBy',
       'IsBlackDate',
       'NickName',
-      'OfficalNickName'
+      'OfficalNickName',
+      'IsBlocked',
+      'IsBlockedBy',
+      'IsBlockedDate'
     ];
 
     // 生產者
