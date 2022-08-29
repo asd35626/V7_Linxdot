@@ -209,60 +209,65 @@
         }
 
         function block(MAC){
-            $.ajax({
-                url: '/api/v1/Block',
-                type: 'POST',
-                async: false,
-                headers: {
-                    'Authorization': Cookies.get('authToken')
-                },
-                data : { 
-                    'MAC' : MAC
-                },
-                success: function(response) {
-                    if(response.status == 0){
-                        alert('Successfully');
-                    }
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    console.log('error');
-                },
-                cache: false
-            });
+            var yes = confirm('Do you confirm to block it?');
 
-            // var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
-            // $.ajax({
-            //     type: "POST",
-            //     url:"https://linxdotapi.v7idea.com/resetMAC",
-            //     data:{
-            //         mac: MAC 
-            //     },
-            //     timeout: 0,
-            //     success: function(response){
-            //         modal.hide();
-            //         // alert(response);
-            //         if(response.status == 0){
-            //             alert('MAC Reset Successfully');
-            //         }else{
-            //             alert(response.errorMessage);
-            //         }
-            //     },
-            //     error : function(xhr, ajaxOptions, thrownError){
-            //         modal.hide();
-            //         canSendGift = true;
-            //         switch (xhr.status) {
-            //             case 422:
-            //                 if(check()){
-            //                 // grecaptcha.reset();
-            //                     alert("Error(422)");
-            //                 }
-            //             break;
-            //             default:
-            //               // grecaptcha.reset();
-            //               alert('server error');
-            //         }
-            //     }
-            // });
+            if (yes) {
+                $.ajax({
+                    url: '/api/v1/Block',
+                    type: 'POST',
+                    async: false,
+                    headers: {
+                        'Authorization': Cookies.get('authToken')
+                    },
+                    data : { 
+                        'MAC' : MAC
+                    },
+                    success: function(response) {
+                        if(response.status == 0){
+                            alert('Successfully');
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        console.log('error');
+                    },
+                    cache: false
+                });
+
+                // var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
+                // $.ajax({
+                //     type: "POST",
+                //     url:"https://linxdotapi.v7idea.com/resetMAC",
+                //     data:{
+                //         mac: MAC 
+                //     },
+                //     timeout: 0,
+                //     success: function(response){
+                //         modal.hide();
+                //         // alert(response);
+                //         if(response.status == 0){
+                //             alert('MAC Reset Successfully');
+                //         }else{
+                //             alert(response.errorMessage);
+                //         }
+                //     },
+                //     error : function(xhr, ajaxOptions, thrownError){
+                //         modal.hide();
+                //         canSendGift = true;
+                //         switch (xhr.status) {
+                //             case 422:
+                //                 if(check()){
+                //                 // grecaptcha.reset();
+                //                     alert("Error(422)");
+                //                 }
+                //             break;
+                //             default:
+                //               // grecaptcha.reset();
+                //               alert('server error');
+                //         }
+                //     }
+                // });
+            }
+                
         }
     </script>
 @endsection
@@ -528,26 +533,27 @@
                                                         <ul style="text-align:left;list-style:none;display: block;
                                                         margin-block-start:0px;margin-block-end:0px;margin-inline-start:0px;
                                                         margin-inline-end:0px;padding-inline-start:0px;line-height: 25px;">
-                                                            {{--地圖--}}
+                                                            {{-- 地圖 --}}
                                                             @if($object->map_lat != null || $object->map_lat != '' && $object->map_lng != null || $object->map_lng != '')
                                                                 <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}','{{ $online }}')">Show on map</a></li>
                                                             @else
                                                                 <li style="pointer-events: none;"><a style="color:#FAFAFA;">Show on map</a></li>
                                                             @endif
+
+                                                            {{-- 導向linxdot網站 --}}
+                                                            <li><a href="https://explorer.helium.com/hotspots/{{ $object->OnBoardingKey }}" target="_blank">Helium Explorer</a></li>
+
+                                                            {{-- 所屬會員 --}}
+                                                            <li><a onclick="showUserList('{{ $object->$primaryKey }}')">User</a></li>
+
                                                             {{-- 重開機 --}}
                                                             <li><a onclick="rebootHotspot('{{ $object->MacAddress }}')">Reboot</a></li>
+
                                                             {{-- 更新分位 --}}
                                                             <li><a onclick="Upgradefirmware('{{ $object->MacAddress }}')">Upgrade firmware</a></li>
                                                             {{-- <li><a href="#">Restart miner</a></li>
                                                             <li><a href="#">Trigger fast sync</a></li> --}}
-                                                            {{-- 回報問題 --}}
-                                                            <!-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> -->
-                                                            {{-- <li><a onclick="showIssue('{{ $object->AnimalName }}','{{ $object->DeviceSN }}','{{ $object->MacAddress }}')">Report issue</a></li> --}}
-                                                            {{-- 黑名單 --}}
-                                                            <li><a onclick="showBlack('{{ $object->IsBlack }}','{{ $object->IsBackMemo }}','{{ $object->MacAddress }}')">Black</a></li>
-                                                            {{-- <li><a href="#">Device heartbeat</a></li> --}}
-                                                            {{-- 會員 --}}
-                                                            <li><a onclick="showUserList('{{ $object->$primaryKey }}')">User</a></li>
+
                                                             {{-- Reverse SSH --}}
                                                             @if(isset($object->CurrentMacAddress))
                                                                 @if($object->CurrentMacAddress != null)
@@ -558,10 +564,20 @@
                                                             @else
                                                                 <li><a onclick="ReverseSSH('{{ $object->MacAddress }}')">Reverse SSH</a></li>
                                                             @endif
-                                                            {{-- helium explorer --}}
-                                                            <li><a href="https://explorer.helium.com/hotspots/{{ $object->OnBoardingKey }}" target="_blank">Helium Explorer</a></li>
+
+                                                            {{-- 黑名單 --}}
+                                                            <li><a onclick="showBlack('{{ $object->IsBlack }}','{{ $object->IsBackMemo }}','{{ $object->MacAddress }}')">Black</a></li>
+
                                                             {{-- block --}}
-                                                            <li><a  onclick="block('{{ $object->MacAddress }}')">block</a></li>
+                                                            @if($object->IsBlocked == 0)
+                                                                <li><a onclick="block('{{ $object->MacAddress }}')">Block</a></li>
+                                                            @else
+                                                                <li style="pointer-events: none;"><a style="color:#FAFAFA;">Block</a></li>
+                                                            @endif
+
+                                                            {{-- 回報問題 --}}
+                                                            <!-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> -->
+                                                            <li><a onclick="showIssue('{{ $object->AnimalName }}','{{ $object->DeviceSN }}','{{ $object->MacAddress }}')">Report Issue</a></li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -637,7 +653,7 @@
     <div class="uk-modal" id="issue">
         <div class="uk-modal-dialog">
             <div class="uk-modal-header" style="background:#45B7C4;margin-top:-25px;height:50px;display:flex;align-items:center;">
-                <h3 align="center" valign="center" style="color:#E8F6F8">Report issue</h3>
+                <h3 align="center" valign="center" style="color:#E8F6F8">Report Issue</h3>
             </div>
             <div>
                 <p><input type="hidden" id="MAC"></p>
@@ -658,6 +674,11 @@
                         </div>
                     </div>
                     <h3 class="heading_a" style="padding-left: 0px;">Issue</h3>
+                    <div class="uk-grid" data-uk-grid-margin>
+                        <div class="uk-width-medium-1-1">
+                            {!! $formFields['LogType']['completeField']  !!}
+                        </div>
+                    </div>
                     <div class="uk-grid" data-uk-grid-margin>
                         <div class="uk-width-medium-1-1">
                             {!! $formFields['Subject']['completeField']  !!}
@@ -864,15 +885,24 @@
             $('#issue #SN').val(sn);
             UIkit.modal("#issue").show();
         }
-        // 顯示回報問題
+
+        // 回報問題
         function updateIssue() {
             var mac = $('#issue #MAC').val();
             var sn = $('#issue #SN').val();
             var Subject = $('#issue #Subject').val();
             var Description = $('#issue #Description').val();
+            var LogType = 0;
+            var radios = document.getElementsByName('LogType');
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    LogType = radios[i].value;
+                    break;
+                }
+            }
 
             $.ajax({
-                url: '/api/v1/updateIssue',
+                url: '/api/v1/UpdateIssue',
                 type: 'POST',
                 async: false,
                 headers: {
@@ -883,6 +913,7 @@
                     'SN' : sn,
                     'Subject' : Subject,
                     'Description' : Description,
+                    'LogType' : LogType,
                 },
                 success: function(response) {
                     if(response.status == 0){
