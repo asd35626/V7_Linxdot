@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\DimHotspot;
 use App\Model\DimProductModel;
 use App\Model\HotspotBlackLog;
+use App\Model\HotspotMaintainLog;
 use App\Model\DimUser;
 use Uuid;
 use Response;
@@ -75,27 +76,27 @@ class HotspotsController extends Controller
             'IsVerify' => [
                 'name' => 'IsVerify',
                 'id' => 'IsVerify',
-                'label' => 'IsVerify',
-                'type' => 'select',
+                'label' => 'Verify',
+                'type' => 'radio',
                 'selectLists' => [
-                    '' => 'Choose',
+                    '1' => 'Yes',
                     '0' => 'No',
-                    '1' => 'Yes'
+                    '' => 'All'
                 ],
-                'value' => '1',
+                'value' => '',
                 'class' => 'md-input label-fixed',
             ],
             'IfRegister' => [
                 'name' => 'IfRegister',
                 'id' => 'IfRegister',
-                'label' => 'IfRegister',
-                'type' => 'select',
+                'label' => 'Register',
+                'type' => 'radio',
                 'selectLists' => [
-                    '' => 'Choose',
+                    '1' => 'Yes',
                     '0' => 'No',
-                    '1' => 'Yes'
+                    '' => 'All'
                 ],
-                'value' => '1',
+                'value' => '',
                 'class' => 'md-input label-fixed',
             ],
             'IssueDateFrom' => [
@@ -744,7 +745,6 @@ class HotspotsController extends Controller
                 'id' => 'AnimalName',
                 'label' => 'Animal name',
                 'type' => 'text',
-                'validation' => 'required',
                 'value' => '',
                 'class' => 'md-input label-fixed',
                 'extras' => ['disabled' => 'disabled']
@@ -754,7 +754,6 @@ class HotspotsController extends Controller
                 'id' => 'DeviceSN',
                 'label' => 's/n',
                 'type' => 'text',
-                'validation' => 'required',
                 'value' => '',
                 'class' => 'md-input label-fixed',
                 'extras' => ['disabled' => 'disabled']
@@ -764,17 +763,29 @@ class HotspotsController extends Controller
                 'id' => 'MacAddress',
                 'label' => 'lan mac',
                 'type' => 'text',
-                'validation' => 'required',
                 'value' => '',
                 'class' => 'md-input label-fixed',
                 'extras' => ['disabled' => 'disabled']
+            ],
+            'LogType' => [
+                'name' => 'LogType',
+                'id' => 'LogType',
+                'label' => 'Type',
+                'type' => 'radio',
+                'selectLists' => [
+                    '0' => 'H/W issue.',
+                    '1' => 'Helium related.',
+                    '2' => 'Setting error.',
+                    '99' => 'others.',
+                ],
+                'value' => '0',
+                'class' => 'md-input label-fixed',
             ],
             'Subject' => [
                 'name' => 'Subject',
                 'id' => 'Subject',
                 'label' => 'Subject',
                 'type' => 'text',
-                'validation' => 'required',
                 'value' => '',
                 'class' => 'md-input label-fixed',
             ],
@@ -1467,6 +1478,7 @@ class HotspotsController extends Controller
         }
         return Response::json($responseBody, 200);
     }
+
     // 回傳 UserType array
     private function getOwnerList(){
         $list = array('' => 'select...');
@@ -1715,10 +1727,11 @@ class HotspotsController extends Controller
           'message' => 'Unknown error.',
         );
 
-        $MAC = $request->input('mac', '');
-        $SN = $request->input('sn', '');
+        $MAC = $request->input('MAC', '');
+        $SN = $request->input('SN', '');
         $Subject = $request->input('Subject', '');
         $Description = $request->input('Description', '');
+        $LogType = $request->input('LogType', '');
 
         if($MAC == ''){
             $responseBody['status'] = 1;
@@ -1731,7 +1744,28 @@ class HotspotsController extends Controller
         }
 
         if($responseBody['status'] == 0) {
-            // 新增資料
+            $uuid = Uuid::generate(4);
+
+            // 組成目前需要新增的資料物件;
+            $newData = [
+                'LogId' => $uuid,
+                'DeviceSN' => $SN,
+                'MacAddress' => $MAC,
+                'LogDate' => Carbon::now('Asia/Taipei')->toDateTimeString(), // 表示為目前時間;
+                'LogTopic' => $Subject,
+                // 'LogType' => '',
+                'LogDescription' =>$Description,
+                'LogType' =>$LogType,
+
+                'IfValid' => 1,
+                'IfDelete' => 0,
+                'CreateBy' => WebLib::getCurrentUserID(),
+                'CreateDate' => Carbon::now('Asia/Taipei')->toDateTimeString() // 表示為目前時間;
+            ];
+            // dd( $newData);
+
+            // 執行產生資料的動作
+            HotspotMaintainLog::on('mysql2')->create($newData);
             
             
             $responseBody['status'] = 0;
