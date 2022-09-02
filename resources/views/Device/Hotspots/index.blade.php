@@ -223,9 +223,38 @@
                         'MAC' : MAC
                     },
                     success: function(response) {
-                        if(response.status == 0){
-                            alert('Successfully');
-                        }
+                        $.ajax({
+                            type: "POST",
+                            url:"{{env('API_URL_49880', '')}}blockMiner",
+                            data:{
+                                'MAC' : MAC
+                            },
+                            timeout: 0,
+                            success: function(response){
+                                modal.hide();
+                                // alert(response);
+                                if(response.status == 0){
+                                    alert('Successfully!');
+                                }else{
+                                    alert(response.errorMessage);
+                                }
+                            },
+                            error : function(xhr, ajaxOptions, thrownError){
+                                modal.hide();
+                                canSendGift = true;
+                                switch (xhr.status) {
+                                    case 422:
+                                        if(check()){
+                                        // grecaptcha.reset();
+                                            alert("Error(422)");
+                                        }
+                                    break;
+                                    default:
+                                      // grecaptcha.reset();
+                                      alert('server error');
+                                }
+                            }
+                        });
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         console.log('error');
@@ -233,39 +262,8 @@
                     cache: false
                 });
 
-                // var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
-                // $.ajax({
-                //     type: "POST",
-                //     url:"{{env('API_URL_49880', '')}}resetMAC",
-                //     data:{
-                //         mac: MAC 
-                //     },
-                //     timeout: 0,
-                //     success: function(response){
-                //         modal.hide();
-                //         // alert(response);
-                //         if(response.status == 0){
-                //             alert('MAC Reset Successfully');
-                //         }else{
-                //             alert(response.errorMessage);
-                //         }
-                //     },
-                //     error : function(xhr, ajaxOptions, thrownError){
-                //         modal.hide();
-                //         canSendGift = true;
-                //         switch (xhr.status) {
-                //             case 422:
-                //                 if(check()){
-                //                 // grecaptcha.reset();
-                //                     alert("Error(422)");
-                //                 }
-                //             break;
-                //             default:
-                //               // grecaptcha.reset();
-                //               alert('server error');
-                //         }
-                //     }
-                // });
+                
+                    
             }
                 
         }
