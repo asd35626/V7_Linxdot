@@ -237,7 +237,7 @@
                 type: "POST",
                 url:"{{env('API_URL_49880', '')}}blockMiner",
                 data:{
-                    'MAC' : MAC
+                    'mac' : MAC
                 },
                 timeout: 0,
                 success: function(response){
