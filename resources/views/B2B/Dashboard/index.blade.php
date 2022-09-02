@@ -124,7 +124,7 @@
             var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
             $.ajax({
                 type: "POST",
-                url:"https://linxdotapi.v7idea.com/rebootHotspot",
+                url:"{{env('API_URL_49880', '')}}rebootHotspot",
                 data:{
                     mac: MAC 
                 },
@@ -158,7 +158,7 @@
             var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
             $.ajax({
                 type: "POST",
-                url:"https://linxdotapi.v7idea.com/ota",
+                url:"{{env('API_URL_49880', '')}}ota",
                 data:{
                     mac: MAC 
                 },
@@ -330,10 +330,10 @@
                                             {{-- 更新分位 --}}
                                             <li><a onclick="Upgradefirmware('{{ $object->MacAddress }}')">Upgrade firmware</a></li>
                                             {{-- <li><a href="#">Restart miner</a></li>
-                                            <li><a href="#">Trigger fast sync</a></li>
-                                            回報問題 --}}
-                                            {{-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li>
-                                            <li><a href="#">Device heartbeat</a></li> --}}
+                                            <li><a href="#">Trigger fast sync</a></li> --}}
+                                            {{-- 回報問題 --}}
+                                            <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li>
+                                            <li><a href="#">Device heartbeat</a></li>
                                             {{-- helium explorer --}}
                                             <li><a href="https://explorer.helium.com/hotspots/{{ $object->OnBoardingKey }}" target="_blank">Helium Explorer</a></li>
                                         </ul>
@@ -358,14 +358,9 @@
                 <div class="uk-modal-header" style="background:#45B7C4;margin-top:-25px;height:50px;display:flex;align-items:center;">
                     <h3 align="center" valign="center" style="color:#E8F6F8">Report issue</h3>
                 </div>
-                {{-- <table align="center">
-                    <tr><td>Animal name：</td><td></td></tr>
-                    <tr><td>Subject：</td><td><input type="" name=""></td></tr>
-                    <tr><td>Description：</td><td><input type="" name=""></td></tr>
-                </table> --}}
 
-                <div class="md-card">
-                    <div class="md-card-content large-padding">
+                <div>
+                    <div class="large-padding">
                         <div class="uk-grid" data-uk-grid-margin>
                             <div class="uk-width-medium-1-3">
                                 {!! $formFields['AnimalName']['completeField']  !!}
@@ -373,11 +368,13 @@
                             <div class="uk-width-medium-1-3">
                                 {!! $formFields['Subject']['completeField']  !!}
                             </div>
-                            <div class="uk-width-medium-1-3">
+                        </div>
+                        <div class="uk-grid" data-uk-grid-margin>
+                            <div class="uk-width-medium-1-1">
                                 {!! $formFields['Description']['completeField']  !!}
                             </div>
                         </div>
-                        <div class="uk-grid">
+                        <div>
                             <div class="uk-width-1-1 uk-modal-footer">
                                 <button type="button" class="md-btn md-btn-primary" >Submit</button>
                             </div>
@@ -395,15 +392,15 @@
 
     {{-- 暱稱 --}}
     <div class="uk-modal" id="nickname" aria-hidden="true" style="display: none; overflow-y: auto;">
-            <div class="uk-modal-dialog" style="top: 199px;">
-                <p><input type="hidden" id="HID"></p>
-                <div id="nicknamemodal"></div>
-                <div class="uk-modal-footer uk-text-right">
-                    <button type="button" class="md-btn md-btn-flat uk-modal-close">BACK</button>
-                    <button onclick="javascript:updateNickName()" type="button" class="md-btn md-btn-flat md-btn-flat-primary">OK</button>
-                </div>
+        <div class="uk-modal-dialog" style="top: 199px;">
+            <p><input type="hidden" id="HID"></p>
+            <div id="nicknamemodal"></div>
+            <div class="uk-modal-footer uk-text-right">
+                <button type="button" class="md-btn md-btn-flat uk-modal-close">BACK</button>
+                <button onclick="javascript:updateNickName()" type="button" class="md-btn md-btn-flat md-btn-flat-primary">OK</button>
             </div>
         </div>
+    </div>
     {{-- 暱稱 --}}
 
     {{-- MAP --}}

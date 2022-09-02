@@ -62,7 +62,7 @@
             var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
             $.ajax({
                 type: "POST",
-                url:"https://linxdotapi.v7idea.com/rebootHotspot",
+                url:"{{env('API_URL_49880', '')}}rebootHotspot",
                 data:{
                     mac: MAC 
                 },
@@ -97,7 +97,7 @@
             var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
             $.ajax({
                 type: "POST",
-                url:"https://linxdotapi.v7idea.com/ota",
+                url:"{{env('API_URL_49880', '')}}ota",
                 data:{
                     mac: MAC 
                 },
@@ -133,7 +133,7 @@
             var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
             $.ajax({
                 type: "POST",
-                url:"https://linxdotapi.v7idea.com/reverseSSH",
+                url:"{{env('API_URL_49880', '')}}reverseSSH",
                 data:{
                     mac: MAC 
                 },
@@ -176,7 +176,7 @@
             var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
             $.ajax({
                 type: "POST",
-                url:"https://linxdotapi.v7idea.com/resetMAC",
+                url:"{{env('API_URL_49880', '')}}resetMAC",
                 data:{
                     mac: MAC 
                 },
@@ -236,7 +236,7 @@
                 // var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
                 // $.ajax({
                 //     type: "POST",
-                //     url:"https://linxdotapi.v7idea.com/resetMAC",
+                //     url:"{{env('API_URL_49880', '')}}resetMAC",
                 //     data:{
                 //         mac: MAC 
                 //     },

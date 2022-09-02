@@ -33,18 +33,26 @@ Route::group(['prefix' => 'api/v1'],function () {
 
     // 圖片上傳api
     Route::resource('UploadImage', 'API\V1\UploadImageController');
+
+    // 會員功能
     // update 發言權
     Route::post('ChangeSpeakAuth', 'Member\MemberManagementController@changeSpeakAuth');
     // 解除鎖定
     Route::post('User/Unlock', 'User\UserController@Unlock');
     // 顯示會員2050
     Route::post('showUserList', 'Device\HotspotsController@showUserList');
+
+    //B2B
+    // 更改暱稱
+    Route::post('B2BUpdateNickName', 'B2B\DashboardController@updateNickName');
+
+    // 機器相關
+    // 顯示匯入清單
+    Route::post('WarehouseInventoryDetail', 'Inventory\ShippedStatusExcelController@WarehouseInventoryDetail');
     // 更改所屬會員
     Route::post('updateUID', 'Device\HotspotsController@updateUID');
     // 更改黑名單狀態
     Route::post('updateIsBlack', 'Device\HotspotsController@updateIsBlack');
-    // 更改暱稱
-    Route::post('B2BUpdateNickName', 'B2B\DashboardController@updateNickName');
     // 更改暱稱
     Route::post('UpdateNickName', 'Device\HotspotsController@updateNickName');
     // 取得onlinetime
@@ -53,8 +61,11 @@ Route::group(['prefix' => 'api/v1'],function () {
     Route::post('Block', 'Device\HotspotsController@block');
     // 回報問題
     Route::post('UpdateIssue', 'Device\HotspotsController@updateIssue');
-    // 顯示上傳清單
-    Route::post('WarehouseInventoryDetail', 'Inventory\ShippedStatusExcelController@WarehouseInventoryDetail');
+
+    // 首頁
+    // Firmware機器列表
+    Route::post('ShowFirmwareList', 'IndexController@showFirmwareList');
+
 });
 
 //帳號相關API

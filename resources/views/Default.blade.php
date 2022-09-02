@@ -145,7 +145,8 @@
 
 			var time = '';
 			var date = '';
-			$.get("https://linxdot-map.v7idea.com/hotspotStatus", function(data) {
+			
+			$.get("{{env('API_URL_50880', '')}}hotspotStatus", function(data) {
 				// 設定資料
 				for (var i = 0; i < data.data.total; i++) {
 					result = data.data.result[i];
@@ -157,7 +158,7 @@
 				}
 			});
 
-			$.get("https://linxdot-map.v7idea.com/mqttStatus", function(data) {
+			$.get("{{env('API_URL_50880', '')}}mqttStatus", function(data) {
 				// 設定資料
 				for (var i = 0; i < data.data.total; i++) {
 					result = data.data.result[i];
@@ -188,9 +189,8 @@
 			      	charts[i].render();
 			    }
 			});
-				
-			
-			$.get("https://linxdot-map.v7idea.com/getFirmwareStatus", function(data) {
+
+			$.get("{{env('API_URL_50880', '')}}getFirmwareStatus", function(data) {
 				var dataPoint = [];
 				var result = [];
 
@@ -223,6 +223,9 @@
 						itemclick: explodePie
 					},
 					data: [{
+						click: function(e){
+							showFirmwareList(e.dataPoint.name);
+						},
 						type: "pie",
 						showInLegend: true,
 						toolTipContent: "{name}: <strong>{y}</strong>",
@@ -233,7 +236,7 @@
 				chart.render();
 			});
 
-			$.get("https://linxdot-map.v7idea.com/getMinerStatus", function(data) {
+			$.get("{{env('API_URL_50880', '')}}getMinerStatus", function(data) {
 				var dataPoint = [];
 				var result = [];
 
@@ -241,11 +244,13 @@
 				for (var i = 0; i < 6; i++) {
 					console.log(data.data.result[i]);
 					result = data.data.result[i];
-					if(result.MinerVersion == null){
-						pointname = "null";
+					if(result.MinerVersion != null && result.MinerVersion != ''){
+						pointname = result.MinerVersion.slice(-13);
 					}else{
-						pointname = result.MinerVersion.slice(-13)
+						pointname = "null";
 					}
+					// console.log(result.MinerVersion);
+					// console.log(result.pointname);					
 					dataPoint.push({ y:result.TotalCount,name:pointname });
 				}
 
@@ -261,6 +266,9 @@
 						itemclick: explodePie
 					},
 					data: [{
+						click: function(e){
+							showVersionList(e.dataPoint.name);
+						},
 						type: "pie",
 						showInLegend: true,
 						toolTipContent: "{name}: <strong>{y}</strong>",
@@ -271,8 +279,6 @@
 				chart21.render();
 			});
 		}
-
-
 
 		function syncCharts(charts, syncToolTip, syncCrosshair, syncAxisXRange) {
 		    if(!this.onToolTipUpdated){
@@ -362,6 +368,85 @@
 			}
 			e.chart.render();
 		}
+
+		function showFirmwareList (name) {
+			// alert(name);
+			$.ajax({
+                url: '/api/v1/ShowFirmwareList',
+                type: 'POST',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : { 
+                    'Name' : name,
+                },
+                success: function(response) {
+                	UIkit.modal("#modal_full").show();
+                    // if(response.status == 0){
+                    //     // hideen the button
+                    //     let HTML = '<thead><tr>';
+                    //     HTML += '<th class="uk-width-1-10">s/n</th>';
+                    //     HTML += '<th class="uk-width-1-10">model</th>';
+                    //     HTML += '<th class="uk-width-1-10">lan mac</th>';
+                    //     HTML += '<th class="uk-width-1-10">animal name</th>';
+                    //     HTML += '<th class="uk-width-1-10">nick name</th>';
+                    //     HTML += '<th class="uk-width-1-10">version</th>';
+                    //     HTML += '<th class="uk-width-1-10">provision</th>';
+                    //     HTML += '<th class="uk-width-1-10">delivery</th>';
+                    //     HTML += '<th class="uk-width-1-10">dewi onboarded</th>';
+
+                    //     // response.data.forEach(element => {
+                    //     //     HTML += '<td class="uk-text-small">';
+                    //     //     HTML += element.SkuID;
+                    //     //     HTML += '</td>';
+                    //     //     HTML += '<td class="uk-text-small">';
+                    //     //     HTML += element.PalletId;
+                    //     //     HTML += '</td>';
+                    //     //     HTML += '<td class="uk-text-small">';
+                    //     //     HTML += element.CartonId;
+                    //     //     HTML += '</td>';
+                    //     //     HTML += '<td class="uk-text-small">';
+                    //     //     HTML += element.DeviceSN;
+                    //     //     HTML += '</td>';
+                    //     //     HTML += '<td class="uk-text-small">';
+                    //     //     HTML += element.IfShipped;
+                    //     //     HTML += '</td>';
+                    //     //     HTML += '<td class="uk-text-small">';
+                    //     //     HTML += element.ShippedDate;
+                    //     //     HTML += '</td>';
+                    //     //     HTML += '<td class="uk-text-small">';
+                    //     //     HTML += element.TrackingNo;
+                    //     //     HTML += '</td>';
+                    //     //     HTML += '<td class="uk-text-small">';
+                    //     //     HTML += element.IfCompletedImport;
+                    //     //     HTML += '</td>';
+                    //     //     HTML += '<td class="uk-text-small">';
+                    //     //     HTML += element.ImportStatus;
+                    //     //     HTML += '</td>';
+                    //     //     HTML += '<td class="uk-text-small">';
+                    //     //     HTML += element.ImportMemo;
+                    //     //     HTML += '</td>';
+                    //     //     HTML +='</tr>';
+                    //     // });
+                        
+                    //     $('#list').html(HTML);
+                    //     UIkit.modal("#list").show();
+                    // }else{
+                    //     console.log(response.message);
+                    // }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    // UIkit.modal.alert('Error').on('hide.uk.modal', function() {
+                    //     console.log('close');
+                    // });
+                },
+            });
+		}
+
+		function showMinerList (name) {
+			// alert(name);
+		}
 	</script>
 @endsection
 
@@ -428,7 +513,40 @@
             </div>
         </div>
     </div>
-    <embed src="https://linxdot-map.v7idea.com/worldmap/" width="100%" height="500">
+
+    {{-- 清單 --}}
+    <div class="uk-modal uk-modal-card-fullscreen" id="modal_full" aria-hidden="true" style="display: none; overflow-y: auto;">
+        <div class="uk-modal-dialog uk-modal-dialog-blank">
+            <div class="md-card uk-height-viewport">
+                <div class="md-card-toolbar">
+                    <div class="md-card-toolbar-actions">
+                        <div class="md-card-dropdown" data-uk-dropdown="{pos:'bottom-right'}">
+                        </div>
+                    </div>
+                    <span class="md-icon material-icons uk-modal-close"></span>
+                    <h3 class="md-card-toolbar-heading-text"></h3>
+                </div>
+                <div class="md-card-content">
+                    <table class="uk-table uk-table-nowrap table_check" id='list'>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- 清單 --}}
+
+    <embed src="{{env('API_URL_50880', '')}}worldmap/" width="100%" height="500">
 
     <script src="js/canvasjs/canvasjs.min.js"></script>
+
+    <script>
+        function resetForm() {
+            location.href = '{{ route('Hotspots'.'.index') }}';
+        }
+        function gotoPage(pageNo) {
+            $('#Page').val(pageNo);
+            $('#IfNewSearch').val('0');
+            $('#searchForm').submit();
+        }
+    </script>
 @endsection
