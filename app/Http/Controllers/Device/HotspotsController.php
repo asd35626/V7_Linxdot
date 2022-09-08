@@ -868,18 +868,17 @@ class HotspotsController extends Controller
                 'VerifyDateFrom' => $searchFields['VerifyDateFrom']['value'],
                 'VerifyDateTo' => $searchFields['VerifyDateTo']['value'],
             );
+            // dd($searchArray);
 
             $data= $data->where(function($query) use ($searchArray) {
                 if($searchArray['keywords'] != '') {
                     $query->orwhere('Dim_Hotspot.DeviceSN', 'like', '%'.$searchArray['keywords'].'%' )
                         ->orwhere('Dim_Hotspot.AnimalName', 'like', '%'.$searchArray['keywords'].'%' )
-                        ->orwhere('Dim_Hotspot.OfficalNickName', 'like', '%'.$searchArray['keywords'].'%' );
-                }
-                if($searchArray['Mac'] != '') {
-                    $query->orwhere('Dim_Hotspot.MacAddress', 'like', '%'.$searchArray['Mac'].'%' );
+                        ->orwhere('Dim_Hotspot.OfficalNickName', 'like', '%'.$searchArray['keywords'].'%' )
+                        ->orwhere('Dim_Hotspot.MacAddress', 'like', '%'.$searchArray['Mac'].'%' );
                 }
                 if($searchArray['ModelID'] != '') {
-                    $query->orwhere('Linxdot_Factory_Dispatch.HWModelNo', 'like', '%'.$searchArray['ModelID'].'%' );
+                    $query->where('Linxdot_Factory_Dispatch.HWModelNo', 'like', '%'.$searchArray['ModelID'].'%' );
                 }
                 if($searchArray['IsVerify'] != '') {
                     $query->where('Dim_Hotspot.IsVerify', $searchArray['IsVerify']);

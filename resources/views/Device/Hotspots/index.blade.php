@@ -232,6 +232,7 @@
                 });
             }  
         }
+
         function blockapi(MAC){
             $.ajax({
                 type: "POST",
@@ -241,7 +242,6 @@
                 },
                 timeout: 0,
                 success: function(response){
-                    modal.hide();
                     // alert(response);
                     if(response.status == 0){
                         alert('Successfully!');
