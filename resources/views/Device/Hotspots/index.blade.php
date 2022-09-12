@@ -210,7 +210,6 @@
 
         function block(MAC){
             var yes = confirm('Do you confirm to block it?');
-
             if (yes) {
                 $.ajax({
                     url: '/api/v1/Block',
@@ -234,6 +233,7 @@
         }
 
         function blockapi(MAC){
+            var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
             $.ajax({
                 type: "POST",
                 url:"{{env('API_URL_49880', '')}}blockMiner",
@@ -243,6 +243,7 @@
                 timeout: 0,
                 success: function(response){
                     // alert(response);
+                    modal.hide();
                     if(response.status == 0){
                         alert('Successfully!');
                     }else{
@@ -461,7 +462,7 @@
                                     @if(isset($object->CurrentMacAddress))
                                         @if($object->CurrentMacAddress != $object->MacAddress)
                                             {{ $object->MacAddress }}<br>
-                                            <font color="#AA3333">({{ $object->MacAddress }})    </font>
+                                            <font color="#AA3333">({{ $object->CurrentMacAddress }})    </font>
                                             <a  onclick="javascript:if(confirm('Do you confirm to recover its MAC?'))resetMAC('{{ $object->CurrentMacAddress }}')">
                                                 <span class="material-icons" style="color:#AA3333;font-size:14px;"> build </span>
                                             </a>
