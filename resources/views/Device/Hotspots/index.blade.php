@@ -14,6 +14,10 @@
     <script src="/assets/js/common.min.js"></script>
     <!-- uikit functions -->
     <script src="/assets/js/uikit_custom.min.js"></script>
+    
+    <script src="/bower_components/tinymce/tinymce.min.js"></script>
+    <!-- ionrangeslider -->
+    <script src="/bower_components/ion.rangeslider/js/ion.rangeSlider.min.js"></script>
     <style type="text/css">
         .uk-modal #hotspotOwner .selectize-dropdown {
             top: 85px !important;
@@ -58,6 +62,7 @@
                 $('#searchForm').submit();
             });
         })
+
         function rebootHotspot(MAC){
             var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
             $.ajax({
@@ -267,6 +272,87 @@
                 }
             });
         }
+        
+        tinymce.init({
+            selector: 'textarea.tinymce',
+            skin_url: '/assets/skins/tinymce/material_design',
+            height: 300,
+            menubar: '',
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code textcolor'
+            ],
+            toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | fontsizeselect | code | forecolor backcolor',
+            color_map: [
+                '#BFEDD2', 'Light Green',
+                '#FBEEB8', 'Light Yellow',
+                '#F8CAC6', 'Light Red',
+                '#ECCAFA', 'Light Purple',
+                '#C2E0F4', 'Light Blue',
+
+                '#2DC26B', 'Green',
+                '#F1C40F', 'Yellow',
+                '#E03E2D', 'Red',
+                '#B96AD9', 'Purple',
+                '#3598DB', 'Blue',
+
+                '#169179', 'Dark Turquoise',
+                '#E67E23', 'Orange',
+                '#BA372A', 'Dark Red',
+                '#843FA1', 'Dark Purple',
+                '#236FA1', 'Dark Blue',
+
+                '#ECF0F1', 'Light Gray',
+                '#CED4D9', 'Medium Gray',
+                '#95A5A6', 'Gray',
+                '#7E8C8D', 'Dark Gray',
+                '#34495E', 'Navy Blue',
+
+                '#000000', 'Black',
+                '#ffffff', 'White'
+            ],
+            file_picker_types: 'image media',
+            paste_data_images: true,
+            forced_root_block:"",//防止自動加上<p></p>
+            fontsize_formats: '11px 12px 14px 16px 18px 24px 36px 48px',
+            images_upload_handler: function (blobInfo, success, failure) {
+                var xhr, formData;
+
+                xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                xhr.open('POST', '/api/v1/UploadImage');
+
+                xhr.onload = function() {
+                    var json;
+
+                    if (xhr.status != 200) {
+                      failure('HTTP Error: ' + xhr.status);
+                      return;
+                    }
+
+                    json = JSON.parse(xhr.responseText);
+
+                    if (!json || typeof json.location != 'string') {
+                      failure('Invalid JSON: ' + xhr.responseText);
+                      return;
+                    }
+
+                    success('{{ env("IMGPath") }}'+json.location);
+                  };
+
+                  formData = new FormData();
+                  formData.append('file', blobInfo.blob(), blobInfo.filename());
+                  formData.append('path', 'files/upload/');
+
+                  xhr.send(formData);
+                },
+              // importcss_file_filter: "style-rabbit.css",
+              // content_css: '/css/style-rabbit.css',
+              importcss_append: true,
+              relative_urls: false, // 關閉會將圖片路徑顯示完整URL
+              remove_script_host: false
+        });
     </script>
 @endsection
 
@@ -523,68 +609,65 @@
                                             N
                                         @endif
                                     </div>
-                                        <div class="md-card-list-wrapper" style="float:right;width:10px;">
-                                            <div class="md-card-list" style="margin-top:0px">
-                                                <div class="md-card-list-item-menu" data-uk-dropdown="{mode:'click',pos:'bottom-right'}">
-                                                    <a class="md-icon material-icons">&#xE5D4;</a>
-                                                    <div class="uk-dropdown" style="background:#C4C4C4">
-                                                        <ul style="text-align:left;list-style:none;display: block;
-                                                        margin-block-start:0px;margin-block-end:0px;margin-inline-start:0px;
-                                                        margin-inline-end:0px;padding-inline-start:0px;line-height: 25px;">
-                                                            {{-- 地圖 --}}
-                                                            @if($object->map_lat != null || $object->map_lat != '' && $object->map_lng != null || $object->map_lng != '')
-                                                                <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}','{{ $online }}')">Show on map</a></li>
-                                                            @else
-                                                                <li style="pointer-events: none;"><a style="color:#FAFAFA;">Show on map</a></li>
-                                                            @endif
+                                    <div class="md-card-list-wrapper" style="float:right;width:10px;">
+                                        <div class="md-card-list" style="margin-top:0px">
+                                            <div class="md-card-list-item-menu" data-uk-dropdown="{mode:'click',pos:'bottom-right'}">
+                                                <a class="md-icon material-icons">&#xE5D4;</a>
+                                                <div class="uk-dropdown" style="background:#C4C4C4">
+                                                    <ul style="text-align:left;list-style:none;display: block;
+                                                    margin-block-start:0px;margin-block-end:0px;margin-inline-start:0px;
+                                                    margin-inline-end:0px;padding-inline-start:0px;line-height: 25px;">
+                                                        {{-- 地圖 --}}
+                                                        @if($object->map_lat != null || $object->map_lat != '' && $object->map_lng != null || $object->map_lng != '')
+                                                            <li><a data-uk-modal="{target:'#modal_full'}" onclick="map('{{ $object->map_lng }}','{{ $object->map_lat }}','{{ $online }}')">Show on map</a></li>
+                                                        @else
+                                                            <li style="pointer-events: none;"><a style="color:#FAFAFA;">Show on map</a></li>
+                                                        @endif
 
-                                                            {{-- 導向linxdot網站 --}}
-                                                            <li><a href="https://explorer.helium.com/hotspots/{{ $object->OnBoardingKey }}" target="_blank">Helium Explorer</a></li>
+                                                        {{-- 導向linxdot網站 --}}
+                                                        <li><a href="https://explorer.helium.com/hotspots/{{ $object->OnBoardingKey }}" target="_blank">Helium Explorer</a></li>
 
-                                                            {{-- 所屬會員 --}}
-                                                            <li><a onclick="showUserList('{{ $object->$primaryKey }}')">User</a></li>
+                                                        {{-- 所屬會員 --}}
+                                                        <li><a onclick="showUserList('{{ $object->$primaryKey }}')">User</a></li>
 
-                                                            {{-- 重開機 --}}
-                                                            <li><a onclick="rebootHotspot('{{ $object->MacAddress }}')">Reboot</a></li>
+                                                        {{-- 重開機 --}}
+                                                        <li><a onclick="rebootHotspot('{{ $object->MacAddress }}')">Reboot</a></li>
 
-                                                            {{-- 更新分位 --}}
-                                                            <li><a onclick="Upgradefirmware('{{ $object->MacAddress }}')">Upgrade firmware</a></li>
-                                                            {{-- <li><a href="#">Restart miner</a></li>
-                                                            <li><a href="#">Trigger fast sync</a></li> --}}
+                                                        {{-- 更新分位 --}}
+                                                        <li><a onclick="Upgradefirmware('{{ $object->MacAddress }}')">Upgrade firmware</a></li>
+                                                        {{-- <li><a href="#">Restart miner</a></li>
+                                                        <li><a href="#">Trigger fast sync</a></li> --}}
 
-                                                            {{-- Reverse SSH --}}
-                                                            @if(isset($object->CurrentMacAddress))
-                                                                @if($object->CurrentMacAddress != null)
-                                                                    <li><a onclick="ReverseSSH('{{ $object->CurrentMacAddress }}')">Reverse SSH</a></li>
-                                                                @else
-                                                                    <li><a onclick="ReverseSSH('{{ $object->MacAddress }}')">Reverse SSH</a></li>
-                                                                @endif
+                                                        {{-- Reverse SSH --}}
+                                                        @if(isset($object->CurrentMacAddress))
+                                                            @if($object->CurrentMacAddress != null)
+                                                                <li><a onclick="ReverseSSH('{{ $object->CurrentMacAddress }}')">Reverse SSH</a></li>
                                                             @else
                                                                 <li><a onclick="ReverseSSH('{{ $object->MacAddress }}')">Reverse SSH</a></li>
                                                             @endif
+                                                        @else
+                                                            <li><a onclick="ReverseSSH('{{ $object->MacAddress }}')">Reverse SSH</a></li>
+                                                        @endif
 
-                                                            {{-- 黑名單 --}}
-                                                            <li><a onclick="showBlack('{{ $object->IsBlack }}','{{ $object->IsBackMemo }}','{{ $object->MacAddress }}')">Black</a></li>
+                                                        {{-- 黑名單 --}}
+                                                        <li><a onclick="showBlack('{{ $object->IsBlack }}','{{ $object->IsBackMemo }}','{{ $object->MacAddress }}')">Black</a></li>
 
-                                                            {{-- block --}}
-                                                            @if($object->IsBlocked == 0)
-                                                                <li><a onclick="block('{{ $object->MacAddress }}')">Block</a></li>
-                                                            @else
-                                                                <li style="pointer-events: none;"><a style="color:#FAFAFA;">Block</a></li>
-                                                            @endif
+                                                        {{-- block --}}
+                                                        @if($object->IsBlocked == 0)
+                                                            <li><a onclick="block('{{ $object->MacAddress }}')">Block</a></li>
+                                                        @else
+                                                            <li style="pointer-events: none;"><a style="color:#FAFAFA;">Block</a></li>
+                                                        @endif
 
-                                                            {{-- 回報問題 --}}
-                                                            <!-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> -->
-                                                            <li><a onclick="showIssue('{{ $object->AnimalName }}','{{ $object->DeviceSN }}','{{ $object->MacAddress }}')">Report Issue</a></li>
-                                                        </ul>
-                                                    </div>
+                                                        {{-- 回報問題 --}}
+                                                        <!-- <li><a data-uk-modal="{target:'#modal_header_footer'}">Report issue</a></li> -->
+                                                        <li><a onclick="showIssue('{{ $object->AnimalName }}','{{ $object->DeviceSN }}','{{ $object->MacAddress }}')">Report Issue</a></li>
+                                                    </ul>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
                                 </td>
-                                {{-- <td class="uk-text-small">{{ $object->DewiStatus }}</td> --}}
-
-                                
                             </tr>
                         @endforeach
                     @else
@@ -690,14 +773,11 @@
                     <div>
                         <div class="uk-width-1-1 uk-modal-footer">
                             <button type="button" class="md-btn md-btn-primary" onclick="updateIssue()">Submit</button>
+                            <button type="button" class="md-btn md-btn-warning uk-modal-close" >BACK</button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            {{-- <div class="uk-modal-footer uk-text-center">
-                <button type="button" class="md-btn md-btn-flat md-btn-flat-primary" style="background:#45B7C4;color:#E8F6F8 ">Submit</button>
-            </div> --}}
         </div>
     </div>
     {{-- 回報問題 --}}

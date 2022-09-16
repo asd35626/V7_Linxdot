@@ -793,11 +793,11 @@ class HotspotsController extends Controller
                 'name' => 'Description',
                 'id' => 'Description',
                 'label' => 'Description',
-                'type' => 'simple_textarea',
+                'type' => 'textarea',
                 'validation' => '',
                 'value' => '',
                 'extras' => [],
-                'class' => 'tinymce abel-fixed',
+                'class' => 'tinymce label-fixed',
                 'extras' => ['style' => 'width: 100%']
             ]
         ];
@@ -849,7 +849,11 @@ class HotspotsController extends Controller
                                 ->where('Dim_ProductModel.IfValid' , 1)
                                 ->where('Dim_ProductModel.IfDelete' , 0);
                         })
-                        ->select('Dim_Hotspot.*','Dim_ProductModel.ModelName','Linxdot_Factory_Dispatch.HWModelNo');
+                        ->select('Dim_Hotspot.*',
+                            'Dim_ProductModel.ModelName',
+                            'Linxdot_Factory_Dispatch.HWModelNo',
+                            DB::raw('CONCAT("Dim_Hotspot.DeviceSN","Dim_Hotspot.AnimalName","Dim_Hotspot.OfficalNickName","Dim_Hotspot.MacAddress") AS keywords')
+                            );
 
         if($status == 1){
             $data = $data->where('Dim_Hotspot.LastUpdateOnLineTime', '>=' ,$now);
@@ -897,6 +901,9 @@ class HotspotsController extends Controller
                 }
                 if ($searchArray['VerifyDateTo'] != '') {
                     $query->where('Dim_Hotspot.IfVerifyDate', '<=', ( $searchArray['VerifyDateTo'] . ' 23:59:59'));
+                }
+                if($searchArray['keywords'] != '') {
+                    // $query->where('keywords', 'like', '%'.$searchArray['keywords'].'%' );
                 }
             });
         }
