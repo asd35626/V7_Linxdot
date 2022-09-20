@@ -212,6 +212,12 @@
                                 <td class="uk-text-small">
                                     <?php
                                         switch($object->LogType){
+                                            case null:
+                                                echo "";
+                                                break;
+                                            case '':
+                                                echo "";
+                                                break;
                                             case 0:
                                                 echo "H/W issue.";
                                                 break;

@@ -74,6 +74,7 @@ class IssuesController extends Controller
                 'label' => 'Type',
                 'type' => 'radio',
                 'selectLists' => [
+                    'all' => 'all',
                     '0' => 'H/W issue.',
                     '1' => 'Helium related.',
                     '2' => 'Setting error.',
@@ -213,7 +214,7 @@ class IssuesController extends Controller
         if($searchFields['LogType']['value'] != ''){
             $LogType = $searchFields['LogType']['value'];
         }else{
-            $LogType = 0;
+            $LogType = 'all';
         }
         $searchFields['LogType']['completeField'] = str_replace('value="'.$LogType.'"','value="'.$LogType.'" checked',$searchFields['LogType']['completeField']);
 
@@ -255,7 +256,7 @@ class IssuesController extends Controller
                 if($searchArray['MacAddress'] != '') {
                     $query->where('Hotspot_Maintain_Log.MacAddress', 'like', '%'.$searchArray['MacAddress'].'%' );
                 }
-                if($searchArray['LogType'] != '') {
+                if($searchArray['LogType'] != 'all') {
                     $query->where('Hotspot_Maintain_Log.LogType', 'like', '%'.$searchArray['LogType'].'%' );
                 }
                 if ($searchArray['DateFrom'] != '') {
