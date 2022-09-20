@@ -61,11 +61,15 @@ Route::group(['prefix' => 'api/v1'],function () {
     Route::post('Block', 'Device\HotspotsController@block');
     // 回報問題
     Route::post('UpdateIssue', 'Device\HotspotsController@updateIssue');
+    
+    // 處理問題
+    Route::post('SolvingIssue', 'CustomerService\IssuesController@solvingIssue');
 
     // 首頁
     // Firmware機器列表
     Route::post('ShowFirmwareList', 'IndexController@showFirmwareList');
-
+    // Miner機器列表
+    Route::post('ShowMinerList', 'IndexController@showMinerList');
 });
 
 //帳號相關API
@@ -131,6 +135,12 @@ Route::group(['prefix' => 'Inventory'],function () {
     Route::resource('ShippedStatus', 'Inventory\ShippedStatusController');
     //工廠設備匯入管理
     Route::resource('ShippedStatusExcel', 'Inventory\ShippedStatusExcelController');
+});
+
+//客戶服務
+Route::group(['prefix' => 'CustomerService'],function () {
+    //回報問題管理
+    Route::resource('Issues', 'CustomerService\IssuesController');
 });
 
 //會員管理

@@ -969,7 +969,8 @@
             var mac = $('#issue #MAC').val();
             var sn = $('#issue #SN').val();
             var Subject = $('#issue #Subject').val();
-            var Description = $('#issue #Description').val();
+            var Description = tinyMCE.get('Description').getContent();
+
             var LogType = 0;
             var radios = document.getElementsByName('LogType');
             for (var i = 0, length = radios.length; i < length; i++) {

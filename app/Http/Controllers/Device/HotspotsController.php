@@ -824,6 +824,22 @@ class HotspotsController extends Controller
         $searchFields = WebLib::generateInputs(self::defineSearchFields(), true)["data"];
         //dd($searchFields);
 
+        // 調整欄位CSS
+        if($searchFields['IsVerify']['value'] != ''){
+            $IsVerify = $searchFields['IsVerify']['value'];
+        }else{
+            $IsVerify = '';
+        }
+        $searchFields['IsVerify']['completeField'] = str_replace('value="'.$IsVerify.'"','value="'.$IsVerify.'" checked',$searchFields['IsVerify']['completeField']);
+
+        // 調整欄位CSS
+        if($searchFields['IfRegister']['value'] != ''){
+            $IfRegister = $searchFields['IfRegister']['value'];
+        }else{
+            $IfRegister = '';
+        }
+        $searchFields['IfRegister']['completeField'] = str_replace('value="'.$IfRegister.'"','value="'.$IfRegister.'" checked',$searchFields['IfRegister']['completeField']);
+
         // 當按下搜尋的時候，會傳回IfNewSearch = 1; 如果不是，表示空值或是其他數值;
         // 當是其他數值的時候，會依照原來的頁碼去產生回應的頁面;
         if($IsNewSearch != '1') {
