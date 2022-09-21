@@ -251,7 +251,7 @@
 					}
 					// console.log(result.MinerVersion);
 					// console.log(result.pointname);					
-					dataPoint.push({ y:result.TotalCount,name:pointname });
+					dataPoint.push({ y:result.TotalCount,name:pointname,oldname:result.MinerVersion });
 				}
 
 				var chart21 = new CanvasJS.Chart("chartContainer21", {
@@ -267,7 +267,7 @@
 					},
 					data: [{
 						click: function(e){
-							showVersionList(e.dataPoint.name);
+							showMinerList(e.dataPoint.oldname);
 						},
 						type: "pie",
 						showInLegend: true,
@@ -370,6 +370,7 @@
 		}
 
 		function showFirmwareList (name) {
+			var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
 			// alert(name);
 			$.ajax({
                 url: '/api/v1/ShowFirmwareList',
@@ -382,59 +383,100 @@
                     'Name' : name,
                 },
                 success: function(response) {
-                	UIkit.modal("#modal_full").show();
-                    // if(response.status == 0){
-                    //     // hideen the button
-                    //     let HTML = '<thead><tr>';
-                    //     HTML += '<th class="uk-width-1-10">s/n</th>';
-                    //     HTML += '<th class="uk-width-1-10">model</th>';
-                    //     HTML += '<th class="uk-width-1-10">lan mac</th>';
-                    //     HTML += '<th class="uk-width-1-10">animal name</th>';
-                    //     HTML += '<th class="uk-width-1-10">nick name</th>';
-                    //     HTML += '<th class="uk-width-1-10">version</th>';
-                    //     HTML += '<th class="uk-width-1-10">provision</th>';
-                    //     HTML += '<th class="uk-width-1-10">delivery</th>';
-                    //     HTML += '<th class="uk-width-1-10">dewi onboarded</th>';
+                    if(response.status == 0){
+                        // hideen the button
+                        let HTML = '<thead><tr>';
+                        HTML += '<th class="uk-width-1-10">s/n</th>';
+                        HTML += '<th class="uk-width-1-10">model</th>';
+                        HTML += '<th class="uk-width-1-10">lan mac</th>';
+                        HTML += '<th class="uk-width-1-10">animal name</th>';
+                        HTML += '<th class="uk-width-1-10">nick name</th>';
+                        HTML += '<th class="uk-width-1-10">version</th>';
+                        HTML += '<th class="uk-width-1-10">provision</th>';
+                        HTML += '<th class="uk-width-1-10">delivery</th>';
+                        HTML += '<th class="uk-width-1-10">dewi onboarded</th></thead></tr>';
 
-                    //     // response.data.forEach(element => {
-                    //     //     HTML += '<td class="uk-text-small">';
-                    //     //     HTML += element.SkuID;
-                    //     //     HTML += '</td>';
-                    //     //     HTML += '<td class="uk-text-small">';
-                    //     //     HTML += element.PalletId;
-                    //     //     HTML += '</td>';
-                    //     //     HTML += '<td class="uk-text-small">';
-                    //     //     HTML += element.CartonId;
-                    //     //     HTML += '</td>';
-                    //     //     HTML += '<td class="uk-text-small">';
-                    //     //     HTML += element.DeviceSN;
-                    //     //     HTML += '</td>';
-                    //     //     HTML += '<td class="uk-text-small">';
-                    //     //     HTML += element.IfShipped;
-                    //     //     HTML += '</td>';
-                    //     //     HTML += '<td class="uk-text-small">';
-                    //     //     HTML += element.ShippedDate;
-                    //     //     HTML += '</td>';
-                    //     //     HTML += '<td class="uk-text-small">';
-                    //     //     HTML += element.TrackingNo;
-                    //     //     HTML += '</td>';
-                    //     //     HTML += '<td class="uk-text-small">';
-                    //     //     HTML += element.IfCompletedImport;
-                    //     //     HTML += '</td>';
-                    //     //     HTML += '<td class="uk-text-small">';
-                    //     //     HTML += element.ImportStatus;
-                    //     //     HTML += '</td>';
-                    //     //     HTML += '<td class="uk-text-small">';
-                    //     //     HTML += element.ImportMemo;
-                    //     //     HTML += '</td>';
-                    //     //     HTML +='</tr>';
-                    //     // });
+                        response.data.forEach(element => {
+                        	// console.log(element);
+                            HTML += '<tr><td class="uk-text-small">';
+                            HTML += element.DeviceSN;
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            if(element.ModelName != null){
+                            	HTML += element.ModelName;
+                            }
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            HTML += element.MacAddress;
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            HTML += element.AnimalName;
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            if(element.OfficalNickName != null){
+                            	HTML += element.OfficalNickName;
+                            }
+                            if(element.NickName != null){
+                            	HTML += '<br>(';
+                            	HTML += element.NickName;
+                            	HTML += ')</td>';
+                            }
+                            HTML += '<td class="uk-text-small">';
+                            if(element.VersionNo != null){
+                            	HTML += element.VersionNo;
+                            	HTML += '<br>';
+                            }else if(element.Firmware != null){
+                            	HTML += element.Firmware;
+                            	HTML += '<br>';
+                            }
+                            if(element.MinerVersion != null){
+                            	HTML += element.MinerVersion.slice(-13);
+                            }
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            var date = new Date(element.IssueDate.replace(/-/g,"/"));
+							const formatDate = (current_datetime)=>{
+								let formatted_date = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate();
+								return formatted_date;
+							}
+							HTML += formatDate(date);
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            if(element.IfShipped != null){
+                            	if(element.IfShipped == 1){
+                            		HTML += element.CustomInfo;
+	                            	HTML += '<br>';
+	                            	var date = new Date(element.ShippedDate.replace(/-/g,"/"));
+									const formatDate = (current_datetime)=>{
+										let formatted_date = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate();
+										return formatted_date;
+									}
+									HTML += formatDate(date);
+                            	}else{
+                            		HTML += 'in stock';
+                            	}
+                            }else{
+                            	HTML += 'in stock';
+                            }
+                            HTML += ''
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            if(element.IsRegisteredDewi == 1){
+                            	HTML += 'Y';
+                            }else{
+                            	HTML += 'N';
+                            }
+                            HTML += '</td>';
+                            HTML +='</tr>';
+                        });
                         
-                    //     $('#list').html(HTML);
-                    //     UIkit.modal("#list").show();
-                    // }else{
-                    //     console.log(response.message);
-                    // }
+                        $('#modal_full #list').html(HTML);
+                        // UIkit.modal("#list").show();
+                		UIkit.modal("#modal_full").show();
+                		modal.hide();
+                    }else{
+                        console.log(response.message);
+                    }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     // UIkit.modal.alert('Error').on('hide.uk.modal', function() {
@@ -445,7 +487,122 @@
 		}
 
 		function showMinerList (name) {
+			var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
 			// alert(name);
+			$.ajax({
+                url: '/api/v1/ShowMinerList',
+                type: 'POST',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : { 
+                    'Name' : name,
+                },
+                success: function(response) {
+                    if(response.status == 0){
+                        // hideen the button
+                        let HTML = '<thead><tr>';
+                        HTML += '<th class="uk-width-1-10">s/n</th>';
+                        HTML += '<th class="uk-width-1-10">model</th>';
+                        HTML += '<th class="uk-width-1-10">lan mac</th>';
+                        HTML += '<th class="uk-width-1-10">animal name</th>';
+                        HTML += '<th class="uk-width-1-10">nick name</th>';
+                        HTML += '<th class="uk-width-1-10">version</th>';
+                        HTML += '<th class="uk-width-1-10">provision</th>';
+                        HTML += '<th class="uk-width-1-10">delivery</th>';
+                        HTML += '<th class="uk-width-1-10">dewi onboarded</th></thead></tr>';
+
+                        response.data.forEach(element => {
+                        	// console.log(element);
+                            HTML += '<tr><td class="uk-text-small">';
+                            HTML += element.DeviceSN;
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            if(element.ModelName != null){
+                            	HTML += element.ModelName;
+                            }
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            HTML += element.MacAddress;
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            HTML += element.AnimalName;
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            if(element.OfficalNickName != null){
+                            	HTML += element.OfficalNickName;
+                            }
+                            if(element.NickName != null){
+                            	HTML += '<br>(';
+                            	HTML += element.NickName;
+                            	HTML += ')</td>';
+                            }
+                            HTML += '<td class="uk-text-small">';
+                            if(element.VersionNo != null){
+                            	HTML += element.VersionNo;
+                            	HTML += '<br>';
+                            }else if(element.Firmware != null){
+                            	HTML += element.Firmware;
+                            	HTML += '<br>';
+                            }
+                            if(element.MinerVersion != null){
+                            	HTML += element.MinerVersion.slice(-13);
+                            }
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            var date = new Date(element.IssueDate.replace(/-/g,"/"));
+							const formatDate = (current_datetime)=>{
+								let formatted_date = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate();
+								return formatted_date;
+							}
+							HTML += formatDate(date);
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            if(element.IfShipped != null){
+                            	if(element.IfShipped == 1){
+                            		HTML += element.CustomInfo;
+	                            	HTML += '<br>';
+	                            	var date = new Date(element.ShippedDate.replace(/-/g,"/"));
+									const formatDate = (current_datetime)=>{
+										let formatted_date = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate();
+										return formatted_date;
+									}
+									HTML += formatDate(date);
+                            	}else{
+                            		HTML += 'in stock';
+                            	}
+                            }else{
+                            	HTML += 'in stock';
+                            }
+                            HTML += ''
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            if(element.IsRegisteredDewi == 1){
+                            	HTML += 'Y';
+                            }else{
+                            	HTML += 'N';
+                            }
+                            HTML += '</td>';
+                            HTML +='</tr>';
+                        });
+                        
+                        $('#modal_full #list').html(HTML);
+                        // UIkit.modal("#list").show();
+                		UIkit.modal("#modal_full").show();
+                		modal.hide();
+                    }else{
+                    	modal.hide();
+                        console.log(response.message);
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                	modal.hide();
+                    UIkit.modal.alert('Error').on('hide.uk.modal', function() {
+                        console.log('close');
+                    });
+                },
+            });
 		}
 	</script>
 @endsection
