@@ -74,13 +74,13 @@ class IssuesController extends Controller
                 'label' => 'Type',
                 'type' => 'radio',
                 'selectLists' => [
-                    'all' => 'all',
+                    'all' => 'All',
                     '0' => 'H/W issue.',
                     '1' => 'Helium related.',
                     '2' => 'Setting error.',
                     '99' => 'others.',
                 ],
-                'value' => '0',
+                'value' => 'all',
                 'class' => 'md-input label-fixed',
             ],
             'DateFrom' => [
@@ -216,7 +216,8 @@ class IssuesController extends Controller
         }else{
             $LogType = 'all';
         }
-        $searchFields['LogType']['completeField'] = str_replace('value="'.$LogType.'"','value="'.$LogType.'" checked',$searchFields['LogType']['completeField']);
+        $searchFields['LogType']['completeField'] = str_replace('checked','',$searchFields['LogType']['completeField']);
+        $searchFields['LogType']['completeField'] = str_replace('value="'.$LogType.'"','value="'.$LogType.'" checked="checked"',$searchFields['LogType']['completeField']);
 
         // 當按下搜尋的時候，會傳回IfNewSearch = 1; 如果不是，表示空值或是其他數值;
         // 當是其他數值的時候，會依照原來的頁碼去產生回應的頁面;

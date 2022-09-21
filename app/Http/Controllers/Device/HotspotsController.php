@@ -79,9 +79,9 @@ class HotspotsController extends Controller
                 'label' => 'Verify',
                 'type' => 'radio',
                 'selectLists' => [
+                    '' => 'All',
                     '1' => 'Yes',
-                    '0' => 'No',
-                    '' => 'All'
+                    '0' => 'No'
                 ],
                 'value' => '',
                 'class' => 'md-input label-fixed',
@@ -92,9 +92,9 @@ class HotspotsController extends Controller
                 'label' => 'Register',
                 'type' => 'radio',
                 'selectLists' => [
+                    '' => 'All',
                     '1' => 'Yes',
-                    '0' => 'No',
-                    '' => 'All'
+                    '0' => 'No'
                 ],
                 'value' => '',
                 'class' => 'md-input label-fixed',
@@ -830,6 +830,7 @@ class HotspotsController extends Controller
         }else{
             $IsVerify = '';
         }
+        $searchFields['IsVerify']['completeField'] = str_replace('checked','',$searchFields['IsVerify']['completeField']);
         $searchFields['IsVerify']['completeField'] = str_replace('value="'.$IsVerify.'"','value="'.$IsVerify.'" checked',$searchFields['IsVerify']['completeField']);
 
         // 調整欄位CSS
@@ -838,6 +839,7 @@ class HotspotsController extends Controller
         }else{
             $IfRegister = '';
         }
+        $searchFields['IfRegister']['completeField'] = str_replace('checked','',$searchFields['IfRegister']['completeField']);
         $searchFields['IfRegister']['completeField'] = str_replace('value="'.$IfRegister.'"','value="'.$IfRegister.'" checked',$searchFields['IfRegister']['completeField']);
 
         // 當按下搜尋的時候，會傳回IfNewSearch = 1; 如果不是，表示空值或是其他數值;
