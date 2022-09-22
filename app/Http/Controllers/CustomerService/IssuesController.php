@@ -339,7 +339,7 @@ class IssuesController extends Controller
                 'IsCompleted' => 1,
                 'CompletedReport' => $CompletedReport,
                 'IsCompletedBy' => WebLib::getCurrentUserID(),
-                'IsCompletedBy' => Carbon::now('Asia/Taipei')->toDateTimeString() // 表示為目前時間;
+                'IsCompletedDate' => Carbon::now('Asia/Taipei')->toDateTimeString() // 表示為目前時間;
             ];
             // dd( $newData);
 
