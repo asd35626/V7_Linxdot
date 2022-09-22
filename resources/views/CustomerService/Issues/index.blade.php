@@ -244,6 +244,10 @@
                                             <br>
                                             {{Carbon\Carbon::parse($object->IsCompletedDate)->format('Y-m-d H:i:s')}}
                                             <br>
+                                            @if(isset($object->CompletedBy))
+                                                {{ $object->CompletedBy->RealName }}
+                                            @endif
+                                            <br>
                                             {{ $object->CompletedReport }}
                                         @endif
                                     @else

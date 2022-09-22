@@ -38,4 +38,10 @@ class HotspotMaintainLog extends Model
       'LastUpdatedBy',
       'LastUpdatedDate'
     ];
+
+    // 處理人員
+    public function CompletedBy()
+    {
+        return $this->belongsTo('App\Model\DimUser', 'IsCompletedBy','Id');
+    }
 }
