@@ -40,6 +40,11 @@
             <div class="uk-width-medium-1-3">
                 {!! $formFields['AnimalName']['completeField']  !!}
             </div>
+            @if($Action == 'NEW')
+                <div class="uk-width-medium-1-3">
+                    {!! $formFields['IsRegisteredDewi']['completeField']  !!}
+                </div>
+            @endif
             @if($Action == 'EDIT')
                 <div class="uk-width-medium-2-3">
                     {!! $formFields['OnBoardingKey']['completeField']  !!}

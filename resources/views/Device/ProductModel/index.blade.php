@@ -89,10 +89,10 @@
                     <thead>
                         <tr>
                             <th class="uk-width-1-10 uk-text-small">No.</th>
-                            {!! generateHTML('DeviceSN','ModelNo',$isAsc, $orderBy) !!}
-                            {!! generateHTML('MacAddress','ModelName mac',$isAsc, $orderBy) !!}
-                            {!! generateHTML('AnimalName','ModelSpec',$isAsc, $orderBy) !!}
-                            {!! generateHTML('IssueDate','ModelInfo',$isAsc, $orderBy) !!}
+                            {!! generateHTML('ModelNo','ModelNo',$isAsc, $orderBy) !!}
+                            {!! generateHTML('ModelName','ModelName',$isAsc, $orderBy) !!}
+                            {!! generateHTML('ModelSpec','ModelSpec',$isAsc, $orderBy) !!}
+                            {!! generateHTML('ModelInfo','ModelInfo',$isAsc, $orderBy) !!}
                             <th class="uk-width-1-10 uk-text-small">Function</th>
                         </tr>
                     </thead>
