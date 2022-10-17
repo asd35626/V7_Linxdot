@@ -99,39 +99,43 @@
         }
 
         function Upgradefirmware(MAC){
-            var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
-            $.ajax({
-                type: "POST",
-                url:"{{env('API_URL_49880', '')}}ota",
-                data:{
-                    mac: MAC 
-                },
-                timeout: 0,
-                success: function(response){
-                    modal.hide();
-                    // alert(response);
-                    if(response.status == 0){
-                        alert('Upgrade Firmware Successfully');
-                    }else{
-                        alert(response.errorMessage);
+            var yes = confirm('Do you confirm to upgrade?');
+            if(yes){
+                var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
+                $.ajax({
+                    type: "POST",
+                    url:"{{env('API_URL_49880', '')}}ota",
+                    data:{
+                        mac: MAC 
+                    },
+                    timeout: 0,
+                    success: function(response){
+                        modal.hide();
+                        // alert(response);
+                        if(response.status == 0){
+                            alert('Upgrade Firmware Successfully');
+                        }else{
+                            alert(response.errorMessage);
+                        }
+                    },
+                    error : function(xhr, ajaxOptions, thrownError){
+                        modal.hide();
+                        canSendGift = true;
+                        switch (xhr.status) {
+                            case 422:
+                                if(check()){
+                                // grecaptcha.reset();
+                                    alert("Error(422)");
+                                }
+                            break;
+                            default:
+                              // grecaptcha.reset();
+                              alert('server error');
+                        }
                     }
-                },
-                error : function(xhr, ajaxOptions, thrownError){
-                    modal.hide();
-                    canSendGift = true;
-                    switch (xhr.status) {
-                        case 422:
-                            if(check()){
-                            // grecaptcha.reset();
-                                alert("Error(422)");
-                            }
-                        break;
-                        default:
-                          // grecaptcha.reset();
-                          alert('server error');
-                    }
-                }
-            });
+                });
+            }
+                
         }
 
         function ReverseSSH(MAC){
@@ -1038,7 +1042,7 @@
                 success: function(response) {
                     if(response.status == 0){
                         // hideen the button
-                        UIkit.modal.alert('更新成功！').on('hide.uk.modal', function() {
+                        UIkit.modal.alert('Updated!').on('hide.uk.modal', function() {
                             // custome js code
                             console.log('close');
                             let topic = `{{env('mqtt_prefix', '')}}/LiveShow/${HID}`;
@@ -1100,7 +1104,7 @@
                 success: function(response) {
                     if(response.status == 0){
                         // hideen the button
-                        UIkit.modal.alert('更新成功！');
+                        UIkit.modal.alert('Updated!');
                         window.location.reload();
                     }else{
                         UIkit.modal.alert('更新失敗！')
@@ -1209,7 +1213,7 @@
                 success: function(response) {
                     if(response.status == 0){
                         // hideen the button
-                        UIkit.modal.alert('更新成功！')
+                        UIkit.modal.alert('Updated!')
                         window.location.reload();
                     }else{
                         UIkit.modal.alert('更新失敗！').on('hide.uk.modal', function() {
@@ -1310,7 +1314,7 @@
                             }
                                 
                         });
-                        // UIkit.modal.alert('更新成功！')
+                        // UIkit.modal.alert('Updated!')
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
