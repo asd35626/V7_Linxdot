@@ -100,17 +100,23 @@ class DashboardController extends Controller
         $user = WebLib::getCurrentUserID();                 // 使用者ID
         $search = $request->input('search', '');            // 查詢
         $MacAddress = $search;
-        $MacAddress = strtolower(str_replace("-","",$MacAddress));
-        $MacAddress = strtolower(str_replace(":","",$MacAddress));
-        $newMacAddress = '';
-        for ($i=0; $i < 11; $i+=2) { 
-            $str = substr($MacAddress, $i, 2);
-            if($i != 10){
-                $newMacAddress .= $str.":";
-            }else{
-                $newMacAddress .= $str;
+        if($MacAddress != ''){
+            $MacAddress = strtolower(str_replace("-","",$MacAddress));
+            $MacAddress = strtolower(str_replace(":","",$MacAddress));
+            $newMacAddress = '';
+            $count = strlen($MacAddress);
+            for ($i=0; $i < $count; $i+=2) {
+                $str = substr($MacAddress, $i, 2);
+                if($i != 10 && $i != $count-2){
+                    $newMacAddress .= $str.":";
+                }else{
+                    $newMacAddress .= $str;
+                }
             }
+        }else{
+            $newMacAddress = '';
         }
+        
         // dd($search);
 
         // 取得輸入欄位的定義
