@@ -5,6 +5,7 @@ use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Controller;
 use App\Model\DimHotspot;
 use App\Model\LinxdotWarehouseInventory;
+use App\Model\DimUser;
 use Uuid;
 use Carbon\Carbon;
 use App\V7Idea\WebLib;
@@ -38,15 +39,28 @@ class ShippedStatusController extends Controller
     // 設定功能名稱
     public static $functionURL = "/Inventory/ShippedStatus";
 
+    // 取得Warehouse選單
+    public function getWarehouse() {
+        return DimUser::where('IfDelete', 0)
+                        ->where('DegreeId',50)
+                        ->where('UserType',80)
+                        ->orderBy('RealName', 'asc');
+    }
+
     // 定義搜尋的欄位設定;
     public function defineSearchFields() {
         $fields = [
-            'WarehouseID' =>  [
+            'WarehouseID' => [
                 'name' => 'WarehouseID',
                 'id' => 'WarehouseID',
                 'label' => 'Warehouse',
-                'type' => 'text',
+                'type' => 'select',
+                'selectLists' => $this->getWarehouse()->get()->pluck('RealName', 'Id')->toArray(),
                 'value' => '',
+                'extras' => [
+                    'placeholder' => '',
+                    'data-parsley-trigger' => 'change'
+                ],
                 'class' => 'md-input label-fixed',
             ],
             'SkuID' =>  [

@@ -5,6 +5,7 @@ use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Controller;
 use App\Model\DimHotspot;
 use App\Model\LinxdotFactoryDispatch;
+use App\Model\DimUser;
 use Uuid;
 use Carbon\Carbon;
 use App\V7Idea\WebLib;
@@ -38,6 +39,14 @@ class FactoryDispatchController extends Controller
     // 設定功能名稱
     public static $functionURL = "/Inventory/FactoryDispatch";
 
+    // 取得Factory選單
+    public function getFactory() {
+        return DimUser::where('IfDelete', 0)
+                        ->where('DegreeId',20)
+                        ->where('UserType',80)
+                        ->orderBy('RealName', 'asc');
+    }
+
     // 定義搜尋的欄位設定;
     public function defineSearchFields() {
         $fields = [
@@ -49,12 +58,17 @@ class FactoryDispatchController extends Controller
                 'value' => '',
                 'class' => 'md-input label-fixed',
             ],
-            'Factory' =>  [
+            'Factory' => [
                 'name' => 'Factory',
                 'id' => 'Factory',
                 'label' => 'Factory',
-                'type' => 'text',
+                'type' => 'select',
+                'selectLists' => $this->getFactory()->get()->pluck('RealName', 'Id')->toArray(),
                 'value' => '',
+                'extras' => [
+                    'placeholder' => '',
+                    'data-parsley-trigger' => 'change'
+                ],
                 'class' => 'md-input label-fixed',
             ],
             'SkuNo' =>  [
