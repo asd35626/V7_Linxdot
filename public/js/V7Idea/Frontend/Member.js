@@ -198,7 +198,7 @@ function sendAddData() {
             alert('型別編號已經存在');
             break;
           case 401:
-            alert('沒有存取權限');
+            alert('No Access Permission');
             window.location.replace("/Admin/Login");
             break;
           default:
