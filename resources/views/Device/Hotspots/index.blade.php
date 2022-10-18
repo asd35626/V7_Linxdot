@@ -572,7 +572,7 @@
                                     @endif
                                 </td>
                                 <td class="uk-text-small">
-                                    <span class="material-icons userMOUSE" onclick="showNickName('{{ $object->id }}','{{ $object->NickName }}')">create</span>
+                                    <span class="material-icons userMOUSE" onclick="showNickName('{{ $object->id }}','{{ $object->OfficalNickName }}')">create</span>
                                 </td>
                                 <td class="uk-text-small">
                                     @if(isset($object->Version))
