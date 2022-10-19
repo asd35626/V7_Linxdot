@@ -256,7 +256,7 @@
                 {!! generateHTML('DeviceSN','S/N',$isAsc, $orderBy) !!}
                 {!! generateHTML('MacAddress','MAC Address',$isAsc, $orderBy) !!}
                 {!! generateHTML('AnimalName','Animal name',$isAsc, $orderBy) !!}
-                {!! generateHTML('NickName','Nick name',$isAsc, $orderBy) !!}
+                {!! generateHTML('NickName','Nickname',$isAsc, $orderBy) !!}
                 {!! generateHTML('LastUpdateOnLineTime','Status',$isAsc, $orderBy) !!}
                 {!! generateHTML('DewiStatus','dewi status',$isAsc, $orderBy) !!}
                 {!! generateHTML('LastUpdateOnLineTime','Latest online time',$isAsc, $orderBy) !!}
