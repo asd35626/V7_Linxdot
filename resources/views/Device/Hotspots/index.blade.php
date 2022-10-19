@@ -128,6 +128,11 @@
                                     alert("Error(422)");
                                 }
                             break;
+                            case 504:
+                                if(check()){
+                                    alert("Upgarde in progress. Please check the device later.");
+                                }
+                            break;
                             default:
                               // grecaptcha.reset();
                               alert('server error');
