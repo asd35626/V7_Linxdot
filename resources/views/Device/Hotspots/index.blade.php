@@ -61,6 +61,22 @@
                 $('#Page').val('1');
                 $('#searchForm').submit();
             });
+            $('#keywords').keypress(function(event) {
+                if (event.which == 13) {
+                    var status = $('#status').val();
+                    if(status == 1){
+                        $('#status').val(1);
+                    }else{
+                        $('#status').val(0);
+                    }
+                    $('#excel').val(0);
+                    $('#IfSearch').val('1');
+                    $('#IfNewSearch').val('1');
+                    $('#Page').val('1');
+                    $('#searchForm').submit();
+                    $('#searchForm').submit();
+                }
+            });
         })
 
         function rebootHotspot(MAC){
@@ -281,6 +297,145 @@
                 }
             });
         }
+
+        function GetHotspotdata(){
+            let page = $('#Page').val();
+            let IfNewSearch = $('#IfNewSearch').val();
+            let IfSearch = $('#IfSearch').val();
+            let orderBy = $('#orderBy').val();
+            let isAsc = $('#isAsc').val();
+            let status = $('#status').val();
+            var keywords = $('#keywords').val();
+            var IsVerify = $('#IsVerify').val();
+            var IfRegister = $('#IfRegister').val();
+            var IssueDateFrom = $('#IssueDateFrom').val();
+            var IssueDateTo = $('#IssueDateTo').val();
+            var VerifyDateFrom = $('#VerifyDateFrom').val();
+            var VerifyDateTo = $('#VerifyDateTo').val();
+            var ModelID = $('#ModelID').val();
+
+            $.ajax({
+                url: '/api/v1/GetHotspot',
+                type: 'POST',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : { 
+                    'page' : page,
+                    'IfNewSearch' : IfNewSearch,
+                    'IfSearch' : IfSearch,
+                    'orderBy' : orderBy,
+                    'isAsc' : isAsc,
+                    'status' : status,
+                    'keywords' : keywords,
+                    'IsVerify' : IsVerify,
+                    'IfRegister' : IfRegister,
+                    'IssueDateFrom' : IssueDateFrom,
+                    'IssueDateTo' : IssueDateTo,
+                    'VerifyDateFrom' : VerifyDateFrom,
+                    'VerifyDateTo' : VerifyDateTo,
+                    'ModelID' : ModelID,
+                },
+                success: function(response) {
+                    if(response.status == 0){
+                        var data = [];
+                        var Version = '';
+                        var delivery = '';
+                        var dewionboarded = '';
+                        var IssueDate = '';
+                        response.data.forEach(element => {
+                            if(element.Version){
+                                Version = element.Version.VersionNo
+                            }else{
+                                if(element.Firmware != "" && element.Firmware != null){
+                                    Version = element.Firmware
+                                }
+                            }
+                            if(element.Warehouse){
+                                if(element.Warehouse.IfShipped == 1){
+                                    delivery = element.Warehouse.CustomInfo+element.Warehouse.ShippedDate
+                                }else{
+                                    delivery = "in stock"
+                                }
+                            }else{
+                                    delivery = "in stock"
+                            }
+
+                            if(element.IsRegisteredDewi){
+                                if(element.IsRegisteredDewi == 1){
+                                    dewionboarded = "Y"
+                                }else{
+                                    dewionboarded = "N"
+                                }
+                            }else{
+                                    dewionboarded = "N"
+                            }
+                            IssueDate = element.IssueDate;
+                            IssueDate = new Date(IssueDate.replace(/-/g,"/"));
+                            getTime = IssueDate.getTime();
+                            let formatted_date = IssueDate.getFullYear() + "-" + (IssueDate.getMonth() + 1) + "-" + IssueDate.getDate();
+
+                            data.push({
+                                "s/n": element.DeviceSN,
+                                "model": element.ModelName,
+                                "lan mac": element.MacAddress,
+                                "animalname": element.AnimalName,
+                                "nickname": element.OfficalNickName,
+                                "verify": Version,
+                                "provision date": formatted_date,
+                                "delivery": delivery,
+                                "dewi onboarded": dewionboarded
+                            })
+                        });
+                        exportcsv(data);
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log('error');
+                },
+            });
+        }
+
+        function exportcsv(data){
+            // alert(123);
+            const buildData = data => {
+                return new Promise((resolve, reject) => {
+                    // 最後所有的資料會存在這
+                    let arrayData = [];
+                    // 取 data 的第一個 Object 的 key 當表頭
+                    let arrayTitle = Object.keys(data[0]);
+                    arrayData.push(arrayTitle);
+                    // 取出每一個 Object 裡的 value，push 進新的 Array 裡
+                    Array.prototype.forEach.call(data, d => {
+                        let items = [];
+                        Array.prototype.forEach.call(arrayTitle, title => {
+                            let item = d[title] || '';
+                            items.push(item);
+                        });
+                        arrayData.push(items)
+                    })
+                    resolve(arrayData);
+                })
+            }
+
+            const downloadCSV = data => {
+                let csvContent = '';
+                Array.prototype.forEach.call(data, d => {
+                    let dataString = d.join(',') + '\n';
+                    csvContent += dataString;
+                })
+                // 下載的檔案名稱
+                let fileName = '下載資料_' + (new Date()).getTime() + '.csv';
+
+                // 建立一個 a，並點擊它
+                let link = document.createElement('a');
+                link.setAttribute('href', 'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURI(csvContent));
+                link.setAttribute('download', fileName);
+                link.click();
+            }
+            buildData(data).then(data => downloadCSV(data));
+        }
         
         tinymce.init({
             selector: 'textarea.tinymce',
@@ -459,8 +614,11 @@
     <div class="md-card uk-margin-medium-bottom">
         <div class="md-card-content">                
             <div class="uk-overflow-container">
-                <div class="uk-width-1-10" style="float:right">
+                <!-- <div class="uk-width-1-10" style="float:right">
                     <button type="submit" onclick="exportExcel()" class="md-btn md-btn-primary">Export</button>
+                </div> -->
+                <div class="uk-width-1-10" style="float:right">
+                    <button type="submit" onclick="GetHotspotdata()" class="md-btn md-btn-primary">Export</button>
                 </div>
                 <div class="uk-width-1-10" style="float:right">
                     <button type="submit" onclick="window.location.href='{{ route('Excel.create') }}';" class="md-btn md-btn-primary">Import</button>
@@ -698,6 +856,7 @@
                 <p><input type="hidden" id="HID"></p>
                 <div id="hotspotOwner"></div>
                 <div class="uk-modal-footer uk-text-right">
+                    <button onclick="javascript:Unassign()" type="button" class="md-btn md-btn-flat uk-modal-close">Unassign</button>
                     <button type="button" class="md-btn md-btn-flat uk-modal-close">BACK</button>
                     <button onclick="javascript:updateUID()" type="button" class="md-btn md-btn-flat md-btn-flat-primary">OK</button>
                 </div>
@@ -1032,6 +1191,59 @@
             let HID = $('#update_hotspotOwner #HID').val();
             //會員ID
             let newUID = $('#update_hotspotOwner #UID').val();
+            console.log(`HID: ${HID}`, `newUID: ${newUID}`);
+            $.ajax({
+                url: '/api/v1/updateUID',
+                type: 'POST',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : { 
+                    'ID' : HID,
+                    'newUID' : newUID,
+                },
+                success: function(response) {
+                    if(response.status == 0){
+                        // hideen the button
+                        UIkit.modal.alert('Updated!').on('hide.uk.modal', function() {
+                            // custome js code
+                            console.log('close');
+                            let topic = `{{env('mqtt_prefix', '')}}/LiveShow/${HID}`;
+                            // console.log(`topic: ${topic}`);
+                            let sendData = {
+                                            type          : "PrimaryProductUpdate",
+                                        };
+                            client.publish(topic, JSON.stringify(sendData), 1);
+                        });
+                    }else{
+                        UIkit.modal.alert('更新失敗！').on('hide.uk.modal', function() {
+                            // custome js code
+                            console.log('close');
+                        });
+                        // console.log(response.message);
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log('error');
+                    UIkit.modal.alert('更新失敗！(error)').on('hide.uk.modal', function() {
+                        // custome js code
+                        console.log('close');
+                    });
+                },
+                complete: function () {
+                    UIkit.modal("#update_hotspotOwner").hide();
+                },
+                cache: false
+            });
+        }
+
+        // 清除所屬會員
+        function Unassign() {
+            //機器ID
+            let HID = $('#update_hotspotOwner #HID').val();
+            //會員ID
+            let newUID = null;
             console.log(`HID: ${HID}`, `newUID: ${newUID}`);
             $.ajax({
                 url: '/api/v1/updateUID',

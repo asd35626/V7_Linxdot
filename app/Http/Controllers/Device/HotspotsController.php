@@ -560,7 +560,7 @@ class HotspotsController extends Controller
                 'value' => '1',
                 'validation' => '',
                 'class' => 'md-input label-fixed',
-                'extras' => ['disabled' => 'disabled'],
+                'extras' => [],
             ], 
             'MinerVersion' => [
                 'name' => 'MinerVersion',
@@ -871,7 +871,7 @@ class HotspotsController extends Controller
                             'Dim_ProductModel.ModelName',
                             'Linxdot_Factory_Dispatch.HWModelNo',
                             DB::raw('CONCAT("Dim_Hotspot.DeviceSN","Dim_Hotspot.AnimalName","Dim_Hotspot.OfficalNickName","Dim_Hotspot.MacAddress") AS keywords')
-                            );
+                        );
 
         if($status == 1){
             $data = $data->where('Dim_Hotspot.LastUpdateOnLineTime', '>=' ,$now);
@@ -1795,6 +1795,118 @@ class HotspotsController extends Controller
             $responseBody['status'] = 0;
             $responseBody['message'] = 'change success!';
             $responseBody['errorCode'] = '0000';
+        }
+        return Response::json($responseBody, 200);
+    }
+
+    public function getHotspot(Request $request){
+        // init status
+        $responseBody = array(
+          'status' => 0,
+          'errorCode' => '9999',
+          'message' => 'Unknown error.',
+        );
+
+        $IsNewSearch = $request->input('IfNewSearch', '');  // 是否為新開始搜尋
+        $IfSearch = $request->input('IfSearch', '');        // 是否為搜尋
+        $orderBy = $request->input('orderBy', '');          // 排序欄位
+        $status = $request->input('status', '');            // 是否檢查onlin
+        $isAsc = $request->input('isAsc', '');              // 是否順序排序
+
+        // 查詢條件
+        $keywords = $request->input('keywords', '');
+        $IsVerify = $request->input('IsVerify', '');
+        $IfRegister = $request->input('IfRegister', '');
+        $IssueDateFrom = $request->input('IssueDateFrom', '');
+        $IssueDateTo = $request->input('IssueDateTo', '');
+        $VerifyDateFrom = $request->input('VerifyDateFrom', '');
+        $VerifyDateTo = $request->input('VerifyDateTo', '');
+        $ModelID = $request->input('ModelID', '');
+        // dd($pageNo);
+        $now = Carbon::now('Asia/Taipei')->subHours(8)->subMinutes(30)->toDateTimeString();
+
+        $data = DimHotspot::where('Dim_Hotspot.IfDelete','0')
+                        ->leftJoin('Linxdot_Factory_Dispatch', function($join){
+                            $join->on('Dim_Hotspot.MacAddress','=','Linxdot_Factory_Dispatch.MacAddress')
+                                ->where('Linxdot_Factory_Dispatch.IfValid' , 1)
+                                ->where('Linxdot_Factory_Dispatch.IfDelete' , 0);
+                        })
+                        ->leftJoin('Dim_ProductModel', function($join){
+                            $join->on('Linxdot_Factory_Dispatch.HWModelNo','=','Dim_ProductModel.ModelID')
+                                ->where('Dim_ProductModel.IfValid' , 1)
+                                ->where('Dim_ProductModel.IfDelete' , 0);
+                        })
+                        ->select('Dim_Hotspot.*','Dim_ProductModel.ModelName','Linxdot_Factory_Dispatch.HWModelNo');
+
+        if($status == 1){
+            $data = $data->where('Dim_Hotspot.LastUpdateOnLineTime', '>=' ,$now);
+        }
+
+
+        if ($IfSearch == '1') {
+            // 表示會需要參考搜尋的變數
+            $searchArray = array(
+                'keywords' => $keywords,
+                'Mac' => strtolower(str_replace("-",":",$keywords)),
+                'IsVerify' => $IsVerify,
+                'ModelID' => $ModelID,
+                'IfRegister' => $IfRegister,
+                'IssueDateFrom' => $IssueDateFrom,
+                'IssueDateTo' => $IssueDateTo,
+                'VerifyDateFrom' => $VerifyDateFrom,
+                'VerifyDateTo' => $VerifyDateTo,
+            );
+
+            $data= $data->where(function($query) use ($searchArray) {
+                if($searchArray['keywords'] != '') {
+                    $query->orwhere('Dim_Hotspot.DeviceSN', 'like', '%'.$searchArray['keywords'].'%' )
+                        ->orwhere('Dim_Hotspot.AnimalName', 'like', '%'.$searchArray['keywords'].'%' )
+                        ->orwhere('Dim_Hotspot.OfficalNickName', 'like', '%'.$searchArray['keywords'].'%' );
+                }
+                if($searchArray['Mac'] != '') {
+                    $query->orwhere('Dim_Hotspot.MacAddress', 'like', '%'.$searchArray['Mac'].'%' );
+                }
+                if($searchArray['ModelID'] != '') {
+                    $query->orwhere('Linxdot_Factory_Dispatch.HWModelNo', 'like', '%'.$searchArray['ModelID'].'%' );
+                }
+                if($searchArray['IsVerify'] != '') {
+                    $query->where('Dim_Hotspot.IsVerify', $searchArray['IsVerify']);
+                }
+                if($searchArray['IfRegister'] != '') {
+                    $query->where('Dim_Hotspot.IfRegister', $searchArray['IfRegister']);
+                }
+                if ($searchArray['IssueDateFrom'] != '') {
+                    $query->where('Dim_Hotspot.IssueDate', '>=', ($searchArray['IssueDateFrom'] . ' 00:00:00'));
+                }
+                if ($searchArray['IssueDateTo'] != '') {
+                    $query->where('Dim_Hotspot.IssueDate', '<=', ( $searchArray['IssueDateTo'] . ' 23:59:59'));
+                }
+                if ($searchArray['VerifyDateFrom'] != '') {
+                    $query->where('Dim_Hotspot.IfVerifyDate', '>=', ($searchArray['VerifyDateFrom'] . ' 00:00:00'));
+                }
+                if ($searchArray['VerifyDateTo'] != '') {
+                    $query->where('Dim_Hotspot.IfVerifyDate', '<=', ( $searchArray['VerifyDateTo'] . ' 23:59:59'));
+                }
+            });
+        }
+
+        //排序
+        if(isset($orderBy) && $orderBy != ''){
+            if($isAsc == '1'){
+                $data = $data->orderBy($orderBy, 'ASC');
+            }else{
+                $data = $data->orderBy($orderBy, 'DESC');
+            }
+        }else{
+            $data = $data->orderBy('Dim_Hotspot.CreateDate');
+        }
+        $data = $data->get();
+
+        if($responseBody['status'] == 0) {
+            $responseBody['status'] = 0;
+            $responseBody['message'] = 'change success!';
+            $responseBody['errorCode'] = '0000';
+            $responseBody['data'] = $data;
         }
         return Response::json($responseBody, 200);
     }

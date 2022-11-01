@@ -60,8 +60,10 @@ Route::group(['prefix' => 'api/v1'],function () {
     // Block
     Route::post('Block', 'Device\HotspotsController@block');
     // 回報問題
-    Route::post('UpdateIssue', 'Device\HotspotsController@updateIssue');
-    
+    Route::post('UpdateIssue', 'Device\HotspotsController@updateIssue');    
+    // 取得所有機器(匯出)
+    Route::post('GetHotspot', 'Device\HotspotsController@getHotspot');
+
     // 處理問題
     Route::post('SolvingIssue', 'CustomerService\IssuesController@solvingIssue');
 
