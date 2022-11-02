@@ -298,6 +298,42 @@
             });
         }
 
+        function registDewi(MAC){
+            var modal =  UIkit.modal.blockUI('<div class=\'uk-text-center\'>Loading...<br/><img class=\'uk-margin-top\' src=\'/assets/img/spinners/spinner.gif\' alt=\'\'>');
+            $.ajax({
+                type: "POST",
+                url:"https://heipeng-0715rc.linxdot.wtf/registDewi",
+                data:{
+                    'mac' : MAC
+                },
+                timeout: 0,
+                success: function(response){
+                    // alert(response);
+                    modal.hide();
+                    if(response.status == 0){
+                        alert('Successfully!');
+                    }else{
+                        alert(response.errorMessage);
+                    }
+                },
+                error : function(xhr, ajaxOptions, thrownError){
+                    modal.hide();
+                    canSendGift = true;
+                    switch (xhr.status) {
+                        case 422:
+                            if(check()){
+                            // grecaptcha.reset();
+                                alert("Error(422)");
+                            }
+                        break;
+                        default:
+                          // grecaptcha.reset();
+                          alert('server error');
+                    }
+                }
+            });
+        }
+
         function GetHotspotdata(){
             let page = $('#Page').val();
             let IfNewSearch = $('#IfNewSearch').val();
@@ -389,6 +425,29 @@
                             })
                         });
                         exportcsv(data);
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log('error');
+                },
+            });
+        }
+
+        function IfNeedRegisteredDewi(){
+            $.ajax({
+                url: 'https://hotspot-auth.linxdot.wtf/IfNeedRegisteredDewi',
+                type: 'GET',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : {
+                },
+                success: function(response) {
+                    if(response.status == 0){
+                        alert('success!');
+                    }else{
+                        alert(response.errorMessage);
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
@@ -625,6 +684,9 @@
                 </div>
                 <div class="uk-width-1-10" style="float:right">
                     <button type="submit" onclick="window.location.href='{{ route( $routePath.'.create') }}';" class="md-btn md-btn-primary">Add</button>
+                </div>                
+                <div class="uk-width-1-10" style="float:right">
+                    <button type="submit" onclick="IfNeedRegisteredDewi()" class="md-btn md-btn-primary">Dewi</button>
                 </div>
                 <!-- <div class="uk-width-1-10" style="float:right">
                     <button type="submit" onclick="updateonline()" class="md-btn md-btn-primary">Refresh</button>
@@ -770,7 +832,7 @@
                                             @if($object->IsRegisteredDewi == 1)
                                                 Y
                                             @else
-                                                N
+                                                N <span onclick="registDewi('{{ $object->MacAddress }}')" class="material-icons userMOUSE">info</span>
                                             @endif
                                         @else
                                             N
