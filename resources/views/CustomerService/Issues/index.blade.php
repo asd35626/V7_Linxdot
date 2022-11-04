@@ -219,10 +219,10 @@
                                                 echo "";
                                                 break;
                                             case 0:
-                                                echo "H/W issue.";
-                                                break;
-                                            case 1:
-                                                echo "Helium related.";
+                                                    echo "H/W issue.";
+                                                    break;
+                                                case 1:
+                                                    echo "Helium related.";
                                                 break;
                                             case 2:
                                                 echo "Setting error.";
@@ -235,7 +235,12 @@
                                         }
                                     ?>
                                 </td>
-                                <td class="uk-text-small">{{ $object->LogDescription }}</td>
+                                <td class="uk-text-small">
+                                    {{ substr($object->LogDescription,0, 49) }}
+                                    {{-- @if(strlen($object->LogDescription) > 50)
+
+                                    @endif --}}
+                                </td>
                                 <td class="uk-text-small">{{Carbon\Carbon::parse($object->LogDate)->format('Y-m-d H:i:s')}}</td>
                                 <td class="uk-text-small">
                                     @if($object->IsCompleted == 1)
@@ -252,10 +257,12 @@
                                         @endif
                                     @else
                                         N
-                                        <a onclick="showIssue('{{ $object->AnimalName }}','{{ $object->DeviceSN }}','{{ $object->MacAddress }}','{{ $object->LogId }}')">
-                                            <span class="material-icons" style="font-size:14px;" > build </span>
-                                        </a>
+                                        <br>
+                                        {{ $object->CompletedReport }}
                                     @endif
+                                    <a onclick="showIssue('{{ $object->AnimalName }}','{{ $object->DeviceSN }}','{{ $object->MacAddress }}','{{ $object->LogId }}','{{ $object->LogDescription }}','{{ $object->CompletedReport }}','{{ $object->IsCompleted }}')">
+                                        <span class="material-icons" style="font-size:14px;" > build </span>
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
@@ -287,20 +294,21 @@
                             {!! $formFields['MacAddress']['completeField']  !!}
                         </div>
                     </div>
-                    <h3 class="heading_a" style="padding-left: 0px;">Issue</h3>
-                   <!--  <div class="uk-grid" data-uk-grid-margin>
-                        <div class="uk-width-medium-1-1">
-                            {!! $formFields['LogType']['completeField']  !!}
+                    <h3 class="heading_a" style="padding-left: 0px;">Description</h3>
+                    <div class="uk-grid" data-uk-grid-margin>
+                        <div class="uk-width-medium-1-1" style="width: 100%">
+                            {!! $formFields['Description']['completeField']  !!}
                         </div>
                     </div>
-                    <div class="uk-grid" data-uk-grid-margin>
-                        <div class="uk-width-medium-1-1">
-                            {!! $formFields['Subject']['completeField']  !!}
-                        </div>
-                    </div> -->
+                    <h3 class="heading_a" style="padding-left: 0px;">CompletedReport</h3>
                     <div class="uk-grid" data-uk-grid-margin>
                         <div class="uk-width-medium-1-1" style="width: 100%">
                             {!! $formFields['CompletedReport']['completeField']  !!}
+                        </div>
+                    </div>
+                    <div class="uk-grid" data-uk-grid-margin>
+                        <div class="uk-width-medium-1-1" style="width: 100%">
+                            {!! $formFields['IfComplete']['completeField']  !!}
                         </div>
                     </div>
                     <div>
@@ -368,11 +376,13 @@
         }
 
         // 顯示回報問題
-        function showIssue(name,sn,mac,lid) {
+        function showIssue(name,sn,mac,lid,Description,CompletedReport,IsCompleted) {
             $('#issue #AnimalName').val(name);
             $('#issue #DeviceSN').val(sn);
             $('#issue #MacAddress').val(mac);
             $('#issue #LogId').val(lid);
+            $('#issue #Description').val(Description);
+            tinyMCE.activeEditor.setContent(CompletedReport)
             UIkit.modal("#issue").show();
         }
 
@@ -380,6 +390,12 @@
         function updateIssue() {
             var LogId = $('#issue #LogId').val();
             var CompletedReport = tinyMCE.get('CompletedReport').getContent();
+            var checked = document.getElementById("IfComplete_1").checked;
+            if(checked){
+                IfComplete = 0;
+            }else{
+                IfComplete = 1;
+            }
 
             $.ajax({
                 url: '/api/v1/SolvingIssue',
@@ -390,7 +406,8 @@
                 },
                 data : { 
                     'LogId' : LogId,
-                    'CompletedReport' : CompletedReport
+                    'CompletedReport' : CompletedReport,
+                    'IfComplete' : IfComplete
                 },
                 success: function(response) {
                     if(response.status == 0){
