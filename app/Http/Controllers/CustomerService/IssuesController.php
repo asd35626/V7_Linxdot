@@ -168,18 +168,31 @@ class IssuesController extends Controller
             'Description' => [
                 'name' => 'Description',
                 'id' => 'Description',
-                'label' => 'Description',
+                'label' => '',
                 'type' => 'textarea',
                 'validation' => '',
                 'value' => '',
                 'extras' => [],
-                'class' => 'tinymce label-fixed',
-                'extras' => ['style' => 'width: 100%']
+                'class' => 'label-fixed',
+                'extras' => ['disabled' => 'disabled','style' => 'width: 100%']
+            ],
+            'IfComplete' => [
+                'name' => 'IfComplete',
+                'id' => 'IfComplete',
+                'label' => 'Complete',
+                'type' => 'radio',
+                'selectLists' => [
+                    '1' => 'Yes',
+                    '0' => 'No'
+                ],
+                'value' => '1',
+                'validation' => 'required',
+                'class' => 'md-input label-fixed',
             ],
             'CompletedReport' => [
                 'name' => 'CompletedReport',
                 'id' => 'CompletedReport',
-                'label' => 'CompletedReport',
+                'label' => '',
                 'type' => 'textarea',
                 'validation' => '',
                 'value' => '',
@@ -332,11 +345,13 @@ class IssuesController extends Controller
 
         $id = $request->input('LogId', '');
         $CompletedReport = $request->input('CompletedReport', '');
+        $IfComplete = $request->input('IfComplete', '');
+        // dd($IfComplete);
 
         if($responseBody['status'] == 0) {
             $newData = [
                 'LogId' => $id,
-                'IsCompleted' => 1,
+                'IsCompleted' => $IfComplete,
                 'CompletedReport' => $CompletedReport,
                 'IsCompletedBy' => WebLib::getCurrentUserID(),
                 'IsCompletedDate' => Carbon::now('Asia/Taipei')->toDateTimeString() // 表示為目前時間;
