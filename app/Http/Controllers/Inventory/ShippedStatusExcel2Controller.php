@@ -133,13 +133,13 @@ class ShippedStatusExcel2Controller extends Controller
                                 }
                             }else{
                                 
-                                $FactoryDispatch = LinxdotFactoryDispatch::where('DeviceSN', $data[5])->select('MacAddress');
-                                if($FactoryDispatch){
+                                $FactoryDispatch = LinxdotFactoryDispatch::where('DeviceSN', $data[5])->select('MacAddress')->first();
+                                if($FactoryDispatch != null){
                                     $ImportStatus = -1;
                                     $ImportMemo = '';
-                                    $newMacAddress = $FactoryDispatch->first()->MacAddress;
+                                    $newMacAddress = $FactoryDispatch->MacAddress;
                                 }else{
-                                    $ImportStatus = 1;
+                                    $ImportStatus = 0;
                                     $ImportMemo = '查無MacAddress';
                                     $newMacAddress = '';
                                 }
