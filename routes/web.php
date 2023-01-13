@@ -137,7 +137,10 @@ Route::group(['prefix' => 'Inventory'],function () {
     Route::resource('ShippedStatus', 'Inventory\ShippedStatusController');
     //工廠設備匯入管理
     Route::resource('ShippedStatusExcel', 'Inventory\ShippedStatusExcelController');
+    //工廠設備匯入管理
+    Route::resource('ShippedStatusExcel2', 'Inventory\ShippedStatusExcel2Controller');
 });
+
 
 //客戶服務
 Route::group(['prefix' => 'CustomerService'],function () {

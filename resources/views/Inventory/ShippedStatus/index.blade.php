@@ -123,15 +123,12 @@
     <div class="md-card uk-margin-medium-bottom">
         <div class="md-card-content">
             <div class="uk-overflow-container">
-                {{-- <div class="uk-width-1-10" style="float:right">
-                    <button type="submit" onclick="exportExcel()" class="md-btn md-btn-primary">Export</button>
-                </div> --}}
+                <div class="uk-width-1-10" style="float:right;width: 250px">
+                    <button type="submit" onclick="window.location.href='{{ route('ShippedStatusExcel2.create') }}';" class="md-btn md-btn-primary" style="width: 230px">express import(no mac)</button>
+                </div>
                 <div class="uk-width-1-10" style="float:right">
                     <button type="submit" onclick="window.location.href='{{ route('ShippedStatusExcel.create') }}';" class="md-btn md-btn-primary">Import</button>
                 </div>
-                {{-- <div class="uk-width-1-10" style="float:right">
-                    <button type="submit" onclick="window.location.href='{{ route( $routePath.'.create') }}';" class="md-btn md-btn-primary">Add</button>
-                </div> --}}
             </div>
             <div class="uk-overflow-container">
                 <table id="grid-basic" class="uk-table uk-table-nowrap table_check">
