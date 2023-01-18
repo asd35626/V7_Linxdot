@@ -141,9 +141,14 @@
                         HTML += '<th class="uk-width-1-10">IfCompletedImport</th>';
                         HTML += '<th class="uk-width-1-10">ImportStatus</th>';
                         HTML += '<th class="uk-width-1-10">ImportMemo</th>';
-                        HTML += '</tr></thead><tr>';
+                        HTML += '</tr></thead>';
                         
                         response.data.forEach(element => {
+                            if(element.IfCompletedImport == 1 && element.ImportStatus == 1){
+                                HTML += '<tr>';
+                            }else{
+                                HTML += "<tr style='color: red;'>";
+                            }
                             HTML += '<td class="uk-text-small">';
                             HTML += element.SkuID;
                             HTML += '</td>';
@@ -166,10 +171,18 @@
                             HTML += element.TrackingNo;
                             HTML += '</td>';
                             HTML += '<td class="uk-text-small">';
-                            HTML += element.IfCompletedImport;
+                            if(element.IfCompletedImport == 1){
+                                HTML += "Y";
+                            }else{
+                                HTML += "N";
+                            }
                             HTML += '</td>';
                             HTML += '<td class="uk-text-small">';
-                            HTML += element.ImportStatus;
+                            if(element.ImportStatus == 1){
+                                HTML += "Y";
+                            }else{
+                                HTML += "N";
+                            }
                             HTML += '</td>';
                             HTML += '<td class="uk-text-small">';
                             HTML += element.ImportMemo;

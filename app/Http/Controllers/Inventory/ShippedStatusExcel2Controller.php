@@ -115,11 +115,11 @@ class ShippedStatusExcel2Controller extends Controller
 
                             if($MacAddress != null){
                                 if(strlen($MacAddress) != 12){
-                                    $ImportStatus = 0;
+                                    $IfCompletedImport = 0;
                                     $ImportMemo = '請確認MacAddress長度為12';
                                     $newMacAddress = $data[2];
                                 }else{
-                                    $ImportStatus = -1;
+                                    $IfCompletedImport = -1;
                                     $ImportMemo = '';
                                     $newMacAddress = '';
                                     for ($i=0; $i < 11; $i+=2) { 
@@ -135,11 +135,11 @@ class ShippedStatusExcel2Controller extends Controller
                                 
                                 $FactoryDispatch = LinxdotFactoryDispatch::where('DeviceSN', $data[5])->select('MacAddress')->first();
                                 if($FactoryDispatch != null){
-                                    $ImportStatus = -1;
+                                    $IfCompletedImport = -1;
                                     $ImportMemo = '';
                                     $newMacAddress = $FactoryDispatch->MacAddress;
                                 }else{
-                                    $ImportStatus = 0;
+                                    $IfCompletedImport = 0;
                                     $ImportMemo = '查無MacAddress';
                                     $newMacAddress = '';
                                 }
@@ -153,7 +153,10 @@ class ShippedStatusExcel2Controller extends Controller
                                     // $ShippedDate = $data[7];
                                     // dd($ShippedDate);
                                 } catch (Exception $e) {
-                                    dd($e);
+                                    $ShippedDate = null;
+                                    $IfCompletedImport = 0;
+                                    $ImportMemo = '日期格式異常，請確認日期格式';
+                                    // dd($e);
                                 }
                             }else{
                                 $ShippedDate = null;
@@ -176,8 +179,8 @@ class ShippedStatusExcel2Controller extends Controller
                                 'IfShipped' => $IfShipped,
                                 'ShippedDate' => $ShippedDate,
                                 'TrackingNo' => $data[8],
-                                'IfCompletedImport' => 0,
-                                'ImportStatus' => $ImportStatus,
+                                'ImportStatus' => 0,
+                                'IfCompletedImport' => $IfCompletedImport,
                                 'ImportMemo' => $ImportMemo,
                                 'IfCompletedImportDate' => Carbon::now('Asia/Taipei')->toDateTimeString(),
                                 'CreateBy' => WebLib::getCurrentUserID(),
@@ -188,8 +191,8 @@ class ShippedStatusExcel2Controller extends Controller
                 }                        
             }
 
-            // 把暫存的資料取出來組成陣列，ImportStatus=0代表有錯誤
-            $DetailData = LinxdotExcelWarehouseInventoryDetail::where('ImportID',$id)->where('ImportStatus','!=',0)->get();
+            // 把暫存的資料取出來組成陣列，IfCompletedImport=0代表有錯誤
+            $DetailData = LinxdotExcelWarehouseInventoryDetail::where('ImportID',$id)->where('IfCompletedImport','!=',0)->get();
             // 找有沒有重複資料
             foreach ($DetailData as $key => $data) {
                 // 檢查工廠出貨清單有沒有存在
@@ -198,8 +201,8 @@ class ShippedStatusExcel2Controller extends Controller
                 if($FactoryDispatch->count() != 1){
                     LinxdotExcelWarehouseInventoryDetail::on('mysql2')
                             ->where('id',$data->id)
-                            ->update(['IfCompletedImport' => 1,
-                                    'ImportStatus' => 0,
+                            ->update(['IfCompletedImport' => 0,
+                                    'ImportStatus' => 1,
                                     'ImportMemo' => '此裝置不在工廠出貨清單內']);
                 }else{
                     // dd($DetailData);
@@ -257,15 +260,15 @@ class ShippedStatusExcel2Controller extends Controller
                         if($HotspotMac->count() > 0){
                             LinxdotExcelWarehouseInventoryDetail::on('mysql2')
                                     ->where('id',$data->id)
-                                    ->update(['IfCompletedImport' => 1,
-                                            'ImportStatus' => 0,
+                                    ->update(['IfCompletedImport' => 0,
+                                            'ImportStatus' => 1,
                                             'ImportMemo' => 'MacAddress重複，請確認資料']);
                         }elseif($HotspotSN->count() > 0){
                             // 如果S/N重複MAC不一樣
                             LinxdotExcelWarehouseInventoryDetail::on('mysql2')
                                     ->where('id',$data->id)
-                                    ->update(['IfCompletedImport' => 1,
-                                            'ImportStatus' => 0,
+                                    ->update(['IfCompletedImport' => 0,
+                                            'ImportStatus' => 1,
                                             'ImportMemo' => 'DeviceSN重複，請確認資料']);
                         }else{
                             // 不重複的資料，檢查MacAddress格式是否正確
