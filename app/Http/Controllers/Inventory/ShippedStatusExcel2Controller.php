@@ -361,7 +361,27 @@ class ShippedStatusExcel2Controller extends Controller
         );
 
         $ID = $request->input('ID', '');
-        $data = LinxdotExcelWarehouseInventoryDetail::where('ImportID',$ID)->get();
+        $data = LinxdotExcelWarehouseInventoryDetail::select(
+            'Linxdot_Excel_WarehouseInventory_Detail.IfCompletedImport',
+            'Linxdot_Excel_WarehouseInventory_Detail.ImportStatus',
+            'Linxdot_Excel_WarehouseInventory_Detail.SkuID',
+            'Linxdot_Excel_WarehouseInventory_Detail.PalletId',
+            'Linxdot_Excel_WarehouseInventory_Detail.CartonId',
+            'Linxdot_Excel_WarehouseInventory_Detail.DeviceSN',
+            'Linxdot_Excel_WarehouseInventory_Detail.IfShipped',
+            'Linxdot_Excel_WarehouseInventory_Detail.ShippedDate',
+            'Linxdot_Excel_WarehouseInventory_Detail.TrackingNo',
+            'Linxdot_Excel_WarehouseInventory_Detail.IfCompletedImport',
+            'Linxdot_Excel_WarehouseInventory_Detail.ImportStatus',
+            'Linxdot_Excel_WarehouseInventory_Detail.ImportMemo',
+            'Dim_Hotspot.IsRegisteredDewi','Dim_Hotspot.LastRegisterDewiMemo','Dim_Hotspot.LastRegisterDewiDate','Dim_Hotspot.LastRegisterDewiStatus')
+        ->leftJoin('Dim_Hotspot', function($join){
+            $join->on('Dim_Hotspot.DeviceSN','=','Linxdot_Excel_WarehouseInventory_Detail.DeviceSN')
+                ->where('Dim_Hotspot.IfValid' , 1)
+                ->where('Dim_Hotspot.IfDelete' , 0);
+        })
+        ->where('Linxdot_Excel_WarehouseInventory_Detail.ImportID',$ID)->get();
+        // dd($data);
 
         $responseBody['status'] = 0;
         $responseBody['message'] = 'change success!';

@@ -49,6 +49,8 @@ Route::group(['prefix' => 'api/v1'],function () {
     // 機器相關
     // 顯示匯入清單
     Route::post('WarehouseInventoryDetail', 'Inventory\ShippedStatusExcelController@WarehouseInventoryDetail');
+    // 顯示匯入清單
+    Route::post('WarehouseInventoryDetail2', 'Inventory\ShippedStatusExcel2Controller@WarehouseInventoryDetail');
     // 更改所屬會員
     Route::post('updateUID', 'Device\HotspotsController@updateUID');
     // 更改黑名單狀態

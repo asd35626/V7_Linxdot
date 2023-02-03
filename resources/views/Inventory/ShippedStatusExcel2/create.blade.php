@@ -118,7 +118,7 @@
         function List(ID) {
             // alert(ID);
             $.ajax({
-                url: '/api/v1/WarehouseInventoryDetail',
+                url: '/api/v1/WarehouseInventoryDetail2',
                 type: 'POST',
                 async: false,
                 headers: {
@@ -141,6 +141,9 @@
                         HTML += '<th class="uk-width-1-10">IfCompletedImport</th>';
                         HTML += '<th class="uk-width-1-10">ImportStatus</th>';
                         HTML += '<th class="uk-width-1-10">ImportMemo</th>';
+                        HTML += '<th class="uk-width-1-10">Registered</th>';
+                        HTML += '<th class="uk-width-1-10">RegisteredDate</th>';
+                        HTML += '<th class="uk-width-1-10">RegisterMemo</th>';
                         HTML += '</tr></thead>';
                         
                         response.data.forEach(element => {
@@ -186,6 +189,31 @@
                             HTML += '</td>';
                             HTML += '<td class="uk-text-small">';
                             HTML += element.ImportMemo;
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            if(element.IsRegisteredDewi == 1){
+                                HTML += "Y";
+                            }else{
+                                HTML += "N";
+                            }
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            if(element.IsRegisteredDewi == 1){
+                                HTML += element.LastRegisterDewiDate;
+                            }else{
+                                HTML += "";
+                            }
+                            HTML += '</td>';
+                            HTML += '<td class="uk-text-small">';
+                            if(element.IsRegisteredDewi != 1){
+                                if(element.LastRegisterDewiMemo){
+                                    HTML += element.LastRegisterDewiMemo;
+                                }else{
+                                    HTML += '';
+                                }
+                            }else{
+                                HTML += "";
+                            }
                             HTML += '</td>';
                             HTML +='</tr>';
                         });
