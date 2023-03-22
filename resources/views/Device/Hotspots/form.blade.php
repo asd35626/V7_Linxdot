@@ -53,12 +53,29 @@
         </div>
         @if($Action == 'EDIT')
             <div class="uk-grid" data-uk-grid-margin>
-                <div class="uk-width-medium-1-3">
+                <div class="uk-width-medium-1-6">
                     {!! $formFields['DewiStatus']['completeField']  !!}
                 </div>
                 <div class="uk-width-medium-1-3">
                     {!! $formFields['IsRegisteredDewi']['completeField']  !!}
                 </div>
+                <div class="uk-width-medium-1-6">
+                    @if($IsRegisteredDewi != 1)
+                        <button type="button" onclick="RegisteredDewi('{!!$MacAddress!!}')" class="md-btn md-btn-primary">Dewi</button>
+                    @endif
+                </div>
+                <div class="uk-width-medium-1-3">
+                    {!! $formFields['LastRegisterDewiDate']['completeField']  !!}
+                </div>
+            </div>
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-3">
+                </div>
+                @if($IsRegisteredDewi != 1)
+                    <div class="uk-width-medium-2-3">
+                        {!! $formFields['LastRegisterDewiMemo']['completeField']  !!}
+                    </div>
+                @endif
             </div>
             <div class="uk-grid" data-uk-grid-margin>
                 <div class="uk-width-medium-1-3">

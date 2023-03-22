@@ -267,6 +267,26 @@ class HotspotsController extends Controller
                 'class' => 'md-input label-fixed',
                 'extras' => []
             ], 
+            'LastRegisterDewiDate' => [
+                'name' => 'LastRegisterDewiDate',
+                'id' => 'LastRegisterDewiDate',
+                'label' => 'Register Date',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+            'LastRegisterDewiMemo' => [
+                'name' => 'LastRegisterDewiMemo',
+                'id' => 'LastRegisterDewiMemo',
+                'label' => 'Register Memo',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
             'MinerVersion' => [
                 'name' => 'MinerVersion',
                 'id' => 'MinerVersion',
@@ -562,6 +582,26 @@ class HotspotsController extends Controller
                 'class' => 'md-input label-fixed',
                 'extras' => [],
             ], 
+            'LastRegisterDewiDate' => [
+                'name' => 'LastRegisterDewiDate',
+                'id' => 'LastRegisterDewiDate',
+                'label' => 'Register Date',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
+            'LastRegisterDewiMemo' => [
+                'name' => 'LastRegisterDewiMemo',
+                'id' => 'LastRegisterDewiMemo',
+                'label' => 'Register Memo',
+                'type' => 'text',
+                'validation' => '',
+                'value' => '',
+                'class' => 'md-input label-fixed',
+                'extras' => ['disabled' => 'disabled']
+            ],
             'MinerVersion' => [
                 'name' => 'MinerVersion',
                 'id' => 'MinerVersion',
@@ -1208,6 +1248,8 @@ class HotspotsController extends Controller
                             'Dim_Hotspot.OnBoardingKey',
                             'Dim_Hotspot.DewiStatus',
                             'Dim_Hotspot.IsRegisteredDewi',
+                            'Dim_Hotspot.LastRegisterDewiDate',
+                            'Dim_Hotspot.LastRegisterDewiMemo',
 
                             'Dim_Hotspot.MinerVersion',
                             'Dim_Hotspot.map_lat',
@@ -1268,6 +1310,9 @@ class HotspotsController extends Controller
             $requestResult['Firmware']['value'] = $data->first()->Firmware;
         }
 
+        $IsRegisteredDewi = $data->first()->IsRegisteredDewi;
+        $MacAddress = $data->first()->MacAddress;
+
         // 產生需要設定的欄位  
         $requestResult = WebLib::generateInputs($requestResult, false);
         // 把產生好的欄位取出來
@@ -1282,6 +1327,8 @@ class HotspotsController extends Controller
                     ->with('viewPath', self::$viewPath)
                     ->with('functionname', self::$functionname)
                     ->with('functionURL', self::$functionURL)
+                    ->with('IsRegisteredDewi', $IsRegisteredDewi)
+                    ->with('MacAddress', $MacAddress)
                     ->with('TOPname', self::$TOPname);
     }
     /**
@@ -1907,6 +1954,28 @@ class HotspotsController extends Controller
             $responseBody['message'] = 'change success!';
             $responseBody['errorCode'] = '0000';
             $responseBody['data'] = $data;
+        }
+        return Response::json($responseBody, 200);
+    }
+
+    public function registeredDewi(Request $request){
+        // init status
+        $responseBody = array(
+          'status' => 0,
+          'errorCode' => '9999',
+          'message' => 'Unknown error.',
+        );
+
+        $mac = $request->input('mac', '');
+
+        $data = DimHotspot::on('mysql2')
+                ->where('MacAddress',$mac)
+                ->update(['IsRegisteredDewi' => 0]);
+
+        if($responseBody['status'] == 0) {
+            $responseBody['status'] = 0;
+            $responseBody['message'] = 'change success!';
+            $responseBody['errorCode'] = '0000';
         }
         return Response::json($responseBody, 200);
     }

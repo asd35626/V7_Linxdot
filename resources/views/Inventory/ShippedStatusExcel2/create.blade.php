@@ -8,7 +8,30 @@
 
 {{-- 增加所需要的Script; 將會放置在主板型的後面 --}}
 @section('scriptArea')
-
+    <script>
+        function RegisteredDewi(ID){
+            $.ajax({
+                url: 'https://hotspot-auth.linxdot.wtf/IfNeedRegisteredDewi',
+                type: 'GET',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : {
+                },
+                success: function(response) {
+                    if(response.status == 0){
+                        List(ID);
+                    }else{
+                        alert(response.errorMessage);
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log('error');
+                },
+            });
+        }
+    </script>
 @endsection
 
 
@@ -96,9 +119,9 @@
                     <span class="md-icon material-icons uk-modal-close"></span>
                     <h3 class="md-card-toolbar-heading-text"></h3>
                 </div>
-                <div class="md-card-content">
-                    <table class="uk-table uk-table-nowrap table_check" id='list'>
-                    </table>
+                <div class="md-card-content" id='list'>
+                    
+                    
                 </div>
             </div>
         </div>
@@ -130,7 +153,11 @@
                 success: function(response) {
                     if(response.status == 0){
                         // hideen the button
-                        let HTML = '<thead><tr>';
+                        let HTML = '<button type="button" onclick="RegisteredDewi(';
+                        HTML += ID;
+                        HTML += ')" class="md-btn md-btn-primary">Dewi</button>';
+                        HTML += '<table class="uk-table uk-table-nowrap table_check">';
+                        HTML += '<thead><tr>';
                         HTML += '<th class="uk-width-1-10">SkuID</th>';
                         HTML += '<th class="uk-width-1-10">PalletId</th>';
                         HTML += '<th class="uk-width-1-10">CartonId</th>';
@@ -138,16 +165,13 @@
                         HTML += '<th class="uk-width-1-10">IfShipped</th>';
                         HTML += '<th class="uk-width-1-10">ShippedDate</th>';
                         HTML += '<th class="uk-width-1-10">TrackingNo</th>';
-                        HTML += '<th class="uk-width-1-10">IfCompletedImport</th>';
                         HTML += '<th class="uk-width-1-10">ImportStatus</th>';
-                        HTML += '<th class="uk-width-1-10">ImportMemo</th>';
                         HTML += '<th class="uk-width-1-10">Registered</th>';
                         HTML += '<th class="uk-width-1-10">RegisteredDate</th>';
-                        HTML += '<th class="uk-width-1-10">RegisterMemo</th>';
                         HTML += '</tr></thead>';
                         
                         response.data.forEach(element => {
-                            if(element.IfCompletedImport == 1 && element.ImportStatus == 1){
+                            if(element.IfCompletedImport == 1 && element.ImportStatus == 1 && element.IsRegisteredDewi == 1){
                                 HTML += '<tr>';
                             }else{
                                 HTML += "<tr style='color: red;'>";
@@ -174,42 +198,35 @@
                             HTML += element.TrackingNo;
                             HTML += '</td>';
                             HTML += '<td class="uk-text-small">';
-                            if(element.IfCompletedImport == 1){
-                                HTML += "Y";
-                            }else{
-                                HTML += "N";
-                            }
-                            HTML += '</td>';
-                            HTML += '<td class="uk-text-small">';
                             if(element.ImportStatus == 1){
                                 HTML += "Y";
                             }else{
                                 HTML += "N";
+                                if(element.ImportMemo){
+                                    HTML += "(";
+                                    HTML += element.ImportMemo;
+                                    HTML += ")";
+                                }
                             }
-                            HTML += '</td>';
-                            HTML += '<td class="uk-text-small">';
-                            HTML += element.ImportMemo;
                             HTML += '</td>';
                             HTML += '<td class="uk-text-small">';
                             if(element.IsRegisteredDewi == 1){
                                 HTML += "Y";
-                            }else{
+                            }else if(element.IsRegisteredDewi == 0){
                                 HTML += "N";
+                            }else{
+                                HTML += "Error";
+                                if(element.LastRegisterDewiMemo){
+                                    HTML += "(";
+                                    HTML += element.LastRegisterDewiMemo;
+                                    HTML += ")";
+                                }
                             }
                             HTML += '</td>';
                             HTML += '<td class="uk-text-small">';
                             if(element.IsRegisteredDewi == 1){
-                                HTML += element.LastRegisterDewiDate;
-                            }else{
-                                HTML += "";
-                            }
-                            HTML += '</td>';
-                            HTML += '<td class="uk-text-small">';
-                            if(element.IsRegisteredDewi != 1){
-                                if(element.LastRegisterDewiMemo){
-                                    HTML += element.LastRegisterDewiMemo;
-                                }else{
-                                    HTML += '';
+                                if(element.LastRegisterDewiDate){
+                                    HTML += element.LastRegisterDewiDate;
                                 }
                             }else{
                                 HTML += "";
@@ -217,6 +234,7 @@
                             HTML += '</td>';
                             HTML +='</tr>';
                         });
+                        HTML += '</table>';
                         
                         $('#list').html(HTML);
                     }else{

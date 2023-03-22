@@ -8,6 +8,52 @@
 
 {{-- 增加所需要的Script; 將會放置在主板型的後面 --}}
 @section('scriptArea')
+    <script>
+        function RegisteredDewi(mac){
+            $.ajax({
+                url: '/api/v1/RegisteredDewi',
+                type: 'POST',
+                async: false,
+                headers: {
+                    'Authorization': Cookies.get('authToken')
+                },
+                data : {
+                    mac:mac
+                },
+                success: function(response) {
+                    if(response.status == 0){
+                        // alert('success!');
+                        $.ajax({
+                            url: 'https://hotspot-auth.linxdot.wtf/IfNeedRegisteredDewi',
+                            type: 'GET',
+                            async: false,
+                            headers: {
+                                'Authorization': Cookies.get('authToken')
+                            },
+                            data : {
+                            },
+                            success: function(response) {
+                                if(response.status == 0){
+                                    // alert('success!');
+                                    window.location.reload();
+                                }else{
+                                    alert(response.errorMessage);
+                                }
+                            },
+                            error: function(xhr, ajaxOptions, thrownError) {
+                                console.log('error');
+                            },
+                        });
+                    }else{
+                        alert(response.errorMessage);
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log('error');
+                },
+            });
+        }
+    </script>
 @endsection
 
 

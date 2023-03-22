@@ -65,6 +65,8 @@ Route::group(['prefix' => 'api/v1'],function () {
     Route::post('UpdateIssue', 'Device\HotspotsController@updateIssue');    
     // 取得所有機器(匯出)
     Route::post('GetHotspot', 'Device\HotspotsController@getHotspot');
+    // RegisteredDewi前應做的修改
+    Route::post('RegisteredDewi', 'Device\HotspotsController@registeredDewi');
 
     // 處理問題
     Route::post('SolvingIssue', 'CustomerService\IssuesController@solvingIssue');
@@ -119,6 +121,8 @@ Route::group(['prefix' => 'Device'],function () {
     Route::resource('B2BHotspots', 'Device\B2BHotspotsController');
     //
     Route::resource('GrayHotspot', 'Device\GrayHotspotController');
+    //
+    Route::resource('OperationSummary', 'Device\OperationSummaryController');
 });
 
 //人員管理
