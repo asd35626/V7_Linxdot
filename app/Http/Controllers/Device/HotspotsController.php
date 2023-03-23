@@ -1405,6 +1405,7 @@ class HotspotsController extends Controller
                 'AnimalName' => $formFields['AnimalName']['value'],
                 'IsVerify' => $formFields['IsVerify']['value'],
                 'OfficalNickName' => $formFields['OfficalNickName']['value'],
+                'IsRegisteredDewi' => $formFields['IsRegisteredDewi']['value'],
 
                 'WifiMacAddress' => $formFields['WifiMacAddress']['value'],
                 'IfValid' => $formFields['IfValid']['value'],
