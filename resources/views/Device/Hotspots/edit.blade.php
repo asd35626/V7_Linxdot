@@ -10,6 +10,7 @@
 @section('scriptArea')
     <script>
         function RegisteredDewi(mac){
+            document.querySelector('#Dewi').innerText = 'Processing';
             $.ajax({
                 url: '/api/v1/RegisteredDewi',
                 type: 'POST',
@@ -34,7 +35,7 @@
                             },
                             success: function(response) {
                                 if(response.status == 0){
-                                    // alert('success!');
+                                    alert('completed!');
                                     window.location.reload();
                                 }else{
                                     alert(response.errorMessage);

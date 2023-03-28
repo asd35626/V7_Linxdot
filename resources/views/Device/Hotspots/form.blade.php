@@ -61,7 +61,7 @@
                 </div>
                 <div class="uk-width-medium-1-6">
                     @if($IsRegisteredDewi != 1)
-                        <button type="button" onclick="RegisteredDewi('{!!$MacAddress!!}')" class="md-btn md-btn-primary">Dewi</button>
+                        <button type="button" id="Dewi" onclick="RegisteredDewi('{!!$MacAddress!!}')" class="md-btn md-btn-primary">Dewi</button>
                     @endif
                 </div>
                 <div class="uk-width-medium-1-3">

@@ -21,6 +21,7 @@
                 },
                 success: function(response) {
                     if(response.status == 0){
+                        alert('success!');
                         List(ID);
                     }else{
                         alert(response.errorMessage);
